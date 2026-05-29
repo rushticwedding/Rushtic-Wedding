@@ -2,32 +2,56 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.rushticwojogja.com/</loc>
-    <lastmod>2025-05-23</lastmod>
+    <lastmod>2025-05-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://www.rushticwojogja.com/blog/index.html</loc>
-    <lastmod>2025-05-23</lastmod>
+    <loc>https://www.rushticwojogja.com/Blog/</loc>
+    <lastmod>2025-05-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.rushticwojogja.com/blog/tips-nikah-murah-jogja.html</loc>
-    <lastmod>2025-06-01</lastmod>
+    <loc>https://www.rushticwojogja.com/Blog/tips-nikah-murah-jogja.html</loc>
+    <lastmod>2025-05-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.rushticwojogja.com/blog/inspirasi-dekorasi-rustic-jogja.html</loc>
-    <lastmod>2025-06-10</lastmod>
+    <loc>https://www.rushticwojogja.com/Blog/inspirasi-dekorasi-rustic-jogja.html</loc>
+    <lastmod>2025-05-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.rushticwojogja.com/blog/checklist-persiapan-nikah-12-bulan.html</loc>
-    <lastmod>2025-07-01</lastmod>
+    <loc>https://www.rushticwojogja.com/Blog/checklist-persiapan-nikah-12-bulan.html</loc>
+    <lastmod>2025-05-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.rushticwojogja.com/Blog/cara-memilih-wedding-organizer-jogja.html</loc>
+    <lastmod>2025-05-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.rushticwojogja.com/Blog/paket-pernikahan-jogja-lengkap.html</loc>
+    <lastmod>2025-05-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.rushticwojogja.com/toko/</loc>
+    <lastmod>2025-05-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.rushticwojogja.com/checklist.html</loc>
+    <lastmod>2025-05-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
 </urlset>
