@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio Dekorasi — Rushtic Wedding &amp; Decoration</title>
+<meta name="description" content="Galeri dekorasi Rushtic Wedding & Decoration Jogja: pelaminan pernikahan, akad & engagement minimalis, dan dekorasi lainnya.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#f6f1e9;--rose:#9c4a3c;--rose-soft:#c98a72;--gold:#b08a4f;--ink:#f6f1e9;--muted:#9c8f80}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:radial-gradient(130% 70% at 50% -5%,#241b16,#0e0b0a 60%);color:var(--ink);overflow-x:hidden;min-height:100vh}
+.top{text-align:center;padding:46px 22px 4px}
+.eye{font-size:.66rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);font-weight:500}
+.top h1{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(1.8rem,6vw,2.4rem);margin-top:10px;line-height:1.1}
+.top h1 em{font-style:italic;color:var(--rose-soft)}
+.top p{max-width:440px;margin:14px auto 0;color:var(--muted);font-size:.95rem}
+.themeLabel{text-align:center;font-family:'Fraunces',serif;font-style:italic;color:var(--rose-soft);font-size:1.1rem;height:1.4em;margin:14px 0 0}
+.stage{perspective:1600px;height:56vh;min-height:360px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;margin-top:4px}
+.track{position:relative;transform-style:preserve-3d;width:100%;height:100%}
+.card{position:absolute;top:50%;left:50%;width:64vw;max-width:430px;border-radius:10px;overflow:hidden;cursor:pointer;box-shadow:0 14px 50px rgba(0,0,0,.55);transition:transform .55s cubic-bezier(.22,.61,.36,1),opacity .55s,filter .55s;backface-visibility:hidden}
+.card img{width:100%;height:auto;display:block}
+.card.active{box-shadow:0 0 0 1px rgba(176,138,79,.6),0 20px 60px rgba(0,0,0,.6)}
+.card.gone{display:none}
+.nav{display:flex;gap:18px;justify-content:center;align-items:center;margin-top:12px}
+.nav button{width:48px;height:48px;border-radius:50%;border:1px solid #3a322c;background:rgba(255,255,255,.05);color:var(--ink);font-size:1.3rem;cursor:pointer;transition:.2s}
+.nav button:hover{background:var(--rose);border-color:var(--rose)}
+.count{font-size:.85rem;color:var(--muted);min-width:54px;text-align:center}
+.dots{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:16px auto 0;max-width:320px;padding:0 16px}
+.dot{width:7px;height:7px;border-radius:50%;background:#3a322c;cursor:pointer;transition:.2s}
+.dot.on{background:var(--gold);width:18px;border-radius:4px}
+.hint{text-align:center;font-size:.76rem;color:#6f655b;margin:18px 0 6px}
+.cta{text-align:center;padding:18px 20px}
+.cta h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem}
+.cta p{color:var(--muted);font-size:.9rem;margin:8px auto 18px;max-width:380px}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--rose);color:#fff;text-decoration:none;font-weight:500;padding:14px 28px;border-radius:999px;transition:.2s}
+.btn:hover{background:#83392d;transform:translateY(-2px)}
+.foot{text-align:center;padding:30px 22px 40px;font-size:.8rem;color:var(--muted);border-top:1px solid #261f1a;margin-top:20px}
+.foot a{color:var(--rose-soft);text-decoration:none}
+.lb{position:fixed;inset:0;z-index:100;background:rgba(8,6,5,.95);display:none;align-items:center;justify-content:center;padding:20px}
+.lb.open{display:flex}
+.lb img{max-width:100%;max-height:84vh;border-radius:8px}
+.lb .label{position:absolute;top:22px;left:0;right:0;text-align:center;font-family:'Fraunces',serif;font-style:italic;color:var(--rose-soft);font-size:1.2rem}
+.lb button{position:absolute;background:rgba(255,255,255,.12);border:none;color:#fff;width:46px;height:46px;border-radius:50%;font-size:1.4rem;cursor:pointer}
+.lb button:hover{background:rgba(255,255,255,.25)}
+.lb .x{top:18px;right:18px}.lb .pv{left:14px;top:50%;transform:translateY(-50%)}.lb .nx{right:14px;top:50%;transform:translateY(-50%)}
+@media(prefers-reduced-motion:reduce){.card{transition:none}}
+</style></head><body>
+<header class="top">
+  <div class="eye">Rushtic Wedding &amp; Decoration</div>
+  <h1>Setiap pelaminan, <em>satu cerita</em></h1>
+  <p>Galeri hasil dekorasi kami di Jogja — pelaminan pernikahan, akad, hingga dekorasi acara lainnya.</p>
+</header>
+<div class="themeLabel" id="themeLabel"></div>
+<div class="stage"><div class="track" id="track">
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-001.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-002.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-003.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-004.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-005.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-006.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-007.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-008.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-009.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-010.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-011.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-012.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-013.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-014.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-015.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-016.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-017.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-018.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Akad / Engagement Minimalis"><img src="assets/dekor-019.jpg" alt="Dekorasi Akad / Engagement Minimalis oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Akad / Engagement Minimalis"><img src="assets/dekor-020.jpg" alt="Dekorasi Akad / Engagement Minimalis oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Akad / Engagement Minimalis"><img src="assets/dekor-021.jpg" alt="Dekorasi Akad / Engagement Minimalis oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Akad / Engagement Minimalis"><img src="assets/dekor-022.jpg" alt="Dekorasi Akad / Engagement Minimalis oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Akad / Engagement Minimalis"><img src="assets/dekor-023.jpg" alt="Dekorasi Akad / Engagement Minimalis oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Akad / Engagement Minimalis"><img src="assets/dekor-024.jpg" alt="Dekorasi Akad / Engagement Minimalis oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Akad / Engagement Minimalis"><img src="assets/dekor-025.jpg" alt="Dekorasi Akad / Engagement Minimalis oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Akad / Engagement Minimalis"><img src="assets/dekor-026.jpg" alt="Dekorasi Akad / Engagement Minimalis oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Akad / Engagement Minimalis"><img src="assets/dekor-027.jpg" alt="Dekorasi Akad / Engagement Minimalis oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Akad / Engagement Minimalis"><img src="assets/dekor-028.jpg" alt="Dekorasi Akad / Engagement Minimalis oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Dekorasi Lain"><img src="assets/dekor-029.jpg" alt="Dekorasi Dekorasi Lain oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Dekorasi Lain"><img src="assets/dekor-030.jpg" alt="Dekorasi Dekorasi Lain oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Dekorasi Lain"><img src="assets/dekor-031.jpg" alt="Dekorasi Dekorasi Lain oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Dekorasi Lain"><img src="assets/dekor-032.jpg" alt="Dekorasi Dekorasi Lain oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Dekorasi Lain"><img src="assets/dekor-033.jpg" alt="Dekorasi Dekorasi Lain oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Dekorasi Lain"><img src="assets/dekor-034.jpg" alt="Dekorasi Dekorasi Lain oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Dekorasi Lain"><img src="assets/dekor-035.jpg" alt="Dekorasi Dekorasi Lain oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Backdrop Lamaran"><img src="assets/dekor-036.jpg" alt="Dekorasi Backdrop Lamaran oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Backdrop Lamaran"><img src="assets/dekor-037.jpg" alt="Dekorasi Backdrop Lamaran oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Backdrop Mobil Pengantin"><img src="assets/dekor-038.jpg" alt="Dekorasi Backdrop Mobil Pengantin oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Dekorasi Ulang Tahun"><img src="assets/dekor-039.jpg" alt="Dekorasi Dekorasi Ulang Tahun oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-040.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-041.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Dekorasi Panggung"><img src="assets/dekor-042.jpg" alt="Dekorasi Dekorasi Panggung oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Mobil Pengantin"><img src="assets/dekor-043.jpg" alt="Dekorasi Mobil Pengantin oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-044.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Dekorasi Taman"><img src="assets/dekor-045.jpg" alt="Dekorasi Dekorasi Taman oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Dekorasi Taman"><img src="assets/dekor-046.jpg" alt="Dekorasi Dekorasi Taman oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Dekorasi Taman"><img src="assets/dekor-047.jpg" alt="Dekorasi Dekorasi Taman oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pendopo"><img src="assets/dekor-048.jpg" alt="Dekorasi Pelaminan Pendopo oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pendopo"><img src="assets/dekor-049.jpg" alt="Dekorasi Pelaminan Pendopo oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Akad Nikah"><img src="assets/dekor-050.jpg" alt="Dekorasi Akad Nikah oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Backdrop Lamaran"><img src="assets/dekor-051.jpg" alt="Dekorasi Backdrop Lamaran oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Backdrop Lamaran"><img src="assets/dekor-052.jpg" alt="Dekorasi Backdrop Lamaran oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Backdrop Lamaran"><img src="assets/dekor-053.jpg" alt="Dekorasi Backdrop Lamaran oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Backdrop Lamaran"><img src="assets/dekor-054.jpg" alt="Dekorasi Backdrop Lamaran oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Dekorasi Meja"><img src="assets/dekor-055.jpg" alt="Dekorasi Dekorasi Meja oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Dekorasi Meja"><img src="assets/dekor-056.jpg" alt="Dekorasi Dekorasi Meja oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Outdoor"><img src="assets/dekor-057.jpg" alt="Dekorasi Pelaminan Outdoor oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Outdoor"><img src="assets/dekor-058.jpg" alt="Dekorasi Pelaminan Outdoor oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-059.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-060.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-061.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-062.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-063.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Akad"><img src="assets/dekor-064.jpg" alt="Dekorasi Pelaminan Akad oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-065.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Joglo"><img src="assets/dekor-066.jpg" alt="Dekorasi Pelaminan Joglo oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Dekorasi Outdoor Rustic"><img src="assets/dekor-067.jpg" alt="Dekorasi Dekorasi Outdoor Rustic oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Dekorasi Rushtic"><img src="assets/dekor-068.jpg" alt="Dekorasi Dekorasi Rushtic oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Ballroom"><img src="assets/dekor-069.jpg" alt="Dekorasi Pelaminan Ballroom oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-070.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Engagement Tradisional"><img src="assets/dekor-071.jpg" alt="Dekorasi Engagement Tradisional oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Dekorasi Rushtic"><img src="assets/dekor-072.jpg" alt="Dekorasi Dekorasi Rushtic oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-073.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-074.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Outdoor"><img src="assets/dekor-075.jpg" alt="Dekorasi Pelaminan Outdoor oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Mobil Pengantin"><img src="assets/dekor-076.jpg" alt="Dekorasi Mobil Pengantin oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-077.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-078.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-079.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-080.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-081.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Mobil Pengantin"><img src="assets/dekor-082.jpg" alt="Dekorasi Mobil Pengantin oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Backdrop Walimatul Ursy"><img src="assets/dekor-083.jpg" alt="Dekorasi Backdrop Walimatul Ursy oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-084.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-085.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-086.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-087.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-088.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-089.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-090.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Dekorasi Balon"><img src="assets/dekor-091.jpg" alt="Dekorasi Dekorasi Balon oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Welcome Board Lamaran"><img src="assets/dekor-092.jpg" alt="Dekorasi Welcome Board Lamaran oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Dekorasi Kolam Renang"><img src="assets/dekor-093.jpg" alt="Dekorasi Dekorasi Kolam Renang oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-094.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-095.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pernikahan"><img src="assets/dekor-096.jpg" alt="Dekorasi Pelaminan Pernikahan oleh Rushtic" loading="lazy"></div>
+<div class="card" data-theme="Pelaminan Pendopo"><img src="assets/dekor-097.jpg" alt="Dekorasi Pelaminan Pendopo oleh Rushtic" loading="lazy"></div>
+</div>
+</div>
+</div></div>
+<div class="nav"><button id="prev" aria-label="Sebelumnya">&#8249;</button><div class="count" id="count"></div><button id="next" aria-label="Berikutnya">&#8250;</button></div>
+<div class="dots" id="dots"></div>
+<div class="hint">Geser atau ketuk panah · ketuk foto untuk memperbesar</div>
+<section class="cta">
+  <h2>Suka salah satu konsepnya?</h2>
+  <p>Cerita acara impianmu, nanti kami bantu wujudkan sesuai budget &amp; venue.</p>
+  <a class="btn" href="https://wa.me/6289608068804?text=Halo%20Rushtic%2C%20saya%20lihat%20portfolio%20dekorasinya%20dan%20tertarik%20konsultasi." target="_blank" rel="noopener">Konsultasi via WhatsApp</a>
+</section>
+<footer class="foot">
+  Rushtic Wedding &amp; Decoration · Banguntapan, Bantul, Yogyakarta<br>
+  <a href="https://www.instagram.com/rushtic.wojogja" target="_blank" rel="noopener">@rushtic.wojogja</a> ·
+  <a href="https://rushticwojogja.com" target="_blank" rel="noopener">rushticwojogja.com</a>
+</footer>
+<div class="lb" id="lb"><div class="label" id="lbLabel"></div><button class="x" id="x" aria-label="Tutup">&times;</button><button class="pv" id="pv" aria-label="Sebelumnya">&#8249;</button><img id="lbImg" src="" alt=""><button class="nx" id="nx" aria-label="Berikutnya">&#8250;</button></div>
+<script>
+const allCards=[...document.querySelectorAll('.card')];
+let cards=allCards.slice();let active=0;
+const themeLabel=document.getElementById('themeLabel'),count=document.getElementById('count'),dotsWrap=document.getElementById('dots');
+function buildDots(){dotsWrap.innerHTML='';cards.forEach((c,i)=>{const d=document.createElement('div');d.className='dot';d.onclick=()=>{active=i;render();};dotsWrap.appendChild(d);});}
+function render(){
+  allCards.forEach(c=>c.classList.add('gone'));
+  cards.forEach((c,i)=>{
+    c.classList.remove('gone');
+    let off=i-active;const abs=Math.abs(off);
+    const tx=off*46,tz=-abs*140,ry=off*-22,scale=Math.max(0.7,1-abs*0.12),op=abs>2?0:1-abs*0.18;
+    c.style.transform=`translateX(calc(-50% + ${tx}%)) translateY(-50%) translateZ(${tz}px) rotateY(${ry}deg) scale(${scale})`;
+    c.style.opacity=op;c.style.zIndex=100-abs;c.style.filter=abs===0?'none':`brightness(${1-abs*0.12})`;
+    c.classList.toggle('active',i===active);c.style.pointerEvents=abs>2?'none':'auto';
+  });
+  themeLabel.textContent=cards.length?cards[active].dataset.theme:'';
+  count.textContent=cards.length?(active+1)+' / '+cards.length:'';
+  [...dotsWrap.children].forEach((d,i)=>d.classList.toggle('on',i===active));
+}
+buildDots();render();
+document.getElementById('prev').onclick=()=>{active=(active-1+cards.length)%cards.length;render();};
+document.getElementById('next').onclick=()=>{active=(active+1)%cards.length;render();};
+let sx=0,sdrag=false,smoved=false;const stage=document.querySelector('.stage');
+stage.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sdrag=true;smoved=false;},{passive:true});
+stage.addEventListener('touchmove',e=>{if(Math.abs(e.touches[0].clientX-sx)>10)smoved=true;},{passive:true});
+stage.addEventListener('touchend',e=>{if(!sdrag)return;const dx=e.changedTouches[0].clientX-sx;if(dx>40){active=(active-1+cards.length)%cards.length;render();}else if(dx<-40){active=(active+1)%cards.length;render();}sdrag=false;});
+allCards.forEach(c=>c.addEventListener('click',()=>{if(smoved)return;const i=cards.indexOf(c);if(i===active)openLb(i);else if(i>=0){active=i;render();}}));
+const lb=document.getElementById('lb'),lbImg=document.getElementById('lbImg'),lbLabel=document.getElementById('lbLabel');let cur=0;
+function openLb(i){cur=i;lbImg.src=cards[i].querySelector('img').src;lbLabel.textContent=cards[i].dataset.theme;lb.classList.add('open');}
+function lstep(d){cur=(cur+d+cards.length)%cards.length;lbImg.src=cards[cur].querySelector('img').src;lbLabel.textContent=cards[cur].dataset.theme;}
+document.getElementById('x').onclick=()=>lb.classList.remove('open');
+document.getElementById('pv').onclick=e=>{e.stopPropagation();lstep(-1);};
+document.getElementById('nx').onclick=e=>{e.stopPropagation();lstep(1);};
+lb.addEventListener('click',e=>{if(e.target===lb)lb.classList.remove('open');});
+document.addEventListener('keydown',e=>{if(lb.classList.contains('open')){if(e.key==='Escape')lb.classList.remove('open');if(e.key==='ArrowLeft')lstep(-1);if(e.key==='ArrowRight')lstep(1);}else{if(e.key==='ArrowLeft'){active=(active-1+cards.length)%cards.length;render();}if(e.key==='ArrowRight'){active=(active+1)%cards.length;render();}}});
+</script></body></html>
