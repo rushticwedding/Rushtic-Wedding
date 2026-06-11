@@ -847,7 +847,7 @@ footer{background:#1A0E06;color:rgba(245,245,220,.45);padding:3rem 2.5rem;text-a
         <div class="calc-section-title"><span>1</span><span class="id">Paket WO</span><span class="en">WO Package</span></div>
         <div class="form-group">
           <select class="form-select" id="woPackage" onchange="calcTotal();showDetail('woDetail',this)">
-            <option value="0" data-detail="">-- <span class="id">Tidak pilih</span><span class="en">Not selected</span> --</option>
+            <option value="0" data-detail="" data-id="-- Tidak pilih --" data-en="-- Not selected --">-- Tidak pilih --</option>
             <option value="3500000" data-detail="Akad/Pemberkatan • Maks 3 jam • 300 tamu • 4 personil • Konsep, run down, layout venue, 10 buku panduan">Bronze – Rp 3.500.000</option>
             <option value="5900000" data-detail="Akad & Resepsi • Maks 6 jam • 500 tamu • 7 personil • Semua Bronze + Free sewa & hias 4 kotak hantaran">Silver – Rp 5.900.000</option>
             <option value="7900000" data-detail="Akad & Resepsi hari berbeda • Maks 12 jam • 1000 tamu • 10 personil • Semua Silver + Free WCC + Free dekorasi mobil">Gold – Rp 7.900.000</option>
@@ -861,7 +861,7 @@ footer{background:#1A0E06;color:rgba(245,245,220,.45);padding:3rem 2.5rem;text-a
         <div class="calc-section-title"><span>2</span><span class="id">Paket Dekorasi</span><span class="en">Decoration Package</span></div>
         <div class="form-group">
           <select class="form-select" id="dekorPackage" onchange="calcTotal();showDetail('dekorDetail',this)">
-            <option value="0" data-detail="">-- <span class="id">Tidak pilih</span><span class="en">Not selected</span> --</option>
+            <option value="0" data-detail="" data-id="-- Tidak pilih --" data-en="-- Not selected --">-- Tidak pilih --</option>
             <option value="1500000" data-detail="Pelaminan maks 3m • Welcome gate • Welcome sign • Free transport 5km">Bronze – Rp 1.500.000</option>
             <option value="3500000" data-detail="Pelaminan maks 6m • 4 standing flowers • Kursi pengantin & ortu • Meja buku tamu & kotak angpau">Silver – Rp 3.500.000</option>
             <option value="5500000" data-detail="Pelaminan maks 9m • 6 standing flowers • Panggung 15cm • Pergola/gazebo • Backdrop buku tamu • Fresh garden">Gold – Rp 5.500.000</option>
@@ -880,7 +880,7 @@ footer{background:#1A0E06;color:rgba(245,245,220,.45);padding:3rem 2.5rem;text-a
         <div class="calc-section-title"><span>3</span><span class="id">Paket Buffet Katering</span><span class="en">Catering Buffet Package</span></div>
         <div class="form-group">
           <select class="form-select" id="buffetPackage" onchange="calcTotal();showBuffetDetail(this)">
-            <option value="0" data-detail=""><span class="id">-- Tidak pilih --</span><span class="en">-- Not selected --</span></option>
+            <option value="0" data-detail="" data-id="-- Tidak pilih --" data-en="-- Not selected --">-- Tidak pilih --</option>
             <option value="25000" data-detail="Nasi putih, sambal goreng kentang, capjae/bihun, telur bacem, ayam goreng kremes, teh manis, kerupuk">Tradisional – Rp 25.000/pax</option>
             <option value="28000" data-detail="Nasi, soup sayur (rolade/sosis/bakso), oseng kombinasi, olahan ayam (fillet/rica/bakar/kremes), bistik galantin/mie oriental, kerupuk, buah iris, es krim/es puter, minuman (teh/sirup/infuse water)">Paket A – Rp 28.000/pax</option>
             <option value="32000" data-detail="Nasi, soup sayur/jagung, cap cay/acar kuning, mie goreng/oseng soun, olahan ayam (saus mentega/sate/katsu), olahan ikan/daging (gurame/tongseng sapi/asem-asem), kerupuk, buah, es krim, minuman lengkap">Paket B – Rp 32.000/pax</option>
@@ -1053,7 +1053,7 @@ footer{background:#1A0E06;color:rgba(245,245,220,.45);padding:3rem 2.5rem;text-a
         </div>
         <div class="cf-group"><label class="cf-label"><span class="id"><span class="id">Paket Diminati</span><span class="en">Package of Interest</span></span><span class="en">Package of Interest</span></label>
           <select class="cf-select" id="cfPkg">
-            <option><span class="id">-- Pilih Paket --</span><span class="en">-- Select Package --</span></option>
+            <option data-id="-- Pilih Paket --" data-en="-- Select Package --">-- Pilih Paket --</option>
             <option>Bronze WO – Rp 3.500.000</option>
             <option>Silver WO – Rp 5.900.000</option>
             <option>Gold WO – Rp 7.900.000</option>
@@ -1061,7 +1061,7 @@ footer{background:#1A0E06;color:rgba(245,245,220,.45);padding:3rem 2.5rem;text-a
             <option>Intimate Akad – Rp 10.000.000</option>
             <option>Akad Resepsi – Rp 15.000.000</option>
             <option>Complete Wedding – Rp 25.000.000</option>
-            <option><span class="id">Lainnya / Custom</span><span class="en">Other / Custom</span></option>
+            <option data-id="Lainnya / Custom" data-en="Other / Custom">Lainnya / Custom</option>
           </select>
         </div>
         <div class="cf-group"><label class="cf-label"><span class="id"><span class="id">Tanggal Acara</span><span class="en">Event Date</span></span><span class="en">Event Date</span></label><input class="cf-input" type="date" id="cfDate"></div>
@@ -1264,6 +1264,10 @@ function setLang(lang) {
   document.getElementById('htmlRoot').lang = lang;
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
   document.querySelector(`.lang-btn[onclick*="'${lang}'"]`).classList.add('active');
+  // Update teks <option> dropdown sesuai bahasa (CSS display:none tidak bekerja di dalam option)
+  document.querySelectorAll('option[data-id][data-en]').forEach(opt => {
+    opt.textContent = (lang === 'en') ? opt.getAttribute('data-en') : opt.getAttribute('data-id');
+  });
 }
 
 // ===== NAV =====
