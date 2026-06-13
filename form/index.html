@@ -496,7 +496,9 @@
     ["Akad Nikah","RA7"],["Sungkeman","RA8"],["Foto Pasca Akad","RA9"],["Break / Ganti Busana","RA10"],
     ["Kirab Pengantin & Resepsi","RA11"],["Lempar Bunga & Closing","RA12"],["Pasca Acara","RA13"]
   ];
-  document.getElementById('rundownFields').innerHTML = rundown.map(([nama,key])=>`
+  var _rundownEl = document.getElementById('rundownFields');
+  if(_rundownEl){
+    _rundownEl.innerHTML = rundown.map(([nama,key])=>`
     <div class="rundown-row">
       <div class="rtitle">${nama}</div>
       <div class="two">
@@ -504,6 +506,7 @@
         <div class="field"><label>Durasi</label><input data-k="${key}_dur" placeholder="cth. 30'"></div>
       </div>
     </div>`).join('');
+  }
 
   const panitia = [
     ["Pemangku Hajat (CPW)","Pan_pemangku_cpw"],["Besan (CPP)","Pan_besan_cpp"],
