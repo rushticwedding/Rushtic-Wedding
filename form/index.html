@@ -395,5 +395,100 @@
     }
   }
 </script>
+
+<!-- AUTO-SAVE: simpan isian form otomatis di perangkat -->
+<script>
+(function(){
+  const SAVE_KEY = 'rushtic_form_buku_panduan';
+
+  // Pulihkan data saat halaman dibuka
+  function restoreForm(){
+    try {
+      const saved = localStorage.getItem(SAVE_KEY);
+      if(!saved) return;
+      const data = JSON.parse(saved);
+      let restored = 0;
+      document.querySelectorAll('[data-k]').forEach(el=>{
+        const k = el.dataset.k;
+        if(data[k] !== undefined && data[k] !== ''){
+          el.value = data[k];
+          restored++;
+        }
+      });
+      if(restored > 0){
+        showAutosaveBanner(restored);
+      }
+    } catch(e){ console.warn('Restore gagal', e); }
+  }
+
+  // Simpan data (dipanggil tiap user mengetik)
+  let saveTimer;
+  function saveForm(){
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(()=>{
+      try {
+        const data = {};
+        document.querySelectorAll('[data-k]').forEach(el=>{
+          if(el.value && el.value.trim() !== '') data[el.dataset.k] = el.value;
+        });
+        localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+        showSavedDot();
+      } catch(e){ console.warn('Save gagal', e); }
+    }, 500);
+  }
+
+  // Indikator kecil "tersimpan"
+  function showSavedDot(){
+    let dot = document.getElementById('autosaveDot');
+    if(!dot){
+      dot = document.createElement('div');
+      dot.id = 'autosaveDot';
+      dot.style.cssText = 'position:fixed;bottom:16px;left:16px;z-index:9999;background:#3a3327;color:#e8dcc0;font-size:12px;padding:6px 12px;border-radius:20px;font-family:sans-serif;box-shadow:0 2px 8px rgba(0,0,0,.3);opacity:0;transition:opacity .3s;pointer-events:none;';
+      document.body.appendChild(dot);
+    }
+    dot.textContent = '✓ Tersimpan otomatis';
+    dot.style.opacity = '1';
+    clearTimeout(dot._t);
+    dot._t = setTimeout(()=>{ dot.style.opacity='0'; }, 1500);
+  }
+
+  // Banner saat data dipulihkan
+  function showAutosaveBanner(n){
+    const b = document.createElement('div');
+    b.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#3a3327;color:#e8dcc0;font-size:13px;padding:10px 16px;text-align:center;font-family:sans-serif;box-shadow:0 2px 8px rgba(0,0,0,.3);';
+    b.innerHTML = '✓ Isian sebelumnya dipulihkan ('+n+' kolom). <span style="text-decoration:underline;cursor:pointer;" id="clearSaved">Mulai dari kosong</span>';
+    document.body.appendChild(b);
+    document.getElementById('clearSaved').onclick = function(){
+      if(confirm('Hapus isian tersimpan dan mulai dari kosong?')){
+        localStorage.removeItem(SAVE_KEY);
+        document.querySelectorAll('[data-k]').forEach(el=>el.value='');
+        b.remove();
+      }
+    };
+    setTimeout(()=>{ b.style.transition='opacity .5s'; b.style.opacity='0'; setTimeout(()=>b.remove(),500); }, 6000);
+  }
+
+  // Pasang listener ke semua field
+  function attachListeners(){
+    document.querySelectorAll('[data-k]').forEach(el=>{
+      el.addEventListener('input', saveForm);
+      el.addEventListener('change', saveForm);
+    });
+  }
+
+  // Hapus simpanan kalau user reset
+  window.addEventListener('load', function(){
+    restoreForm();
+    attachListeners();
+    // Hook ke tombol reset jika ada
+    document.querySelectorAll('button').forEach(btn=>{
+      const t = (btn.textContent||'').toLowerCase();
+      if(t.includes('reset') || t.includes('kosongkan')){
+        btn.addEventListener('click', ()=>{ setTimeout(()=>localStorage.removeItem(SAVE_KEY), 100); });
+      }
+    });
+  });
+})();
+</script>
 </body>
 </html>
