@@ -128,8 +128,8 @@
       </div>
       <div class="field"><label>Tempat</label><input data-k="Akad_tempat"></div>
       <div class="two">
-        <div class="field"><label>Busana akad</label><input data-k="Akad_busana"></div>
-        <div class="field"><label>Bahasa MC</label><input data-k="Akad_bahasa"></div>
+        
+        
       </div>
 
       <div class="subhead">Resepsi</div>
@@ -139,8 +139,8 @@
       </div>
       <div class="field"><label>Tempat</label><input data-k="Resepsi_tempat"></div>
       <div class="two">
-        <div class="field"><label>Busana resepsi</label><input data-k="Resepsi_busana"></div>
-        <div class="field"><label>Bahasa MC</label><input data-k="Resepsi_bahasa"></div>
+        
+        
       </div>
 
       <div class="subhead">Catatan Prosesi</div>
@@ -211,7 +211,7 @@
       </div>
       <div class="two">
         <div class="field"><label>Pembawa acara</label><input data-k="Seserahan_mc"></div>
-        <div class="field"><label>Bahasa pengantar</label><input data-k="Seserahan_bahasa"></div>
+        
       </div>
       <div class="field"><label>Pambagyoharjo / sambutan</label><input data-k="Seserahan_pambagyo"></div>
       <div class="field"><label>Snack</label><input data-k="Seserahan_snack"></div>
@@ -515,11 +515,7 @@
     ["Among Tamu","Pan_amongtamu"],["Lain-lain","Pan_lainlain"]
   ];
   document.getElementById('panitiaFields').innerHTML = panitia.map(([nama,key])=>`
-    <div class="field" style="border-bottom:1px solid #ece3d3;padding-bottom:.8rem;margin-bottom:.8rem;">
-      <label style="font-weight:600;">${nama}</label>
-      <textarea data-k="${key}" rows="2" placeholder="Penanggung jawab (nama)" style="width:100%;font-family:inherit;font-size:inherit;padding:.6rem;border-radius:8px;border:1px solid #d8cdb8;background:#fdfbf6;resize:vertical;margin-bottom:.4rem;"></textarea>
-      <textarea data-k="${key}_desc" rows="2" placeholder="Deskripsi / tugas (opsional)" style="width:100%;font-family:inherit;font-size:.85em;padding:.6rem;border-radius:8px;border:1px solid #e3dac8;background:#fbf8f2;resize:vertical;color:#6b5d4a;"></textarea>
-    </div>`).join('');
+    <div class="field"><label>${nama}</label><textarea data-k="${key}" rows="2" placeholder="Tulis nama penanggung jawab & keterangan..." style="width:100%;font-family:inherit;font-size:inherit;padding:.6rem;border-radius:8px;border:1px solid #d8cdb8;background:#fdfbf6;resize:vertical;"></textarea></div>`).join('');
 
   // ---- helpers ----
   function showStatus(msg){const s=document.getElementById('status');s.textContent=msg;s.classList.add('show');
@@ -592,6 +588,12 @@
           data.Req_terpilih = reqLines.join('\n');
           window._totalTambahan = _totalTambahan;
         } catch(e){ console.warn('req proc', e); }
+        // Sinkronisasi field yang digabung (isi sekali, pakai di banyak tempat di Word)
+        data.Akad_bahasa = data.Konsep_bahasa_akad || '';
+        data.Resepsi_bahasa = data.Konsep_bahasa_resepsi || '';
+        data.Seserahan_bahasa = data.Konsep_bahasa_seserahan || '';
+        data.Akad_busana = data.Konsep_busana_akad || '';
+        data.Resepsi_busana = data.Konsep_busana_resepsi || '';
         // Auto-isi jam rundown dari data akad/seserahan/resepsi
         if(!data.RA7_jam) data.RA7_jam = data.Akad_jam || '';      // Akad Nikah
         if(!data.RA5_jam) data.RA5_jam = data.Seserahan_waktu || ''; // Prosesi Seserahan
