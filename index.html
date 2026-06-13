@@ -827,108 +827,14 @@ footer{background:#1A0E06;color:rgba(245,245,220,.45);padding:3rem 2.5rem;text-a
   </div>
 </section>
 
-<section class="calculator" id="calculator">
-  <div class="fade-in" style="max-width:1100px;margin:0 auto 2.5rem;">
-    <div class="section-label"><span class="id">Hitung Anggaran</span><span class="en">Budget Planner</span></div>
-    <h2 class="section-title"><span class="id">Kalkulator Budget <em>Pintar</em></span><span class="en"><em>Smart</em> Budget Calculator</span></h2>
-    <div class="divider"></div>
-    <p style="font-size:.85rem;color:var(--muted);"><span class="id">Pilih paket dan layanan, total harga akan dihitung otomatis.</span><span class="en">Select packages and services, total price calculated automatically.</span></p>
-  </div>
-  <div class="calc-grid">
-    <div class="calc-form">
-
-      <!-- Tamu -->
-      <div class="calc-section fade-in">
-        <div class="calc-section-title"><span>0</span><span class="id">Jumlah Tamu</span><span class="en">Number of Guests</span></div>
-        <div class="form-group">
-          <label class="form-label"><span class="id">Estimasi jumlah tamu</span><span class="en">Estimated guests</span></label>
-          <input class="form-input" type="number" id="guestCount" min="0" value="0" oninput="calcTotal()" placeholder="contoh: 200">
-        </div>
-      </div>
-
-      <!-- WO -->
-      <div class="calc-section fade-in">
-        <div class="calc-section-title"><span>1</span><span class="id">Paket WO</span><span class="en">WO Package</span></div>
-        <div class="form-group">
-          <select class="form-select" id="woPackage" onchange="calcTotal();showDetail('woDetail',this)">
-            <option value="0" data-detail="" data-id="-- Tidak pilih --" data-en="-- Not selected --">-- Tidak pilih --</option>
-            <option value="3500000" data-detail="Akad/Pemberkatan • Maks 3 jam • 300 tamu • 4 personil • Konsep, run down, layout venue, 10 buku panduan">Bronze – Rp 3.500.000</option>
-            <option value="5900000" data-detail="Akad & Resepsi • Maks 6 jam • 500 tamu • 7 personil • Semua Bronze + Free sewa & hias 4 kotak hantaran">Silver – Rp 5.900.000</option>
-            <option value="7900000" data-detail="Akad & Resepsi hari berbeda • Maks 12 jam • 1000 tamu • 10 personil • Semua Silver + Free WCC + Free dekorasi mobil">Gold – Rp 7.900.000</option>
-          </select>
-          <div class="pkg-detail-box" id="woDetail"></div>
-        </div>
-      </div>
-
-      <!-- Dekor -->
-      <div class="calc-section fade-in">
-        <div class="calc-section-title"><span>2</span><span class="id">Paket Dekorasi</span><span class="en">Decoration Package</span></div>
-        <div class="form-group">
-          <select class="form-select" id="dekorPackage" onchange="calcTotal();showDetail('dekorDetail',this)">
-            <option value="0" data-detail="" data-id="-- Tidak pilih --" data-en="-- Not selected --">-- Tidak pilih --</option>
-            <option value="1500000" data-detail="Pelaminan maks 3m • Welcome gate • Welcome sign • Free transport 5km">Bronze – Rp 1.500.000</option>
-            <option value="3500000" data-detail="Pelaminan maks 6m • 4 standing flowers • Kursi pengantin & ortu • Meja buku tamu & kotak angpau">Silver – Rp 3.500.000</option>
-            <option value="5500000" data-detail="Pelaminan maks 9m • 6 standing flowers • Panggung 15cm • Pergola/gazebo • Backdrop buku tamu • Fresh garden">Gold – Rp 5.500.000</option>
-            <option value="7500000" data-detail="Pelaminan maks 12m • 8 standing flowers • Backdrop photobooth • Dekorasi mobil pengantin">Platinum – Rp 7.500.000</option>
-          </select>
-          <div class="pkg-detail-box" id="dekorDetail"></div>
-          <div class="form-group" style="margin-top:.75rem;">
-            <label class="form-label"><span class="id">Jarak lokasi dari kota (km)</span><span class="en">Distance from city center (km)</span></label>
-            <input class="form-input" type="number" id="transportKm" min="0" value="0" oninput="calcTotal()" placeholder="0 = gratis (radius 5km)">
-          </div>
-        </div>
-      </div>
-
-      <!-- Buffet -->
-      <div class="calc-section fade-in">
-        <div class="calc-section-title"><span>3</span><span class="id">Paket Buffet Katering</span><span class="en">Catering Buffet Package</span></div>
-        <div class="form-group">
-          <select class="form-select" id="buffetPackage" onchange="calcTotal();showBuffetDetail(this)">
-            <option value="0" data-detail="" data-id="-- Tidak pilih --" data-en="-- Not selected --">-- Tidak pilih --</option>
-            <option value="25000" data-detail="Nasi putih, sambal goreng kentang, capjae/bihun, telur bacem, ayam goreng kremes, teh manis, kerupuk">Tradisional – Rp 25.000/pax</option>
-            <option value="28000" data-detail="Nasi, soup sayur (rolade/sosis/bakso), oseng kombinasi, olahan ayam (fillet/rica/bakar/kremes), bistik galantin/mie oriental, kerupuk, buah iris, es krim/es puter, minuman (teh/sirup/infuse water)">Paket A – Rp 28.000/pax</option>
-            <option value="32000" data-detail="Nasi, soup sayur/jagung, cap cay/acar kuning, mie goreng/oseng soun, olahan ayam (saus mentega/sate/katsu), olahan ikan/daging (gurame/tongseng sapi/asem-asem), kerupuk, buah, es krim, minuman lengkap">Paket B – Rp 32.000/pax</option>
-            <option value="37000" data-detail="Nasi, soup premium (timlo/cream), buncis szechuan/sapo tahu, olahan ayam (telur asin/teriyaki), olahan daging/ikan (gurame pesmol/beef mushroom/sapi lada hitam), telur balado, kerupuk, buah, es krim pudding, es kuwut melon">Paket C – Rp 37.000/pax</option>
-          </select>
-          <div class="pkg-detail-box" id="buffetDetail"></div>
-        </div>
-      </div>
-
-      <!-- Gubug -->
-      <div class="calc-section fade-in">
-        <div class="calc-section-title"><span>4</span><span class="id">Menu Gubug / Stall</span><span class="en">Food Stall Menu</span></div>
-        <p style="font-size:.75rem;color:var(--muted);margin-bottom:1rem;"><span class="id">Min. 100 porsi per stall. Centang menu yang diinginkan:</span><span class="en">Min. 100 portions per stall. Check the menus you want:</span></p>
-        <div id="gubugList"></div>
-      </div>
-
-      <!-- Add-ons -->
-      <div class="calc-section fade-in">
-        <div class="calc-section-title"><span>5</span><span class="id">Layanan Tambahan</span><span class="en">Additional Services</span></div>
-        <div class="addons-grid" id="addonsList"></div>
-      </div>
-
-    </div>
-
-    <!-- Summary -->
-    <div class="calc-summary fade-in">
-      <div class="summary-title"><span class="id">Ringkasan Budget</span><span class="en">Budget Summary</span></div>
-      <div id="summaryRows"></div>
-      <div class="summary-total">
-        <span class="lbl">TOTAL</span>
-        <span class="val" id="summaryTotal">Rp 0</span>
-      </div>
-      <p class="summary-note"><span class="id">* Estimasi, harga final sesuai diskusi</span><span class="en">* Estimate, final price subject to discussion</span></p>
-      <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:4px;padding:1rem;margin-top:1rem;text-align:center;">
-        <p style="font-size:.75rem;color:rgba(255,255,255,.7);margin-bottom:.5rem;">💡 <span class="id">Budget sudah ketemu? Konsultasikan langsung ke tim kami!</span><span class="en">Budget ready? Consult directly with our team!</span></p>
-        <p style="font-size:.68rem;color:rgba(255,255,255,.45);"><span class="id">Respon cepat · Konsultasi gratis · Tanpa tekanan</span><span class="en">Fast response · Free consultation · No pressure</span></p>
-      </div>
-      <button class="btn-wa-calc" onclick="sendCalcToWA()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        <span class="id">Kirim ke WhatsApp</span><span class="en">Send to WhatsApp</span>
-      </button>
-      <button class="btn-reset" onclick="resetCalc()"><span class="id">Reset Kalkulator</span><span class="en">Reset Calculator</span></button>
-    </div>
-  </div>
+<section class="calc-cta" id="calculator" style="padding:4rem 2.5rem;text-align:center;background:linear-gradient(135deg,#1a1410,#2a2018);">
+  <div class="section-label fade-in"><span class="id">Hitung Anggaran</span><span class="en">Budget Calculator</span></div>
+  <h2 class="section-title fade-in" style="margin-bottom:1rem;"><span class="id">Kalkulator Budget <em>Pintar</em></span><span class="en">Smart Budget <em>Calculator</em></span></h2>
+  <p class="fade-in" style="max-width:600px;margin:0 auto 2rem;color:var(--muted);font-size:.9rem;"><span class="id">Hitung estimasi biaya pernikahan impianmu — pilih paket, dekorasi, katering, dan layanan tambahan. Total otomatis terhitung.</span><span class="en">Estimate your dream wedding cost — choose package, decoration, catering, and add-ons. Total calculated automatically.</span></p>
+  <a href="kalkulator/" class="btn-primary fade-in" style="display:inline-flex;align-items:center;gap:.6rem;">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="10" y2="18"/><line x1="14" y1="18" x2="16" y2="18"/></svg>
+    <span class="id">Buka Kalkulator</span><span class="en">Open Calculator</span>
+  </a>
 </section>
 
 
