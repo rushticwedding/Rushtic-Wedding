@@ -536,8 +536,11 @@ async function loadData(manual = false) {
     renderAll();
     if (manual) showToast('✅ Data berhasil dimuat');
   } catch(e) {
-    setSyncStatus('error', 'Gagal terhubung');
-    if (manual) showToast('❌ Gagal memuat data');
+    // Walau gagal terhubung, tetap render tampilan dari data lokal/default
+    if (!appData || !Object.keys(appData).length) appData = defaultData();
+    setSyncStatus('error', 'Offline — data lokal');
+    renderAll();
+    if (manual) showToast('❌ Gagal memuat, tampil data lokal');
   }
   hideOverlay();
 }
@@ -943,6 +946,10 @@ setInterval(() => {
 // ============================================================
 // INIT
 // ============================================================
+// Render tampilan posisi dulu (instan, tidak butuh internet)
+if (!appData || !Object.keys(appData).length) appData = defaultData();
+try { renderAll(); } catch(e) { console.warn('initial render', e); }
+// Lalu ambil data terbaru dari server
 loadData();
 </script>
 </body>
