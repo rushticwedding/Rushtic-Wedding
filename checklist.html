@@ -251,6 +251,8 @@
     cursor: pointer; font-family: 'DM Sans', sans-serif;
   }
 </style>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 </head>
 <body>
 
@@ -479,48 +481,29 @@ function defaultData() {
 }
 
 // ============================================================
-// GITHUB API sebagai database
+// FIREBASE (rushtic-deco) sebagai database — aman tanpa token publik
 // ============================================================
-const GH_TOKEN = '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';
-const GH_REPO = 'rushticwedding/Rushtic-Wedding';
-const GH_FILE = 'data/checklist-data.json';
-const GH_API = `https://api.github.com/repos/${GH_REPO}/contents/${GH_FILE}`;
-let ghFileSha = null;
+const firebaseConfig = {
+  apiKey: "AIzaSyChv_3FtTZySN7gYnmn5P6PvV23hvxD_Jg",
+  authDomain: "rushtic-deco.firebaseapp.com",
+  databaseURL: "https://rushtic-deco-default-rtdb.firebaseio.com",
+  projectId: "rushtic-deco",
+  storageBucket: "rushtic-deco.firebasestorage.app",
+  messagingSenderId: "181425495967",
+  appId: "1:181425495967:web:89dbcec8e29137be5127aa"
+};
+firebase.initializeApp(firebaseConfig);
+const DATA_REF = firebase.database().ref('wo_checklist');
 
 async function readBin() {
-  const res = await fetch(GH_API + '?t=' + Date.now(), {
-    headers: {
-      'Authorization': 'token ' + GH_TOKEN,
-      'Accept': 'application/vnd.github.v3+json'
-    }
-  });
-  if (res.status === 404) return null;
-  const json = await res.json();
-  ghFileSha = json.sha;
-  const decoded = JSON.parse(atob(json.content.replace(/\n/g, '')));
-  return decoded;
+  const snap = await DATA_REF.get();
+  return snap.exists() ? snap.val() : null;
 }
 
 async function writeBin(data) {
   data.updatedAt = new Date().toISOString();
-  const content = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
-  const body = {
-    message: 'update checklist data',
-    content,
-    ...(ghFileSha ? { sha: ghFileSha } : {})
-  };
-  const res = await fetch(GH_API, {
-    method: 'PUT',
-    headers: {
-      'Authorization': 'token ' + GH_TOKEN,
-      'Accept': 'application/vnd.github.v3+json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(body)
-  });
-  const json = await res.json();
-  if (json.content?.sha) ghFileSha = json.content.sha;
-  return res.ok;
+  await DATA_REF.set(data);
+  return true;
 }
 
 // ============================================================
