@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rushtic Wedding Tracker</title>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --rose: #9B6B8E;
+    --rose-dark: #7a5270;
+    --rose-light: #f5eef3;
+    --gold: #C9A96E;
+    --gold-light: #fdf6ec;
+    --green: #4a7c59;
+    --green-light: #eaf3ee;
+    --orange: #e07b39;
+    --orange-light: #fdf0e6;
+    --red: #c0392b;
+    --gray: #6b7280;
+    --gray-light: #f3f4f6;
+    --border: #e5e7eb;
+    --text: #1f2937;
+    --text-muted: #6b7280;
+    --bg: #faf9f8;
+    --white: #ffffff;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  .nav {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--rose);
+  }
+  .nav-brand .flower { font-size: 18px; }
+  .nav-sync {
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .sync-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #d1d5db;
+    transition: background 0.3s;
+  }
+  .sync-dot.live { background: #22c55e; }
+  .sync-dot.saving { background: var(--gold); animation: pulse 0.8s infinite; }
+
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  /* MAIN */
+  .main { max-width: 640px; margin: 0 auto; padding: 16px; }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .stat-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+    text-align: center;
+  }
+  .stat-num {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--rose);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+
+  /* BTN NEW */
+  .btn-new-wrap { margin-bottom: 14px; }
+  .btn-new {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px;
+    background: var(--rose);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+  }
+  .btn-new:hover { background: var(--rose-dark); }
+  .btn-new:active { transform: scale(0.98); }
+
+  /* PROJECT CARD */
+  .proj-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: box-shadow 0.2s;
+  }
+  .proj-card:hover { box-shadow: var(--shadow-md); }
+
+  .proj-header {
+    display: flex;
+    align-items: center;
+    padding: 14px 14px;
+    cursor: pointer;
+    user-select: none;
+    gap: 12px;
+  }
+  .proj-header:active { background: var(--gray-light); }
+
+  .proj-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--rose-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .proj-info { flex: 1; min-width: 0; }
+  .proj-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .proj-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .proj-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+  .prog-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .prog-idle { background: var(--gray-light); color: var(--text-muted); }
+  .prog-going { background: var(--orange-light); color: var(--orange); }
+  .prog-done { background: var(--green-light); color: var(--green); }
+
+  /* PROGRESS BAR */
+  .prog-bar-wrap { height: 3px; background: var(--gray-light); }
+  .prog-bar { height: 100%; background: var(--rose); transition: width 0.4s; }
+
+  /* BODY */
+  .proj-body { border-top: 1px solid var(--border); }
+
+  .section-head {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 10px 14px 5px;
+  }
+
+  .check-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 9px 14px;
+    border-top: 1px solid var(--border);
+    transition: background 0.1s;
+  }
+  .check-row:hover { background: var(--gray-light); }
+
+  .checkbox {
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    border: 2px solid var(--border);
+    background: var(--white);
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+  .checkbox.checked {
+    background: var(--rose);
+    border-color: var(--rose);
+  }
+  .checkbox.checked::after {
+    content: '✓';
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .check-content { flex: 1; min-width: 0; }
+  .check-label {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .check-label.done {
+    color: var(--text-muted);
+    text-decoration: line-through;
+  }
+  .check-who {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+  .check-note-text {
+    font-size: 12px;
+    color: var(--rose);
+    background: var(--rose-light);
+    padding: 4px 8px;
+    border-radius: 6px;
+    margin-top: 4px;
+    display: inline-block;
+  }
+
+  .note-form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 6px;
+  }
+  .note-form input {
+    font-size: 12px;
+    padding: 6px 8px;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    outline: none;
+    color: var(--text);
+    background: var(--bg);
+  }
+  .note-form input:focus { border-color: var(--rose); }
+  .note-form-btns { display: flex; gap: 6px; }
+  .btn-save-note {
+    font-size: 12px;
+    padding: 5px 12px;
+    background: var(--rose);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .btn-cancel-note {
+    font-size: 12px;
+    padding: 5px 12px;
+    background: var(--gray-light);
+    color: var(--text-muted);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .btn-add-note {
+    font-size: 11px;
+    color: var(--rose);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px 0;
+    margin-top: 2px;
+  }
+
+  /* GENERAL NOTES */
+  .general-notes {
+    padding: 10px 14px 14px;
+    border-top: 1px solid var(--border);
+  }
+  .notes-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+  }
+  .notes-textarea {
+    width: 100%;
+    font-size: 13px;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--text);
+    resize: none;
+    min-height: 72px;
+    outline: none;
+    font-family: inherit;
+  }
+  .notes-textarea:focus { border-color: var(--rose); }
+
+  /* ACTIONS BAR */
+  .proj-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    border-top: 1px solid var(--border);
+  }
+  .btn-share {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--rose);
+    background: var(--rose-light);
+    border: none;
+    padding: 6px 12px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  .btn-share:hover { background: #ead5e6; }
+  .btn-del-proj {
+    font-size: 12px;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 7px;
+  }
+  .btn-del-proj:hover { color: var(--red); background: #fef2f2; }
+
+  /* CHEVRON */
+  .chevron {
+    font-size: 16px;
+    color: var(--text-muted);
+    transition: transform 0.2s;
+    display: inline-block;
+  }
+  .chevron.open { transform: rotate(180deg); }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 100;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--white);
+    border-radius: 20px 20px 0 0;
+    padding: 20px 16px 32px;
+    width: 100%;
+    max-width: 640px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(40px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  .modal-handle {
+    width: 36px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 0 auto 16px;
+  }
+  .modal h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+  .form-field { margin-bottom: 12px; }
+  .form-field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+  }
+  .form-field input,
+  .form-field select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--white);
+    outline: none;
+    font-family: inherit;
+  }
+  .form-field input:focus,
+  .form-field select:focus { border-color: var(--rose); }
+
+  .modal-btns { display: flex; gap: 8px; margin-top: 16px; }
+  .btn-modal-cancel {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: white;
+    font-size: 14px;
+    cursor: pointer;
+    color: var(--text-muted);
+  }
+  .btn-modal-ok {
+    flex: 2;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: var(--rose);
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn-modal-ok:hover { background: var(--rose-dark); }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: #1f2937;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 13px;
+    z-index: 999;
+    transition: transform 0.3s;
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* EMPTY */
+  .empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-muted);
+  }
+  .empty-icon { font-size: 40px; margin-bottom: 10px; }
+  .empty p { font-size: 14px; line-height: 1.6; }
+
+  /* LOADING */
+  .loading {
+    text-align: center;
+    padding: 48px 20px;
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">
+    <span class="flower">✿</span>
+    Rushtic Wedding Tracker
+  </div>
+  <div class="nav-sync">
+    <div class="sync-dot" id="syncDot"></div>
+    <span id="syncLabel">Menghubungkan...</span>
+  </div>
+</nav>
+
+<div class="main">
+  <div class="stats-bar" id="statsBar" style="display:none">
+    <div class="stat-card">
+      <div class="stat-num" id="statTotal">0</div>
+      <div class="stat-label">Total Proyek</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="statActive">0</div>
+      <div class="stat-label">Sedang Jalan</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="statDone">0</div>
+      <div class="stat-label">Selesai</div>
+    </div>
+  </div>
+
+  <div class="btn-new-wrap">
+    <button class="btn-new" onclick="openModal()">
+      ＋ Proyek Wedding Baru
+    </button>
+  </div>
+
+  <div id="projectList">
+    <div class="loading">Memuat data...</div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal" onclick="handleOverlayClick(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h3>Proyek Wedding Baru</h3>
+    <div class="form-field">
+      <label>Nama pengantin *</label>
+      <input id="f-name" placeholder="cth: Rossi & Aris" />
+    </div>
+    <div class="form-field">
+      <label>Tanggal wedding *</label>
+      <input id="f-date" type="date" />
+    </div>
+    <div class="form-field">
+      <label>Konsep / tema</label>
+      <input id="f-concept" placeholder="cth: Nasional, Rustic, Modern Jawa" />
+    </div>
+    <div class="form-field">
+      <label>Lokasi / venue</label>
+      <input id="f-venue" placeholder="cth: Balai Desa Banguntapan" />
+    </div>
+    <div class="form-field">
+      <label>Paket layanan</label>
+      <select id="f-package">
+        <option value="WO Komplit">WO Komplit</option>
+        <option value="WO + Dokumentasi">WO + Dokumentasi</option>
+        <option value="Dekorasi Only">Dekorasi Only</option>
+        <option value="Dekorasi + MUA">Dekorasi + MUA</option>
+        <option value="Custom">Custom / Mix</option>
+      </select>
+    </div>
+    <div class="form-field">
+      <label>Nama PIC / yang handle</label>
+      <input id="f-pic" placeholder="cth: Aan, Pak Sugeng, Tim A" />
+    </div>
+    <div class="modal-btns">
+      <button class="btn-modal-cancel" onclick="closeModal()">Batal</button>
+      <button class="btn-modal-ok" onclick="createProject()">Buat Proyek</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyChv_3FtTZySN7gYnmn5P6PvV23hvxD_Jg",
+  authDomain: "rushtic-deco.firebaseapp.com",
+  databaseURL: "https://rushtic-deco-default-rtdb.firebaseio.com",
+  projectId: "rushtic-deco",
+  storageBucket: "rushtic-deco.firebasestorage.app",
+  messagingSenderId: "181425495967",
+  appId: "1:181425495967:web:89dbcec8e29137be5127aa",
+  measurementId: "G-5YQH239V2Q"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const REF = db.ref('wedding_tracker');
+
+/* ── Checklist template ─── */
+const TEMPLATE = [
+  { section: "📋 Dokumen & Admin", items: [
+    "Kontrak & DP sudah ditandatangani",
+    "Buku panduan klien sudah dibuat & dikirim",
+    "Klien sudah urus berkas KUA",
+    "Rundown hari H sudah final & disetujui klien",
+    "Invoice pelunasan sudah dikirim",
+  ]},
+  { section: "👥 Tim & Vendor", items: [
+    "Tim WO sudah rekrut & fix",
+    "Briefing awal tim WO selesai",
+    "Koordinasi vendor dekorasi (Pak Sugeng / partner)",
+    "Konfirmasi MC & entertainment",
+    "Konfirmasi catering",
+    "Konfirmasi dokumentasi (foto & video)",
+    "Konfirmasi rias pengantin",
+  ]},
+  { section: "🛍️ Perlengkapan Tambahan", items: [
+    "Order confetti via Shopee (min H-14)",
+    "Beli buket bunga lempar (H-1, pagi hari)",
+    "Beli bunga tabur (H-1, pagi hari)",
+    "Semua perlengkapan WO sudah dicek lengkap",
+  ]},
+  { section: "🤝 Meeting & Koordinasi", items: [
+    "Teknikal meeting sudah terjadwal (H-7 s/d H-10)",
+    "Teknikal meeting selesai dilaksanakan",
+    "Koordinasi final semua vendor H-3",
+    "Gladi bersih di venue (H-1)",
+    "Briefing final tim WO (H-1)",
+  ]},
+  { section: "💒 Hari H", items: [
+    "Tiba di venue sebelum jadwal",
+    "Semua perlengkapan & additional items siap di lokasi",
+    "Koordinasi on-site dengan semua vendor",
+    "Acara berjalan sesuai rundown",
+    "Selesai & wrap up — semua beres",
+  ]},
+];
+
+function buildItems() {
+  const items = {};
+  TEMPLATE.forEach(sec => {
+    sec.items.forEach(label => {
+      const id = 'i' + Date.now().toString(36) + Math.random().toString(36).slice(2,5);
+      items[id] = { label, section: sec.section, checked: false, note: '', who: '', createdAt: Date.now() };
+    });
+  });
+  return items;
+}
+
+/* ── State ─── */
+let projects = {};
+let openIds = new Set();
+let editingNote = {};
+let noteInputs = {};
+
+/* ── Sync indicator ─── */
+function setSyncState(state) {
+  const dot = document.getElementById('syncDot');
+  const label = document.getElementById('syncLabel');
+  if (state === 'live') {
+    dot.className = 'sync-dot live';
+    label.textContent = 'Live sync';
+  } else if (state === 'saving') {
+    dot.className = 'sync-dot saving';
+    label.textContent = 'Menyimpan...';
+  } else {
+    dot.className = 'sync-dot';
+    label.textContent = 'Offline';
+  }
+}
+
+/* ── Toast ─── */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+/* ── Firebase ─── */
+REF.on('value', snap => {
+  projects = snap.val() || {};
+  setSyncState('live');
+  render();
+}, err => {
+  setSyncState('offline');
+  console.error(err);
+});
+
+function saveProject(id, data) {
+  setSyncState('saving');
+  REF.child(id).set(data).then(() => setSyncState('live'));
+}
+
+/* ── Helpers ─── */
+function uid() {
+  return 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+}
+
+function getProgress(proj) {
+  const items = Object.values(proj.items || {});
+  const total = items.length;
+  const done = items.filter(i => i.checked).length;
+  return { total, done, pct: total ? Math.round(done / total * 100) : 0 };
+}
+
+function pillClass(pct) {
+  if (pct === 100) return 'prog-done';
+  if (pct > 0) return 'prog-going';
+  return 'prog-idle';
+}
+
+function pillText(pct, done, total) {
+  if (pct === 100) return '✓ Selesai';
+  return done + '/' + total;
+}
+
+function formatDate(d) {
+  if (!d) return '';
+  const dt = new Date(d + 'T00:00:00');
+  return dt.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function daysLeft(d) {
+  if (!d) return '';
+  const diff = Math.ceil((new Date(d + 'T00:00:00') - new Date()) / 86400000);
+  if (diff < 0) return '· sudah lewat';
+  if (diff === 0) return '· Hari ini!';
+  return '· H-' + diff;
+}
+
+function groupItems(items) {
+  const map = {};
+  Object.entries(items).forEach(([id, item]) => {
+    if (!map[item.section]) map[item.section] = [];
+    map[item.section].push({ id, ...item });
+  });
+  return map;
+}
+
+/* ── Render ─── */
+function render() {
+  const list = document.getElementById('projectList');
+  const statsBar = document.getElementById('statsBar');
+  const projArr = Object.entries(projects).sort((a,b) => (b[1].createdAt||0) - (a[1].createdAt||0));
+
+  // Stats
+  const total = projArr.length;
+  const done = projArr.filter(([,p]) => getProgress(p).pct === 100).length;
+  const active = total - done;
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statActive').textContent = active;
+  document.getElementById('statDone').textContent = done;
+  statsBar.style.display = total ? 'grid' : 'none';
+
+  if (!total) {
+    list.innerHTML = '<div class="empty"><div class="empty-icon">💍</div><p>Belum ada proyek.<br>Klik tombol di atas untuk mulai.</p></div>';
+    return;
+  }
+
+  list.innerHTML = projArr.map(([id, proj]) => {
+    const p = getProgress(proj);
+    const isOpen = openIds.has(id);
+    const grouped = groupItems(proj.items || {});
+
+    return `
+    <div class="proj-card">
+      <div class="proj-header" onclick="toggleOpen('${id}')">
+        <div class="proj-avatar">💍</div>
+        <div class="proj-info">
+          <div class="proj-name">${esc(proj.name)}</div>
+          <div class="proj-meta">${formatDate(proj.date)} ${daysLeft(proj.date)}${proj.venue ? ' · ' + esc(proj.venue) : ''}</div>
+        </div>
+        <div class="proj-right">
+          <span class="prog-badge ${pillClass(p.pct)}">${pillText(p.pct, p.done, p.total)}</span>
+          <span class="chevron ${isOpen ? 'open' : ''}">▾</span>
+        </div>
+      </div>
+      <div class="prog-bar-wrap"><div class="prog-bar" style="width:${p.pct}%"></div></div>
+
+      ${isOpen ? `
+      <div class="proj-body">
+        ${Object.entries(grouped).map(([sec, items]) => `
+          <div class="section-head">${sec}</div>
+          ${items.map(item => renderItem(id, proj, item)).join('')}
+        `).join('')}
+
+        <div class="general-notes">
+          <div class="notes-label">📝 Catatan Umum Proyek</div>
+          <textarea class="notes-textarea"
+            placeholder="Tulis catatan umum, info penting, atau hal yang perlu diingat..."
+            onblur="saveGeneralNote('${id}', this.value)"
+            onchange="saveGeneralNote('${id}', this.value)"
+          >${esc(proj.note || '')}</textarea>
+        </div>
+
+        <div class="proj-actions">
+          <button class="btn-share" onclick="shareProject('${id}', '${esc(proj.name)}')">
+            🔗 Bagikan ke tim
+          </button>
+          <button class="btn-del-proj" onclick="deleteProject('${id}', '${esc(proj.name)}')">
+            🗑 Hapus
+          </button>
+        </div>
+      </div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function renderItem(projId, proj, item) {
+  const isEditing = editingNote[item.id];
+  const savedInput = noteInputs[item.id] || '';
+
+  return `
+  <div class="check-row">
+    <div class="checkbox ${item.checked ? 'checked' : ''}"
+      onclick="toggleCheck('${projId}','${item.id}')"
+      role="checkbox" aria-checked="${item.checked}"
+      aria-label="${esc(item.label)}">
+    </div>
+    <div class="check-content">
+      <div class="check-label ${item.checked ? 'done' : ''}">${esc(item.label)}</div>
+      ${item.who ? `<div class="check-who">👤 ${esc(item.who)}</div>` : ''}
+      ${item.note && !isEditing ? `<div class="check-note-text">💬 ${esc(item.note)}</div>` : ''}
+      ${isEditing ? `
+        <div class="note-form">
+          <input id="ni-${item.id}" value="${esc(savedInput || item.note)}"
+            placeholder="Catatan atau siapa yang handle..."
+            onkeydown="if(event.key==='Enter') confirmNote('${projId}','${item.id}')" />
+          <div class="note-form-btns">
+            <button class="btn-save-note" onclick="confirmNote('${projId}','${item.id}')">Simpan</button>
+            <button class="btn-cancel-note" onclick="cancelNote('${item.id}')">Batal</button>
+          </div>
+        </div>` : `
+        <button class="btn-add-note" onclick="startNote('${projId}','${item.id}','${esc(item.note)}')">
+          ${item.note ? '✏️ Edit catatan' : '+ Catatan / PIC'}
+        </button>`}
+    </div>
+  </div>`;
+}
+
+function esc(str) {
+  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+/* ── Actions ─── */
+function toggleOpen(id) {
+  if (openIds.has(id)) openIds.delete(id);
+  else openIds.add(id);
+  render();
+}
+
+function toggleCheck(projId, itemId) {
+  const proj = { ...projects[projId] };
+  proj.items = { ...proj.items };
+  proj.items[itemId] = { ...proj.items[itemId], checked: !proj.items[itemId].checked };
+  projects[projId] = proj;
+  render();
+  saveProject(projId, proj);
+}
+
+function startNote(projId, itemId, current) {
+  editingNote[itemId] = true;
+  noteInputs[itemId] = current;
+  render();
+  setTimeout(() => {
+    const el = document.getElementById('ni-' + itemId);
+    if (el) { el.focus(); el.select(); }
+  }, 50);
+}
+
+function confirmNote(projId, itemId) {
+  const el = document.getElementById('ni-' + itemId);
+  const val = el ? el.value.trim() : '';
+  const proj = { ...projects[projId] };
+  proj.items = { ...proj.items };
+  proj.items[itemId] = { ...proj.items[itemId], note: val };
+  projects[projId] = proj;
+  delete editingNote[itemId];
+  delete noteInputs[itemId];
+  render();
+  saveProject(projId, proj);
+  showToast('Catatan disimpan ✓');
+}
+
+function cancelNote(itemId) {
+  delete editingNote[itemId];
+  delete noteInputs[itemId];
+  render();
+}
+
+function saveGeneralNote(projId, val) {
+  const proj = { ...projects[projId], note: val };
+  projects[projId] = proj;
+  saveProject(projId, proj);
+}
+
+function shareProject(id, name) {
+  const url = window.location.href;
+  if (navigator.share) {
+    navigator.share({ title: 'Rushtic · ' + name, url });
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => showToast('Link disalin! Bagikan ke tim ✓'));
+  } else {
+    prompt('Salin link ini:', url);
+  }
+}
+
+function deleteProject(id, name) {
+  if (!confirm('Hapus proyek "' + name + '"?\n\nData tidak bisa dikembalikan.')) return;
+  REF.child(id).remove();
+  openIds.delete(id);
+  showToast('Proyek dihapus');
+}
+
+/* ── Modal ─── */
+function openModal() {
+  document.getElementById('modal').classList.add('open');
+  setTimeout(() => document.getElementById('f-name').focus(), 200);
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('modal')) closeModal();
+}
+
+function createProject() {
+  const name = document.getElementById('f-name').value.trim();
+  if (!name) { showToast('Nama pengantin wajib diisi'); return; }
+
+  const id = uid();
+  const proj = {
+    id,
+    name,
+    date: document.getElementById('f-date').value || '',
+    concept: document.getElementById('f-concept').value.trim(),
+    venue: document.getElementById('f-venue').value.trim(),
+    package: document.getElementById('f-package').value,
+    pic: document.getElementById('f-pic').value.trim(),
+    note: '',
+    items: buildItems(),
+    createdAt: Date.now(),
+  };
+
+  openIds.add(id);
+  projects[id] = proj;
+  render();
+  saveProject(id, proj);
+  closeModal();
+  showToast('Proyek "' + name + '" dibuat ✓');
+
+  // Reset form
+  ['f-name','f-date','f-concept','f-venue','f-pic'].forEach(f => {
+    document.getElementById(f).value = '';
+  });
+}
+
+/* ── Keyboard ─── */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+</script>
+</body>
+</html>
