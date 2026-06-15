@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generator Link Undangan — Rushtic WO</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{
+      min-height:100vh;background:#f8f4ef;
+      font-family:'Georgia',serif;color:#4a3728;
+      display:flex;flex-direction:column;align-items:center;
+      padding:2rem 1.2rem;
+    }
+    header{text-align:center;margin-bottom:2rem}
+    .brand{font-size:.7rem;letter-spacing:.25em;color:#b8956a;text-transform:uppercase;margin-bottom:.5rem}
+    h1{font-size:1.6rem;color:#5c3d2e;letter-spacing:.05em;margin-bottom:.3rem}
+    .sub{font-size:.82rem;color:#9a7d65;line-height:1.6}
+    .card{
+      background:#fff;border-radius:16px;padding:1.8rem;width:100%;max-width:460px;
+      box-shadow:0 4px 24px rgba(90,60,30,.08);border:1px solid #ecdcc8;
+    }
+    label{display:block;font-size:.72rem;letter-spacing:.12em;color:#b8956a;
+          text-transform:uppercase;margin-bottom:.5rem}
+    input[type=text]{
+      width:100%;padding:.85rem 1rem;border:1.5px solid #ddd0bc;border-radius:10px;
+      font-family:'Georgia',serif;font-size:.95rem;color:#4a3728;background:#fdf9f5;
+      outline:none;transition:border .2s;
+    }
+    input[type=text]:focus{border-color:#c9a96e}
+    input[type=text]::placeholder{color:#c5b09a}
+    .hint{font-size:.75rem;color:#b0967e;margin-top:.4rem}
+    .divider{border:none;border-top:1px solid #ecdcc8;margin:1.4rem 0}
+    .result-box{
+      background:#fdf9f5;border:1.5px solid #ddd0bc;border-radius:10px;
+      padding:.85rem 1rem;font-size:.82rem;color:#6b4c35;word-break:break-all;
+      line-height:1.6;min-height:3rem;
+    }
+    .result-box.empty{color:#c5b09a;font-style:italic}
+    .btn-row{display:flex;gap:.7rem;margin-top:.9rem;flex-wrap:wrap}
+    button{
+      flex:1;min-width:120px;padding:.75rem .5rem;border:none;border-radius:10px;
+      font-family:'Georgia',serif;font-size:.82rem;letter-spacing:.06em;
+      cursor:pointer;transition:all .2s;display:flex;align-items:center;
+      justify-content:center;gap:.4rem;
+    }
+    .btn-copy{background:#5c3d2e;color:#f8f0e3}
+    .btn-copy:hover{background:#7a5238}
+    .btn-copy.copied{background:#4a7c59;color:#fff}
+    .btn-wa{background:#25d366;color:#fff}
+    .btn-wa:hover{background:#1da851}
+    .btn-wa:disabled{background:#b8c9b5;cursor:not-allowed}
+    .list-section{width:100%;max-width:460px;margin-top:1.6rem}
+    .list-section h2{font-size:.8rem;letter-spacing:.15em;color:#b8956a;
+                     text-transform:uppercase;margin-bottom:.8rem}
+    .tamu-list{display:flex;flex-direction:column;gap:.5rem}
+    .tamu-item{
+      background:#fff;border:1px solid #ecdcc8;border-radius:10px;
+      padding:.75rem 1rem;display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;
+    }
+    .tamu-nama{flex:1;font-size:.88rem;color:#4a3728;min-width:100px}
+    .tamu-actions{display:flex;gap:.5rem}
+    .btn-sm{
+      padding:.4rem .75rem;border:none;border-radius:7px;font-size:.72rem;
+      cursor:pointer;font-family:'Georgia',serif;transition:all .2s;
+    }
+    .btn-sm-copy{background:#f0e8de;color:#5c3d2e}
+    .btn-sm-copy:hover{background:#e0d0be}
+    .btn-sm-wa{background:#e8f7ee;color:#1da851}
+    .btn-sm-wa:hover{background:#d0eedc}
+    .btn-sm-del{background:#fdecea;color:#c0392b}
+    .btn-sm-del:hover{background:#fad9d5}
+    .add-btn{
+      width:100%;padding:.7rem;border:1.5px dashed #ddd0bc;border-radius:10px;
+      background:transparent;color:#b8956a;font-family:'Georgia',serif;
+      font-size:.82rem;cursor:pointer;margin-top:.5rem;transition:all .2s;
+    }
+    .add-btn:hover{background:#fdf9f5;border-color:#c9a96e;color:#8a6040}
+    .empty-list{text-align:center;color:#c5b09a;font-size:.8rem;
+                padding:1.2rem;font-style:italic}
+    .toast{
+      position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+      background:#4a7c59;color:#fff;padding:.6rem 1.4rem;border-radius:50px;
+      font-size:.8rem;opacity:0;transition:opacity .3s;pointer-events:none;
+      letter-spacing:.05em;z-index:999;white-space:nowrap;
+    }
+    .toast.show{opacity:1}
+    footer{margin-top:2rem;font-size:.72rem;color:#c5b09a;text-align:center}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="brand">Rushtic Wedding & Decoration</div>
+  <h1>Generator Link Undangan</h1>
+  <p class="sub">Buat link personal untuk tiap tamu<br>agar nama mereka muncul di undangan</p>
+</header>
+
+<div class="card">
+  <label for="namaInput">Nama Tamu</label>
+  <input type="text" id="namaInput" placeholder="cth: Bapak Budi &amp; Keluarga"
+         oninput="updateLink()" onkeydown="handleEnter(event)">
+  <p class="hint">Tekan Enter untuk tambah ke daftar</p>
+
+  <hr class="divider">
+
+  <label>Link Undangan Personal</label>
+  <div class="result-box empty" id="linkBox">
+    Ketik nama tamu di atas…
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-copy" id="btnCopy" onclick="copyLink()" disabled>
+      📋 Salin Link
+    </button>
+    <button class="btn-wa" id="btnWa" onclick="sendWA()" disabled>
+      💬 Kirim WA
+    </button>
+  </div>
+</div>
+
+<!-- Daftar Tamu -->
+<div class="list-section">
+  <h2>Daftar Tamu</h2>
+  <div class="tamu-list" id="tamuList">
+    <div class="empty-list" id="emptyMsg">Belum ada tamu ditambahkan</div>
+  </div>
+  <button class="add-btn" onclick="addTamu()">+ Tambah ke Daftar</button>
+</div>
+
+<footer>rushticwojogja.com &nbsp;·&nbsp; Rushtic WO Jogja</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+  const BASE = 'https://rushticwojogja.com/undangan/rosi-aris/';
+  var tamuList = JSON.parse(localStorage.getItem('rushtic_tamu_list') || '[]');
+
+  function getLink(nama) {
+    if(!nama.trim()) return '';
+    return BASE + '?to=' + encodeURIComponent(nama.trim());
+  }
+
+  function updateLink() {
+    var nama = document.getElementById('namaInput').value;
+    var box = document.getElementById('linkBox');
+    var cp = document.getElementById('btnCopy');
+    var wa = document.getElementById('btnWa');
+    var link = getLink(nama);
+    if(link) {
+      box.textContent = link;
+      box.classList.remove('empty');
+      cp.disabled = false;
+      wa.disabled = false;
+    } else {
+      box.textContent = 'Ketik nama tamu di atas…';
+      box.classList.add('empty');
+      cp.disabled = true;
+      wa.disabled = true;
+    }
+  }
+
+  function handleEnter(e) {
+    if(e.key === 'Enter') addTamu();
+  }
+
+  function copyLink() {
+    var link = document.getElementById('linkBox').textContent;
+    navigator.clipboard.writeText(link).then(function(){
+      var btn = document.getElementById('btnCopy');
+      btn.textContent = '✓ Tersalin!';
+      btn.classList.add('copied');
+      showToast('Link disalin!');
+      setTimeout(function(){ btn.textContent = '📋 Salin Link'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  function sendWA() {
+    var nama = document.getElementById('namaInput').value.trim();
+    var link = getLink(nama);
+    var msg = 'Kepada Yth.\n' + nama + '\n\nDengan hormat, kami mengundang Bapak/Ibu/Sdr/i untuk hadir dalam acara pernikahan kami:\n\n✨ Aris & Rosi ✨\nSabtu, 18 Juli 2026\n\nBuka undangan di sini:\n' + link;
+    window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+  }
+
+  function addTamu() {
+    var nama = document.getElementById('namaInput').value.trim();
+    if(!nama) return;
+    if(tamuList.find(function(t){ return t === nama; })) {
+      showToast('Nama sudah ada di daftar');
+      return;
+    }
+    tamuList.push(nama);
+    saveTamu();
+    renderTamu();
+    document.getElementById('namaInput').value = '';
+    updateLink();
+    showToast('✓ ' + nama + ' ditambahkan');
+  }
+
+  function deleteTamu(idx) {
+    tamuList.splice(idx, 1);
+    saveTamu();
+    renderTamu();
+  }
+
+  function copyTamuLink(nama) {
+    navigator.clipboard.writeText(getLink(nama)).then(function(){
+      showToast('Link ' + nama + ' disalin!');
+    });
+  }
+
+  function waTamu(nama) {
+    var link = getLink(nama);
+    var msg = 'Kepada Yth.\n' + nama + '\n\nDengan hormat, kami mengundang Bapak/Ibu/Sdr/i untuk hadir dalam acara pernikahan kami:\n\n✨ Aris & Rosi ✨\nSabtu, 18 Juli 2026\n\nBuka undangan di sini:\n' + link;
+    window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+  }
+
+  function saveTamu() {
+    localStorage.setItem('rushtic_tamu_list', JSON.stringify(tamuList));
+  }
+
+  function renderTamu() {
+    var list = document.getElementById('tamuList');
+    var empty = document.getElementById('emptyMsg');
+    if(tamuList.length === 0) {
+      list.innerHTML = '<div class="empty-list" id="emptyMsg">Belum ada tamu ditambahkan</div>';
+      return;
+    }
+    list.innerHTML = tamuList.map(function(nama, i) {
+      return '<div class="tamu-item">'
+        + '<span class="tamu-nama">' + escHtml(nama) + '</span>'
+        + '<div class="tamu-actions">'
+        + '<button class="btn-sm btn-sm-copy" onclick="copyTamuLink(\'' + escJs(nama) + '\')">📋 Salin</button>'
+        + '<button class="btn-sm btn-sm-wa" onclick="waTamu(\'' + escJs(nama) + '\')">💬 WA</button>'
+        + '<button class="btn-sm btn-sm-del" onclick="deleteTamu(' + i + ')">✕</button>'
+        + '</div></div>';
+    }).join('');
+  }
+
+  function escHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function escJs(s){ return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
+
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(function(){ t.classList.remove('show'); }, 2200);
+  }
+
+  // Init
+  renderTamu();
+</script>
+</body>
+</html>
