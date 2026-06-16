@@ -239,25 +239,48 @@ body{font-family:Arial,sans-serif;color:var(--brown);min-height:100vh;
   margin-top:10px;transition:border-color .15s}
 .btn-cancel:hover{border-color:var(--rose);color:var(--rose)}
 
-/* INSTANT PAY */
-.instant-pay-box{
-  background:linear-gradient(135deg,#fff8f0,#fff0e8);
-  border:1.5px solid var(--rose-lt);border-radius:12px;
-  padding:20px;text-align:center;
+/* PAY CARD */
+.pay-card{
+  background:var(--gray-lt);border:1.5px solid var(--rose-lt);
+  border-radius:14px;padding:18px;
 }
-.instant-icon{font-size:28px;margin-bottom:6px}
-.instant-title{font-size:17px;font-weight:bold;color:var(--brown);margin-bottom:6px}
-.instant-desc{font-size:13px;color:var(--gray);line-height:1.6;margin-bottom:16px}
-.btn-instant{
-  display:inline-block;
-  background:var(--rose);color:#fff;text-decoration:none;
-  padding:13px 32px;border-radius:10px;
-  font-size:15px;font-weight:bold;
-  transition:background .15s;margin-bottom:14px;
+.pay-card.instant{background:linear-gradient(135deg,#fff8f0,#fff0e8)}
+.pay-card-top{margin-bottom:10px}
+.pay-card-label{font-size:13px;font-weight:bold;color:var(--brown);margin-bottom:2px}
+.pay-card-name{font-size:12px;color:var(--gray)}
+.pay-card-num{
+  font-size:26px;font-weight:bold;color:var(--brown);
+  letter-spacing:3px;margin-bottom:14px;
+  background:var(--white);border-radius:8px;
+  padding:10px 14px;text-align:center;
+  border:1px solid var(--rose-lt);
 }
-.btn-instant:hover{background:var(--rose-dk)}
-.instant-fallback{font-size:11px;color:var(--gray);line-height:1.6;border-top:1px solid var(--rose-lt);padding-top:12px;margin-top:4px}
-.instant-fallback b{color:var(--brown)}
+.btn-cp-big{
+  width:100%;background:var(--rose);color:#fff;border:none;
+  border-radius:10px;padding:14px;
+  font-size:15px;font-weight:bold;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:background .15s;margin-bottom:0;
+}
+.btn-cp-big:hover{background:var(--rose-dk)}
+.btn-cp-big.ok{background:#4a8a4a}
+.cp-icon{font-size:18px}
+.btn-instant-full{
+  display:flex;align-items:center;justify-content:center;
+  width:100%;background:var(--brown);color:#fff;
+  text-decoration:none;border-radius:10px;padding:13px;
+  font-size:14px;font-weight:bold;margin-top:8px;
+  transition:background .15s;
+}
+.btn-instant-full:hover{background:#1a0e08}
+.pay-steps{
+  background:var(--white);border-radius:10px;
+  padding:14px;margin-top:12px;
+  border-left:3px solid var(--gold);
+}
+.pay-step-title{font-size:13px;font-weight:bold;color:var(--brown);margin-bottom:8px}
+.pay-step{font-size:13px;color:var(--brown);line-height:1.6;padding:3px 0}
+.pay-step b{color:var(--rose)}
 
 /* TOAST */
 .toast{position:fixed;bottom:80px;left:50%;
@@ -393,62 +416,161 @@ body{font-family:Arial,sans-serif;color:var(--brown);min-height:100vh;
       <div class="order-summary" id="order-summary"></div>
 
       <div class="pay-sec-lbl">Pilih Metode Pembayaran</div>
+
+      <!-- BANK TABS -->
       <div class="bank-tabs">
         <button class="btab active" onclick="pickBank('bca',this)">BCA</button>
         <button class="btab" onclick="pickBank('bni',this)">BNI</button>
         <button class="btab" onclick="pickBank('bri',this)">BRI</button>
         <button class="btab" onclick="pickBank('sea',this)">Seabank</button>
-        <button class="btab" onclick="pickBank('spay',this)">ShopeePay ⚡</button>
-        <button class="btab" onclick="pickBank('gpay',this)">GoPay ⚡</button>
+        <button class="btab" onclick="pickBank('spay',this)">ShopeePay</button>
+        <button class="btab" onclick="pickBank('gpay',this)">GoPay</button>
       </div>
 
-      <div class="binfo active" id="bi-bca"><div class="rek-box">
-        <div class="rek-bank">BCA · Transfer ke rekening</div>
-        <div class="rek-num"><span>4451512611</span><button class="btn-copy" onclick="cp('4451512611',this)">Salin</button></div>
-        <div class="rek-an">a.n. Aan Fajar Lestari</div>
-      </div></div>
-      <div class="binfo" id="bi-bni"><div class="rek-box">
-        <div class="rek-bank">BNI · Transfer ke rekening</div>
-        <div class="rek-num"><span>0903321338</span><button class="btn-copy" onclick="cp('0903321338',this)">Salin</button></div>
-        <div class="rek-an">a.n. Aan Fajar Lestari</div>
-      </div></div>
-      <div class="binfo" id="bi-bri"><div class="rek-box">
-        <div class="rek-bank">BRI · Transfer ke rekening</div>
-        <div class="rek-num"><span>700101013421537</span><button class="btn-copy" onclick="cp('700101013421537',this)">Salin</button></div>
-        <div class="rek-an">a.n. Aan Fajar Lestari</div>
-      </div></div>
-      <div class="binfo" id="bi-sea"><div class="rek-box">
-        <div class="rek-bank">Seabank · Transfer ke rekening</div>
-        <div class="rek-num"><span>901982885443</span><button class="btn-copy" onclick="cp('901982885443',this)">Salin</button></div>
-        <div class="rek-an">a.n. Aan Fajar Lestari</div>
-      </div></div>
+      <!-- BCA -->
+      <div class="binfo active" id="bi-bca">
+        <div class="pay-card">
+          <div class="pay-card-top">
+            <div class="pay-card-label">Nomor Rekening BCA</div>
+            <div class="pay-card-name">a.n. Aan Fajar Lestari</div>
+          </div>
+          <div class="pay-card-num" id="num-bca">4451512611</div>
+          <button class="btn-cp-big" onclick="cpAll('bca')">
+            <span class="cp-icon">📋</span>
+            <span class="cp-text" id="cptxt-bca">Salin Nomor Rekening</span>
+          </button>
+          <div class="pay-steps" id="steps-bca" style="display:none">
+            <div class="pay-step-title">✅ Disalin! Langkah selanjutnya:</div>
+            <div class="pay-step">1️⃣ &nbsp;Buka app <b>BCA Mobile / myBCA / m-BCA</b></div>
+            <div class="pay-step">2️⃣ &nbsp;Pilih <b>Transfer</b> → ke sesama BCA atau antar bank</div>
+            <div class="pay-step">3️⃣ &nbsp;Paste nomor rekening yang sudah disalin</div>
+            <div class="pay-step">4️⃣ &nbsp;Masukkan nominal <b id="amt-bca"></b></div>
+            <div class="pay-step">5️⃣ &nbsp;Konfirmasi via WhatsApp di bawah 👇</div>
+          </div>
+        </div>
+      </div>
 
+      <!-- BNI -->
+      <div class="binfo" id="bi-bni">
+        <div class="pay-card">
+          <div class="pay-card-top">
+            <div class="pay-card-label">Nomor Rekening BNI</div>
+            <div class="pay-card-name">a.n. Aan Fajar Lestari</div>
+          </div>
+          <div class="pay-card-num" id="num-bni">0903321338</div>
+          <button class="btn-cp-big" onclick="cpAll('bni')">
+            <span class="cp-icon">📋</span>
+            <span class="cp-text" id="cptxt-bni">Salin Nomor Rekening</span>
+          </button>
+          <div class="pay-steps" id="steps-bni" style="display:none">
+            <div class="pay-step-title">✅ Disalin! Langkah selanjutnya:</div>
+            <div class="pay-step">1️⃣ &nbsp;Buka app <b>BNI Mobile Banking</b></div>
+            <div class="pay-step">2️⃣ &nbsp;Pilih <b>Transfer</b> → ke sesama BNI atau antar bank</div>
+            <div class="pay-step">3️⃣ &nbsp;Paste nomor rekening yang sudah disalin</div>
+            <div class="pay-step">4️⃣ &nbsp;Masukkan nominal <b id="amt-bni"></b></div>
+            <div class="pay-step">5️⃣ &nbsp;Konfirmasi via WhatsApp di bawah 👇</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BRI -->
+      <div class="binfo" id="bi-bri">
+        <div class="pay-card">
+          <div class="pay-card-top">
+            <div class="pay-card-label">Nomor Rekening BRI</div>
+            <div class="pay-card-name">a.n. Aan Fajar Lestari</div>
+          </div>
+          <div class="pay-card-num" id="num-bri">700101013421537</div>
+          <button class="btn-cp-big" onclick="cpAll('bri')">
+            <span class="cp-icon">📋</span>
+            <span class="cp-text" id="cptxt-bri">Salin Nomor Rekening</span>
+          </button>
+          <div class="pay-steps" id="steps-bri" style="display:none">
+            <div class="pay-step-title">✅ Disalin! Langkah selanjutnya:</div>
+            <div class="pay-step">1️⃣ &nbsp;Buka app <b>BRImo</b></div>
+            <div class="pay-step">2️⃣ &nbsp;Pilih <b>Transfer</b> → ke sesama BRI atau antar bank</div>
+            <div class="pay-step">3️⃣ &nbsp;Paste nomor rekening yang sudah disalin</div>
+            <div class="pay-step">4️⃣ &nbsp;Masukkan nominal <b id="amt-bri"></b></div>
+            <div class="pay-step">5️⃣ &nbsp;Konfirmasi via WhatsApp di bawah 👇</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEABANK -->
+      <div class="binfo" id="bi-sea">
+        <div class="pay-card">
+          <div class="pay-card-top">
+            <div class="pay-card-label">Nomor Rekening Seabank</div>
+            <div class="pay-card-name">a.n. Aan Fajar Lestari</div>
+          </div>
+          <div class="pay-card-num" id="num-sea">901982885443</div>
+          <button class="btn-cp-big" onclick="cpAll('sea')">
+            <span class="cp-icon">📋</span>
+            <span class="cp-text" id="cptxt-sea">Salin Nomor Rekening</span>
+          </button>
+          <div class="pay-steps" id="steps-sea" style="display:none">
+            <div class="pay-step-title">✅ Disalin! Langkah selanjutnya:</div>
+            <div class="pay-step">1️⃣ &nbsp;Buka app <b>Seabank</b></div>
+            <div class="pay-step">2️⃣ &nbsp;Pilih <b>Transfer</b> → ke sesama Seabank atau antar bank</div>
+            <div class="pay-step">3️⃣ &nbsp;Paste nomor rekening yang sudah disalin</div>
+            <div class="pay-step">4️⃣ &nbsp;Masukkan nominal <b id="amt-sea"></b></div>
+            <div class="pay-step">5️⃣ &nbsp;Konfirmasi via WhatsApp di bawah 👇</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SHOPEEPAY -->
       <div class="binfo" id="bi-spay">
-        <div class="instant-pay-box">
-          <div class="instant-icon">⚡</div>
-          <div class="instant-title">ShopeePay</div>
-          <div class="instant-desc">Klik tombol di bawah — app Shopee langsung terbuka & nominal sudah terisi otomatis</div>
-          <a class="btn-instant" id="btn-spay" href="#" target="_blank">
-            🛍️ &nbsp;Buka ShopeePay
+        <div class="pay-card instant">
+          <div class="pay-card-top">
+            <div class="pay-card-label">🛍️ ShopeePay</div>
+            <div class="pay-card-name">a.n. Aan Fajar Lestari</div>
+          </div>
+          <div class="pay-card-num" id="num-spay">089608068804</div>
+          <button class="btn-cp-big" onclick="cpAll('spay')">
+            <span class="cp-icon">📋</span>
+            <span class="cp-text" id="cptxt-spay">Salin Nomor HP</span>
+          </button>
+          <a class="btn-instant-full" id="btn-spay" href="#">
+            ⚡ Buka App ShopeePay Langsung
           </a>
-          <div class="instant-fallback">Tidak punya Shopee? Transfer manual ke <b>089608068804</b> a.n. Aan Fajar Lestari</div>
+          <div class="pay-steps" id="steps-spay" style="display:none">
+            <div class="pay-step-title">✅ Disalin! Langkah selanjutnya:</div>
+            <div class="pay-step">1️⃣ &nbsp;Buka app <b>Shopee</b> → ShopeePay → Kirim</div>
+            <div class="pay-step">2️⃣ &nbsp;Paste nomor HP yang sudah disalin</div>
+            <div class="pay-step">3️⃣ &nbsp;Masukkan nominal <b id="amt-spay"></b></div>
+            <div class="pay-step">4️⃣ &nbsp;Konfirmasi via WhatsApp di bawah 👇</div>
+          </div>
         </div>
       </div>
 
+      <!-- GOPAY -->
       <div class="binfo" id="bi-gpay">
-        <div class="instant-pay-box">
-          <div class="instant-icon">⚡</div>
-          <div class="instant-title">GoPay</div>
-          <div class="instant-desc">Klik tombol di bawah — app Gojek langsung terbuka & nominal sudah terisi otomatis</div>
-          <a class="btn-instant" id="btn-gpay" href="#" target="_blank">
-            🟢 &nbsp;Buka GoPay
+        <div class="pay-card instant">
+          <div class="pay-card-top">
+            <div class="pay-card-label">🟢 GoPay</div>
+            <div class="pay-card-name">a.n. Aan Fajar Lestari</div>
+          </div>
+          <div class="pay-card-num" id="num-gpay">089608068804</div>
+          <button class="btn-cp-big" onclick="cpAll('gpay')">
+            <span class="cp-icon">📋</span>
+            <span class="cp-text" id="cptxt-gpay">Salin Nomor HP</span>
+          </button>
+          <a class="btn-instant-full" id="btn-gpay" href="#">
+            ⚡ Buka App GoPay Langsung
           </a>
-          <div class="instant-fallback">Tidak punya Gojek? Transfer manual ke <b>089608068804</b> a.n. Aan Fajar Lestari</div>
+          <div class="pay-steps" id="steps-gpay" style="display:none">
+            <div class="pay-step-title">✅ Disalin! Langkah selanjutnya:</div>
+            <div class="pay-step">1️⃣ &nbsp;Buka app <b>Gojek</b> → GoPay → Kirim GoPay</div>
+            <div class="pay-step">2️⃣ &nbsp;Paste nomor HP yang sudah disalin</div>
+            <div class="pay-step">3️⃣ &nbsp;Masukkan nominal <b id="amt-gpay"></b></div>
+            <div class="pay-step">4️⃣ &nbsp;Konfirmasi via WhatsApp di bawah 👇</div>
+          </div>
         </div>
       </div>
 
-      <p class="pay-note">Setelah transfer, konfirmasi via WhatsApp di bawah.<br>Link produk dikirim dalam <b>maks. 1×24 jam</b> 🙏</p>
       <a class="btn-wa" id="btn-wa" href="#" target="_blank">💬 &nbsp;Konfirmasi Pembayaran via WhatsApp</a>
+      <p class="pay-note">Link produk dikirim dalam <b>maks. 1×24 jam</b> setelah konfirmasi 🙏</p>
       <button class="btn-cancel" onclick="closeSheet()">Batal</button>
     </div>
 
@@ -578,12 +700,30 @@ function overlayClick(e){
   if(e.target === document.getElementById('overlay')) closeSheet();
 }
 
+var BANKS = {
+  bca:  { num:'4451512611',    label:'BCA' },
+  bni:  { num:'0903321338',    label:'BNI' },
+  bri:  { num:'700101013421537', label:'BRI' },
+  sea:  { num:'901982885443',  label:'Seabank' },
+  spay: { num:'089608068804',  label:'ShopeePay' },
+  gpay: { num:'089608068804',  label:'GoPay' }
+};
+
 function pickBank(bank, btn){
   currentBank = bank;
   document.querySelectorAll('.btab').forEach(function(t){ t.classList.remove('active'); });
   btn.classList.add('active');
   document.querySelectorAll('.binfo').forEach(function(b){ b.classList.remove('active'); });
   document.getElementById('bi-'+bank).classList.add('active');
+  // Hide all steps
+  ['bca','bni','bri','sea','spay','gpay'].forEach(function(b){
+    var s = document.getElementById('steps-'+b);
+    if(s) s.style.display='none';
+    var bt = document.getElementById('cptxt-'+b);
+    if(bt){ bt.textContent = (b==='spay'||b==='gpay') ? 'Salin Nomor HP' : 'Salin Nomor Rekening'; }
+    var cpbtn = document.querySelector('#bi-'+b+' .btn-cp-big');
+    if(cpbtn) cpbtn.classList.remove('ok');
+  });
   var ids = Object.keys(cart);
   var total = ids.reduce(function(s,id){ return s+PRODS[id].priceNum; },0);
   updateInstantLinks(total);
@@ -591,23 +731,45 @@ function pickBank(bank, btn){
 }
 
 function updateInstantLinks(total){
-  // ShopeePay deep link — buka app Shopee ke halaman kirim uang
-  var spayLink = 'shopeepay://transfer?phone=089608068804&amount=' + total + '&note=Rushtic+Digital+Store';
-  // Fallback ke web jika app tidak ada
-  var spayWeb = 'https://shopee.co.id/';
+  var spayLink = 'shopeepay://transfer?phone=089608068804&amount='+total+'&note=Rushtic+Digital+Store';
   document.getElementById('btn-spay').href = spayLink;
-  document.getElementById('btn-spay').onclick = function(e){
-    // Try deep link, fallback to web after 1.5s if app not installed
-    setTimeout(function(){ window.open(spayWeb,'_blank'); }, 1500);
+  document.getElementById('btn-spay').onclick = function(){
+    setTimeout(function(){ window.location.href='https://shopee.co.id/'; }, 1800);
   };
-
-  // GoPay deep link — buka app Gojek ke halaman kirim GoPay
-  var gpayLink = 'gojek://gopay/transfer?phone=089608068804&amount=' + total + '&notes=Rushtic+Digital+Store';
-  var gpayWeb = 'https://gojek.com/';
+  var gpayLink = 'gojek://gopay/transfer?phone=089608068804&amount='+total+'&notes=Rushtic+Digital+Store';
   document.getElementById('btn-gpay').href = gpayLink;
-  document.getElementById('btn-gpay').onclick = function(e){
-    setTimeout(function(){ window.open(gpayWeb,'_blank'); }, 1500);
+  document.getElementById('btn-gpay').onclick = function(){
+    setTimeout(function(){ window.location.href='https://gojek.com/'; }, 1800);
   };
+  // Fill nominal labels
+  var fmt = formatRp(total);
+  ['bca','bni','bri','sea','spay','gpay'].forEach(function(b){
+    var el = document.getElementById('amt-'+b);
+    if(el) el.textContent = fmt;
+  });
+}
+
+function cpAll(bank){
+  var num = BANKS[bank].num;
+  var txt = document.getElementById('cptxt-'+bank);
+  var btn = document.querySelector('#bi-'+bank+' .btn-cp-big');
+  var ok = function(){
+    txt.textContent = '✓ Tersalin!';
+    btn.classList.add('ok');
+    // Show steps
+    var steps = document.getElementById('steps-'+bank);
+    if(steps){ steps.style.display='block'; steps.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+    showToast('Nomor disalin — ikuti langkah di bawah 👇');
+    setTimeout(function(){
+      txt.textContent = (bank==='spay'||bank==='gpay') ? 'Salin Nomor HP' : 'Salin Nomor Rekening';
+    }, 3000);
+  };
+  if(navigator.clipboard){ navigator.clipboard.writeText(num).then(ok); }
+  else {
+    var el=document.createElement('textarea'); el.value=num;
+    document.body.appendChild(el); el.select();
+    document.execCommand('copy'); document.body.removeChild(el); ok();
+  }
 }
 
 function updateWA(ids, total){
@@ -620,19 +782,7 @@ function updateWA(ids, total){
   document.getElementById('btn-wa').href = 'https://wa.me/6289608068804?text=' + msg;
 }
 
-function cp(val, btn){
-  var ok = function(){
-    btn.textContent = '✓'; btn.classList.add('ok');
-    showToast('Disalin: ' + val);
-    setTimeout(function(){ btn.textContent='Salin'; btn.classList.remove('ok'); }, 2000);
-  };
-  if(navigator.clipboard){ navigator.clipboard.writeText(val).then(ok); }
-  else {
-    var el=document.createElement('textarea'); el.value=val;
-    document.body.appendChild(el); el.select();
-    document.execCommand('copy'); document.body.removeChild(el); ok();
-  }
-}
+/* cpAll replaces cp */
 
 function showToast(msg){
   var t = document.getElementById('toast');
