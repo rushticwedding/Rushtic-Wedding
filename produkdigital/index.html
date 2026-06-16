@@ -239,6 +239,26 @@ body{font-family:Arial,sans-serif;color:var(--brown);min-height:100vh;
   margin-top:10px;transition:border-color .15s}
 .btn-cancel:hover{border-color:var(--rose);color:var(--rose)}
 
+/* INSTANT PAY */
+.instant-pay-box{
+  background:linear-gradient(135deg,#fff8f0,#fff0e8);
+  border:1.5px solid var(--rose-lt);border-radius:12px;
+  padding:20px;text-align:center;
+}
+.instant-icon{font-size:28px;margin-bottom:6px}
+.instant-title{font-size:17px;font-weight:bold;color:var(--brown);margin-bottom:6px}
+.instant-desc{font-size:13px;color:var(--gray);line-height:1.6;margin-bottom:16px}
+.btn-instant{
+  display:inline-block;
+  background:var(--rose);color:#fff;text-decoration:none;
+  padding:13px 32px;border-radius:10px;
+  font-size:15px;font-weight:bold;
+  transition:background .15s;margin-bottom:14px;
+}
+.btn-instant:hover{background:var(--rose-dk)}
+.instant-fallback{font-size:11px;color:var(--gray);line-height:1.6;border-top:1px solid var(--rose-lt);padding-top:12px;margin-top:4px}
+.instant-fallback b{color:var(--brown)}
+
 /* TOAST */
 .toast{position:fixed;bottom:80px;left:50%;
   transform:translateX(-50%) translateY(80px);
@@ -378,8 +398,8 @@ body{font-family:Arial,sans-serif;color:var(--brown);min-height:100vh;
         <button class="btab" onclick="pickBank('bni',this)">BNI</button>
         <button class="btab" onclick="pickBank('bri',this)">BRI</button>
         <button class="btab" onclick="pickBank('sea',this)">Seabank</button>
-        <button class="btab" onclick="pickBank('spay',this)">ShopeePay</button>
-        <button class="btab" onclick="pickBank('gpay',this)">GoPay</button>
+        <button class="btab" onclick="pickBank('spay',this)">ShopeePay ⚡</button>
+        <button class="btab" onclick="pickBank('gpay',this)">GoPay ⚡</button>
       </div>
 
       <div class="binfo active" id="bi-bca"><div class="rek-box">
@@ -402,16 +422,30 @@ body{font-family:Arial,sans-serif;color:var(--brown);min-height:100vh;
         <div class="rek-num"><span>901982885443</span><button class="btn-copy" onclick="cp('901982885443',this)">Salin</button></div>
         <div class="rek-an">a.n. Aan Fajar Lestari</div>
       </div></div>
-      <div class="binfo" id="bi-spay"><div class="rek-box">
-        <div class="rek-bank">ShopeePay · Transfer ke nomor</div>
-        <div class="rek-num"><span>089608068804</span><button class="btn-copy" onclick="cp('089608068804',this)">Salin</button></div>
-        <div class="rek-an">a.n. Aan Fajar Lestari</div>
-      </div></div>
-      <div class="binfo" id="bi-gpay"><div class="rek-box">
-        <div class="rek-bank">GoPay · Transfer ke nomor</div>
-        <div class="rek-num"><span>089608068804</span><button class="btn-copy" onclick="cp('089608068804',this)">Salin</button></div>
-        <div class="rek-an">a.n. Aan Fajar Lestari</div>
-      </div></div>
+
+      <div class="binfo" id="bi-spay">
+        <div class="instant-pay-box">
+          <div class="instant-icon">⚡</div>
+          <div class="instant-title">ShopeePay</div>
+          <div class="instant-desc">Klik tombol di bawah — app Shopee langsung terbuka & nominal sudah terisi otomatis</div>
+          <a class="btn-instant" id="btn-spay" href="#" target="_blank">
+            🛍️ &nbsp;Buka ShopeePay
+          </a>
+          <div class="instant-fallback">Tidak punya Shopee? Transfer manual ke <b>089608068804</b> a.n. Aan Fajar Lestari</div>
+        </div>
+      </div>
+
+      <div class="binfo" id="bi-gpay">
+        <div class="instant-pay-box">
+          <div class="instant-icon">⚡</div>
+          <div class="instant-title">GoPay</div>
+          <div class="instant-desc">Klik tombol di bawah — app Gojek langsung terbuka & nominal sudah terisi otomatis</div>
+          <a class="btn-instant" id="btn-gpay" href="#" target="_blank">
+            🟢 &nbsp;Buka GoPay
+          </a>
+          <div class="instant-fallback">Tidak punya Gojek? Transfer manual ke <b>089608068804</b> a.n. Aan Fajar Lestari</div>
+        </div>
+      </div>
 
       <p class="pay-note">Setelah transfer, konfirmasi via WhatsApp di bawah.<br>Link produk dikirim dalam <b>maks. 1×24 jam</b> 🙏</p>
       <a class="btn-wa" id="btn-wa" href="#" target="_blank">💬 &nbsp;Konfirmasi Pembayaran via WhatsApp</a>
@@ -521,6 +555,7 @@ function openCheckout(){
   document.getElementById('order-summary').innerHTML = html;
   // reset bank tab
   pickBank('bca', document.querySelector('.btab'));
+  updateInstantLinks(total);
   updateWA(ids, total);
   showSheet('v-checkout');
 }
@@ -551,7 +586,28 @@ function pickBank(bank, btn){
   document.getElementById('bi-'+bank).classList.add('active');
   var ids = Object.keys(cart);
   var total = ids.reduce(function(s,id){ return s+PRODS[id].priceNum; },0);
+  updateInstantLinks(total);
   updateWA(ids, total);
+}
+
+function updateInstantLinks(total){
+  // ShopeePay deep link — buka app Shopee ke halaman kirim uang
+  var spayLink = 'shopeepay://transfer?phone=089608068804&amount=' + total + '&note=Rushtic+Digital+Store';
+  // Fallback ke web jika app tidak ada
+  var spayWeb = 'https://shopee.co.id/';
+  document.getElementById('btn-spay').href = spayLink;
+  document.getElementById('btn-spay').onclick = function(e){
+    // Try deep link, fallback to web after 1.5s if app not installed
+    setTimeout(function(){ window.open(spayWeb,'_blank'); }, 1500);
+  };
+
+  // GoPay deep link — buka app Gojek ke halaman kirim GoPay
+  var gpayLink = 'gojek://gopay/transfer?phone=089608068804&amount=' + total + '&notes=Rushtic+Digital+Store';
+  var gpayWeb = 'https://gojek.com/';
+  document.getElementById('btn-gpay').href = gpayLink;
+  document.getElementById('btn-gpay').onclick = function(e){
+    setTimeout(function(){ window.open(gpayWeb,'_blank'); }, 1500);
+  };
 }
 
 function updateWA(ids, total){
