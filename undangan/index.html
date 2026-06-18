@@ -1,0 +1,613 @@
+<!DOCTYPE html><html lang="id"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Katalog Undangan Pernikahan - Rushtic Wedding & Decoration</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#8f9779;--secondary:#c17a54;--bg:#f4f1ea;--card:#fff;--text:#2f2b27;--muted:#8a8278;--price:#c0392b;--star:#f5a623;--line:#e8e2d6;--ok:#3aa655;--gold:#c9a227;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Jost',sans-serif;color:var(--text);line-height:1.5;
+ background:radial-gradient(circle at 12% 18%,rgba(201,162,39,.10),transparent 38%),radial-gradient(circle at 88% 12%,rgba(143,151,121,.12),transparent 40%),radial-gradient(circle at 50% 100%,rgba(193,122,84,.10),transparent 55%),linear-gradient(160deg,#f7f4ed 0%,#efe9dc 55%,#e9e1cf 100%);background-attachment:fixed;min-height:100vh;}
+.topbar{background:linear-gradient(120deg,#7d8568,#8f9779 55%,#9aa285);color:#fff;position:sticky;top:0;z-index:50;box-shadow:0 2px 14px rgba(0,0,0,.18);}
+.topbar-inner{max-width:1200px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:14px;justify-content:space-between;}
+.brand{display:flex;align-items:center;gap:12px;}
+.brand-txt h1{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;line-height:1;}
+.brand-txt span{font-size:.68rem;opacity:.9;letter-spacing:1.4px;text-transform:uppercase;}
+.wa-btn{background:#25D366;color:#fff;border:none;font-size:.8rem;font-weight:600;padding:9px 16px;border-radius:30px;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-block;}
+.hero{max-width:1200px;margin:18px auto 0;padding:0 16px;}
+.hero-band{position:relative;overflow:hidden;background:linear-gradient(110deg,#6b7a5e,#8f9779 60%,#a8b090);border-radius:16px;padding:26px 24px;color:#fff;box-shadow:0 8px 26px rgba(107,122,94,.28);}
+.hero-band::after{content:"";position:absolute;right:-30px;top:-30px;width:180px;height:180px;background:radial-gradient(circle,rgba(255,255,255,.18),transparent 70%);}
+.hero-band h2{font-family:'Playfair Display',serif;font-size:1.7rem;margin-bottom:6px;}
+.hero-band p{font-size:.9rem;opacity:.96;max-width:660px;}
+.hero-chips{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;}
+.chip{background:rgba(255,255,255,.22);padding:5px 12px;border-radius:20px;font-size:.73rem;backdrop-filter:blur(2px);}
+.nav-tabs{max-width:1200px;margin:18px auto 0;padding:0 16px;display:flex;gap:8px;overflow-x:auto;}
+.tab-btn{flex:0 0 auto;font-family:'Jost',sans-serif;font-size:.85rem;font-weight:500;padding:9px 20px;border-radius:30px;border:1px solid var(--line);background:#fff;color:var(--text);cursor:pointer;transition:.2s;white-space:nowrap;}
+.tab-btn.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+.controls{max-width:1200px;margin:14px auto 0;padding:0 16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;}
+.filter-bar{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none;flex:1;min-width:200px;}
+.filter-bar::-webkit-scrollbar{display:none;}
+.filter-btn{flex:0 0 auto;font-family:'Jost',sans-serif;font-size:.82rem;background:#fff;color:var(--text);border:1px solid var(--line);padding:8px 16px;border-radius:8px;cursor:pointer;transition:.2s;}
+.filter-btn.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+.sort-sel{font-family:'Jost',sans-serif;font-size:.82rem;padding:9px 12px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--text);cursor:pointer;}
+.results-info{max-width:1200px;margin:10px auto 0;padding:0 16px;font-size:.8rem;color:var(--muted);}
+.grid{max-width:1200px;margin:10px auto 0;padding:16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+.card:hover{box-shadow:0 8px 22px rgba(0,0,0,.12);transform:translateY(-3px);}
+.card-header{background:linear-gradient(135deg,#f5f1e8,#ebe5d8);padding:18px 14px 12px;position:relative;}
+.card-type{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--text);margin-bottom:2px;}
+.card-sub{font-size:.75rem;color:var(--muted);}
+.cat-badge{position:absolute;top:12px;right:12px;background:var(--primary);color:#fff;font-size:.62rem;font-weight:700;padding:3px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.4px;}
+.cat-badge.hc{background:#7a6b58;}.cat-badge.sc{background:#8f9779;}.cat-badge.bs{background:#c17a54;}
+.card-body{padding:12px 14px 14px;flex:1;display:flex;flex-direction:column;}
+.mat-label{font-size:.72rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px;}
+.price-table{width:100%;border-collapse:collapse;font-size:.75rem;flex:1;}
+.price-table th{background:#f5f1e8;color:var(--muted);font-weight:600;padding:5px 7px;text-align:right;font-size:.68rem;}
+.price-table th:first-child{text-align:left;}
+.price-table td{padding:4px 7px;border-bottom:1px solid #f0ebe0;color:var(--text);text-align:right;}
+.price-table td:first-child{text-align:left;color:var(--muted);font-size:.7rem;}
+.price-table tr:last-child td{border-bottom:none;}
+.price-table .hl{background:#fdf6e3;font-weight:600;color:var(--price);}
+.note-row{font-size:.68rem;color:var(--muted);font-style:italic;margin-top:8px;}
+.wa-order{display:block;margin-top:10px;background:var(--primary);color:#fff;border:none;text-align:center;font-size:.8rem;font-weight:600;padding:9px;border-radius:7px;cursor:pointer;text-decoration:none;transition:.2s;font-family:'Jost',sans-serif;}
+.wa-order:hover{background:#7a8266;}
+.info-box{background:#fff8f0;border:1px solid #f0d8c0;border-radius:10px;padding:14px 16px;margin:0 16px 18px;max-width:1200px;margin-left:auto;margin-right:auto;font-size:.82rem;}
+.info-box h4{font-family:'Playfair Display',serif;font-size:.95rem;margin-bottom:8px;color:var(--secondary);}
+.info-box ul{padding-left:18px;color:var(--muted);line-height:1.8;}
+.info-box ul li{margin-bottom:2px;}
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted);}
+.foot{background:#2f2b27;color:#cfc7b9;text-align:center;padding:30px 16px;margin-top:30px;font-size:.8rem;}
+.foot a{color:#d8a07a;text-decoration:none;}
+.section-title{max-width:1200px;margin:22px auto 0;padding:0 16px;font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--text);}
+.section-title span{font-family:'Jost',sans-serif;font-size:.78rem;color:var(--muted);font-weight:400;margin-left:8px;}
+@media(max-width:640px){.grid{grid-template-columns:1fr;gap:12px;}.hero-band h2{font-size:1.35rem;}.brand-txt h1{font-size:1.1rem;}}
+</style></head><body>
+
+<div class="topbar"><div class="topbar-inner">
+  <div class="brand">
+    <div class="brand-txt">
+      <h1>Rushtic Wedding</h1>
+      <span>& Decoration · Jogja</span>
+    </div>
+  </div>
+  <a class="wa-btn" href="https://wa.me/6289608068804?text=Halo%20Rushtic%2C%20saya%20mau%20tanya%20tentang%20undangan%20pernikahan" target="_blank">💬 Tanya Harga</a>
+</div></div>
+
+<div class="hero"><div class="hero-band">
+  <h2>Katalog Undangan Pernikahan</h2>
+  <p>Undangan elegan dengan berbagai pilihan model: Hardcover, Softcover, Single HC + Amplop. Harga per pcs, desain custom sesuai selera. Ribuan desain tersedia.</p>
+  <div class="hero-chips">
+    <span class="chip">✓ Desain custom</span>
+    <span class="chip">✓ Gratis desain</span>
+    <span class="chip">✓ Cetak grosir</span>
+    <span class="chip">✓ Bisa hotprint & emboss</span>
+  </div>
+</div></div>
+
+<div class="nav-tabs" id="navTabs">
+  <button class="tab-btn active" data-tab="semua">📋 Semua</button>
+  <button class="tab-btn" data-tab="single-hc">📩 Single HC + Amplop</button>
+  <button class="tab-btn" data-tab="hardcover">📗 Hardcover Best Seller</button>
+  <button class="tab-btn" data-tab="softcover">📄 Softcover Best Seller</button>
+</div>
+
+<div class="controls">
+  <div class="filter-bar" id="filterBar"></div>
+  <select class="sort-sel" id="sortSel">
+    <option value="default">Urutkan: Default</option>
+    <option value="low">Harga min. terendah</option>
+    <option value="high">Harga min. tertinggi</option>
+  </select>
+</div>
+<div class="results-info" id="countInfo"></div>
+
+<div id="gridContainer"></div>
+
+<div class="info-box" id="infoBox">
+  <h4>📌 Catatan Pemesanan</h4>
+  <ul>
+    <li>Harga per pcs (satuan), belum termasuk ongkos kirim</li>
+    <li>Desain custom sesuai selera — yang tampil hanya contoh, ratusan desain tersedia</li>
+    <li>Harga <em>belum termasuk</em>: hotprint, emboss, cenilan, pita, stiker, wax lilin (konsultasi CS)</li>
+    <li>Bisa pakai kertas Fancy: Jasmine, Flamboyan, Linen, Aster</li>
+    <li>Minimal order & DP: tanyakan via WhatsApp</li>
+    <li>Harga sewaktu-waktu dapat berubah — konfirmasi final via WA</li>
+  </ul>
+</div>
+
+<div class="foot">
+  <a href="/">← Kembali ke Rushtic WO</a> &nbsp;·&nbsp; <a href="/souvenir/">Katalog Souvenir</a><br><br>
+  Rushtic Wedding & Decoration · Banguntapan, Bantul, Yogyakarta<br>
+  WhatsApp: <a href="https://wa.me/6289608068804">+62 896-0806-8804</a>
+</div>
+
+<script>
+const WA = "6289608068804";
+
+const CATALOG = [
+  // ============ SINGLE HC + AMPLOP ============
+  {
+    id: "shc-01-fc",
+    tab: "single-hc",
+    type: "Single Hardcover + Amplop",
+    code: "SingleHC 01",
+    size: "10.5 × 22 cm",
+    material: "IVORY DOFF Fullcolor",
+    cat: "Single HC + Amplop",
+    note: "Harga belum termasuk hotprint, cenilan dan pita",
+    prices: [
+      {qty:150, price:15800}, {qty:200, price:12850}, {qty:300, price:9950},
+      {qty:500, price:9350}, {qty:700, price:9100}, {qty:1000, price:8600}
+    ]
+  },
+  {
+    id: "shc-04-1w",
+    tab: "single-hc",
+    type: "Single Hardcover + Amplop",
+    code: "SingleHC 04",
+    size: "14 × 21 cm",
+    material: "IVORY DOFF 1 Warna",
+    cat: "Single HC + Amplop",
+    note: "Harga belum termasuk hotprint",
+    prices: [
+      {qty:150, price:14700}, {qty:200, price:12100}, {qty:300, price:10100},
+      {qty:500, price:9700}, {qty:700, price:9550}, {qty:1000, price:9200}
+    ]
+  },
+  {
+    id: "shc-04-fc",
+    tab: "single-hc",
+    type: "Single Hardcover + Amplop",
+    code: "SingleHC 04",
+    size: "14 × 21 cm",
+    material: "IVORY DOFF Fullcolor",
+    cat: "Single HC + Amplop",
+    note: "Harga belum termasuk hotprint, stiker, wax lilin",
+    prices: [
+      {qty:150, price:17250}, {qty:200, price:14200}, {qty:300, price:11500},
+      {qty:500, price:10850}, {qty:700, price:10550}, {qty:1000, price:10100}
+    ]
+  },
+  {
+    id: "sc-kg04-fc",
+    tab: "single-hc",
+    type: "Single Softcover",
+    code: "Single KG 04",
+    size: "11.5 × 21 cm",
+    material: "IVORY DOFF Fullcolor",
+    cat: "Single Softcover",
+    note: "Harga belum termasuk hotprint, stiker, pita, pond",
+    prices: [
+      {qty:150, price:15000}, {qty:200, price:9350}, {qty:300, price:6500},
+      {qty:500, price:5750}, {qty:700, price:5200}, {qty:1000, price:4975}
+    ]
+  },
+  {
+    id: "sc-kg08-1w",
+    tab: "single-hc",
+    type: "Single Softcover",
+    code: "Single KG 08",
+    size: "15 × 21 cm",
+    material: "IVORY DOFF 1 Warna",
+    cat: "Single Softcover",
+    note: "Harga belum termasuk hotprint, stiker, pita, pond",
+    prices: [
+      {qty:150, price:11600}, {qty:200, price:7400}, {qty:300, price:5250},
+      {qty:500, price:4750}, {qty:700, price:4400}, {qty:1000, price:4300}
+    ]
+  },
+  {
+    id: "sc-kg08-fc",
+    tab: "single-hc",
+    type: "Single Softcover",
+    code: "Single KG 08",
+    size: "15 × 21 cm",
+    material: "IVORY DOFF Fullcolor",
+    cat: "Single Softcover",
+    note: "Harga belum termasuk hotprint, stiker, pita, pond",
+    prices: [
+      {qty:150, price:15350}, {qty:200, price:9550}, {qty:300, price:6650},
+      {qty:500, price:5950}, {qty:700, price:5350}, {qty:1000, price:5150}
+    ]
+  },
+
+  // ============ HARDCOVER BEST SELLER ============
+  {
+    id: "hc-01-1w",
+    tab: "hardcover",
+    type: "Hardcover",
+    code: "HC 01",
+    size: "10.5 × 22 cm",
+    material: "IVORY DOFF 1 Warna",
+    cat: "Hardcover",
+    note: "Harga belum termasuk hotprint",
+    prices: [
+      {qty:50, price:18600}, {qty:100, price:11550}, {qty:150, price:9150},
+      {qty:200, price:8250}, {qty:300, price:7150}, {qty:500, price:6950},
+      {qty:700, price:6650}, {qty:1000, price:6450}, {qty:1200, price:6200}, {qty:1500, price:6100}
+    ]
+  },
+  {
+    id: "hc-01-fc",
+    tab: "hardcover",
+    type: "Hardcover",
+    code: "HC 01",
+    size: "10.5 × 22 cm",
+    material: "IVORY DOFF Fullcolor",
+    cat: "Hardcover",
+    prices: [
+      {qty:50, price:24350}, {qty:100, price:14500}, {qty:150, price:11200},
+      {qty:200, price:9650}, {qty:300, price:8150}, {qty:500, price:7550},
+      {qty:700, price:7300}, {qty:1000, price:6800}, {qty:1200, price:6700}, {qty:1500, price:6400}
+    ]
+  },
+  {
+    id: "hc-03-1w",
+    tab: "hardcover",
+    type: "Hardcover",
+    code: "HC 03",
+    size: "15 × 15 cm",
+    material: "IVORY DOFF 1 Warna",
+    cat: "Hardcover",
+    note: "Harga belum termasuk hotprint",
+    prices: [
+      {qty:50, price:18250}, {qty:100, price:11300}, {qty:150, price:8900},
+      {qty:200, price:8000}, {qty:300, price:7000}, {qty:500, price:6800},
+      {qty:700, price:6500}, {qty:1000, price:6300}, {qty:1200, price:6100}, {qty:1500, price:6000}
+    ]
+  },
+  {
+    id: "hc-03-fc",
+    tab: "hardcover",
+    type: "Hardcover",
+    code: "HC 03",
+    size: "15 × 15 cm",
+    material: "IVORY DOFF Fullcolor",
+    cat: "Hardcover",
+    prices: [
+      {qty:50, price:24200}, {qty:100, price:14350}, {qty:150, price:11050},
+      {qty:200, price:9500}, {qty:300, price:8000}, {qty:500, price:7400},
+      {qty:700, price:7150}, {qty:1000, price:6650}, {qty:1200, price:6550}, {qty:1500, price:6250}
+    ]
+  },
+  {
+    id: "hc-04-1w",
+    tab: "hardcover",
+    type: "Hardcover",
+    code: "HC 04",
+    size: "14 × 21 cm",
+    material: "IVORY DOFF 1 Warna",
+    cat: "Hardcover",
+    note: "Harga belum termasuk pita",
+    prices: [
+      {qty:50, price:21300}, {qty:100, price:13500}, {qty:150, price:11100},
+      {qty:200, price:9650}, {qty:300, price:8800}, {qty:500, price:8400},
+      {qty:700, price:8250}, {qty:1000, price:7900}, {qty:1200, price:7650}, {qty:1500, price:7500}
+    ]
+  },
+  {
+    id: "hc-04-fc",
+    tab: "hardcover",
+    type: "Hardcover",
+    code: "HC 04",
+    size: "14 × 21 cm",
+    material: "IVORY DOFF Fullcolor",
+    cat: "Hardcover",
+    prices: [
+      {qty:50, price:26600}, {qty:100, price:16200}, {qty:150, price:12650},
+      {qty:200, price:11000}, {qty:300, price:9700}, {qty:500, price:9050},
+      {qty:700, price:8750}, {qty:1000, price:8250}, {qty:1200, price:8000}, {qty:1500, price:7800}
+    ]
+  },
+  {
+    id: "hc-07-1w",
+    tab: "hardcover",
+    type: "Hardcover",
+    code: "HC 07",
+    size: "16 × 24 cm",
+    material: "IVORY DOFF 1 Warna",
+    cat: "Hardcover",
+    prices: [
+      {qty:50, price:24100}, {qty:100, price:15400}, {qty:150, price:12750},
+      {qty:200, price:11100}, {qty:300, price:10150}, {qty:500, price:9650},
+      {qty:700, price:9400}, {qty:1000, price:9000}, {qty:1200, price:8800}, {qty:1500, price:8600}
+    ]
+  },
+  {
+    id: "hc-07-fc",
+    tab: "hardcover",
+    type: "Hardcover",
+    code: "HC 07",
+    size: "16 × 24 cm",
+    material: "IVORY DOFF Fullcolor",
+    cat: "Hardcover",
+    prices: [
+      {qty:50, price:30650}, {qty:100, price:18750}, {qty:150, price:14800},
+      {qty:200, price:12800}, {qty:300, price:11250}, {qty:500, price:10400},
+      {qty:700, price:9950}, {qty:1000, price:9400}, {qty:1200, price:9200}, {qty:1500, price:9000}
+    ]
+  },
+
+  // ============ SOFTCOVER BEST SELLER ============
+  {
+    id: "kg-03-1w",
+    tab: "softcover",
+    type: "Softcover",
+    code: "KG 03",
+    size: "11 × 44 cm",
+    material: "IVORY 260 GR 1 Warna",
+    cat: "Softcover",
+    prices: [
+      {qty:50, price:12950}, {qty:100, price:7100}, {qty:150, price:5150},
+      {qty:200, price:4200}, {qty:300, price:3450}, {qty:500, price:3250},
+      {qty:700, price:3200}, {qty:1000, price:2900}, {qty:1200, price:2800}, {qty:1500, price:2650}
+    ]
+  },
+  {
+    id: "kg-03-fc",
+    tab: "softcover",
+    type: "Softcover",
+    code: "KG 03",
+    size: "11 × 44 cm",
+    material: "IVORY 260 GR Fullcolor",
+    cat: "Softcover",
+    prices: [
+      {qty:50, price:18450}, {qty:100, price:9850}, {qty:150, price:7000},
+      {qty:200, price:5500}, {qty:300, price:4350}, {qty:500, price:3950},
+      {qty:700, price:3750}, {qty:1000, price:3350}, {qty:1200, price:3150}, {qty:1500, price:2950}
+    ]
+  },
+  {
+    id: "kg-04-1w",
+    tab: "softcover",
+    type: "Softcover",
+    code: "KG 04",
+    size: "21 × 23 cm",
+    material: "IVORY 260 GR 1 Warna",
+    cat: "Softcover",
+    prices: [
+      {qty:50, price:12950}, {qty:100, price:7100}, {qty:150, price:5150},
+      {qty:200, price:4200}, {qty:300, price:3450}, {qty:500, price:3250},
+      {qty:700, price:3200}, {qty:1000, price:2900}, {qty:1200, price:2800}, {qty:1500, price:2650}
+    ]
+  },
+  {
+    id: "kg-04-fc",
+    tab: "softcover",
+    type: "Softcover",
+    code: "KG 04",
+    size: "21 × 23 cm",
+    material: "IVORY 260 GR Fullcolor",
+    cat: "Softcover",
+    prices: [
+      {qty:50, price:18450}, {qty:100, price:9850}, {qty:150, price:7000},
+      {qty:200, price:5500}, {qty:300, price:4350}, {qty:500, price:3950},
+      {qty:700, price:3750}, {qty:1000, price:3350}, {qty:1200, price:3150}, {qty:1500, price:2950}
+    ]
+  },
+  {
+    id: "kg-05-1w",
+    tab: "softcover",
+    type: "Softcover",
+    code: "KG 05",
+    size: "16 × 32 cm",
+    material: "IVORY 260 GR 1 Warna",
+    cat: "Softcover",
+    prices: [
+      {qty:50, price:12950}, {qty:100, price:7100}, {qty:150, price:5150},
+      {qty:200, price:4200}, {qty:300, price:3450}, {qty:500, price:3250},
+      {qty:700, price:3200}, {qty:1000, price:2900}, {qty:1200, price:2800}, {qty:1500, price:2650}
+    ]
+  },
+  {
+    id: "kg-05-fc",
+    tab: "softcover",
+    type: "Softcover",
+    code: "KG 05",
+    size: "16 × 32 cm",
+    material: "IVORY 260 GR Fullcolor",
+    cat: "Softcover",
+    prices: [
+      {qty:50, price:18450}, {qty:100, price:9850}, {qty:150, price:7000},
+      {qty:200, price:5500}, {qty:300, price:4350}, {qty:500, price:3950},
+      {qty:700, price:3750}, {qty:1000, price:3350}, {qty:1200, price:3150}, {qty:1500, price:2950}
+    ]
+  },
+  {
+    id: "kg-08-1w",
+    tab: "softcover",
+    type: "Softcover",
+    code: "KG 08",
+    size: "21 × 30 cm",
+    material: "IVORY 260 GR 1 Warna",
+    cat: "Softcover",
+    prices: [
+      {qty:50, price:13600}, {qty:100, price:7500}, {qty:150, price:5500},
+      {qty:200, price:4500}, {qty:300, price:3750}, {qty:500, price:3600},
+      {qty:700, price:3500}, {qty:1000, price:3250}, {qty:1200, price:3100}, {qty:1500, price:2950}
+    ]
+  },
+  {
+    id: "kg-08-fc",
+    tab: "softcover",
+    type: "Softcover",
+    code: "KG 08",
+    size: "21 × 30 cm",
+    material: "IVORY 260 GR Fullcolor",
+    cat: "Softcover",
+    prices: [
+      {qty:50, price:19100}, {qty:100, price:10300}, {qty:150, price:7300},
+      {qty:200, price:5850}, {qty:300, price:4700}, {qty:500, price:4300},
+      {qty:700, price:4100}, {qty:1000, price:3650}, {qty:1200, price:3450}, {qty:1500, price:3250}
+    ]
+  },
+  {
+    id: "kg-12-1w",
+    tab: "softcover",
+    type: "Softcover",
+    code: "KG 12",
+    size: "20 × 30 cm",
+    material: "IVORY 260 GR 1 Warna",
+    cat: "Softcover",
+    prices: [
+      {qty:50, price:14750}, {qty:100, price:8300}, {qty:150, price:6100},
+      {qty:200, price:5050}, {qty:300, price:4300}, {qty:500, price:4050},
+      {qty:700, price:3900}, {qty:1000, price:3600}, {qty:1200, price:3400}, {qty:1500, price:3250}
+    ]
+  },
+  {
+    id: "kg-12-fc",
+    tab: "softcover",
+    type: "Softcover",
+    code: "KG 12",
+    size: "20 × 30 cm",
+    material: "IVORY 260 GR Fullcolor",
+    cat: "Softcover",
+    prices: [
+      {qty:50, price:20100}, {qty:100, price:10950}, {qty:150, price:7900},
+      {qty:200, price:6350}, {qty:300, price:5200}, {qty:500, price:4700},
+      {qty:700, price:4450}, {qty:1000, price:4000}, {qty:1200, price:3800}, {qty:1500, price:3550}
+    ]
+  }
+];
+
+function rp(n){return "Rp"+n.toLocaleString("id-id");}
+
+var activeTab = "semua";
+var activeFilter = "Semua";
+var activeSort = "default";
+
+function getCategories(tab){
+  var items = tab === "semua" ? CATALOG : CATALOG.filter(function(i){return i.tab===tab;});
+  var cats = ["Semua"];
+  items.forEach(function(i){if(cats.indexOf(i.cat)===-1)cats.push(i.cat);});
+  return cats;
+}
+
+function buildFilterBar(tab){
+  var cats = getCategories(tab);
+  var fb = document.getElementById("filterBar");
+  fb.innerHTML = cats.map(function(c){
+    return '<button class="filter-btn'+(c===activeFilter?' active':'')
+      +'" data-cat="'+c+'" onclick="setFilter(\''+c+'\')">'+c+'</button>';
+  }).join("");
+}
+
+function setFilter(cat){
+  activeFilter = cat;
+  document.querySelectorAll(".filter-btn").forEach(function(b){b.classList.toggle("active",b.dataset.cat===cat);});
+  render();
+}
+
+function setTab(tab){
+  activeTab = tab;
+  activeFilter = "Semua";
+  document.querySelectorAll(".tab-btn").forEach(function(b){b.classList.toggle("active",b.dataset.tab===tab);});
+  buildFilterBar(tab);
+  render();
+}
+
+function getMinPrice(item){return item.prices[item.prices.length-1].price;}
+
+function getFilteredSorted(){
+  var items = activeTab === "semua" ? CATALOG.slice() : CATALOG.filter(function(i){return i.tab===activeTab;});
+  if(activeFilter !== "Semua") items = items.filter(function(i){return i.cat===activeFilter;});
+  if(activeSort === "low") items.sort(function(a,b){return getMinPrice(a)-getMinPrice(b);});
+  else if(activeSort === "high") items.sort(function(a,b){return getMinPrice(b)-getMinPrice(a);});
+  return items;
+}
+
+function tabLabel(t){
+  return {
+    "single-hc":"Single HC + Amplop","hardcover":"Hardcover Best Seller","softcover":"Softcover Best Seller"
+  }[t] || t;
+}
+
+function catBadgeCls(cat){
+  if(cat.indexOf("Single HC")>-1||cat.indexOf("Single Soft")>-1) return "sc";
+  if(cat.indexOf("Hardcover")>-1) return "hc";
+  if(cat.indexOf("Softcover")>-1) return "bs";
+  return "";
+}
+
+function buildWAMsg(item){
+  var msg = "Halo Rushtic 👋\n\nSaya tertarik dengan:\n";
+  msg += "📋 *"+item.code+" ("+item.size+")* – "+item.material+"\n";
+  msg += "\nMohon info ketersediaan & estimasi order-nya. Terima kasih 🙏";
+  return encodeURIComponent(msg);
+}
+
+function renderCard(item){
+  // Show max 6 price tiers
+  var tiers = item.prices;
+  var show = tiers.length > 6 ? tiers.filter(function(_,i){return i<3 || i>=tiers.length-3;}) : tiers;
+  var rows = show.map(function(p,i){
+    var isMin = (i===show.length-1);
+    return '<tr'+(isMin?' class="hl"':'')+'>'
+      +'<td>'+p.qty+' pcs</td>'
+      +'<td>'+rp(p.price)+'/pcs</td>'
+      +'<td>'+rp(p.qty*p.price)+'</td>'
+      +'</tr>';
+  }).join("");
+
+  var noteHtml = item.note ? '<div class="note-row">* '+item.note+'</div>' : '';
+
+  return '<div class="card">'
+    +'<div class="card-header">'
+      +'<div class="card-type">'+item.code+'</div>'
+      +'<div class="card-sub">Uk. '+item.size+'</div>'
+      +'<span class="cat-badge '+catBadgeCls(item.cat)+'">'+item.cat+'</span>'
+    +'</div>'
+    +'<div class="card-body">'
+      +'<div class="mat-label">'+item.material+'</div>'
+      +'<table class="price-table">'
+        +'<thead><tr><th>Jumlah</th><th>Harga/pcs</th><th>Estimasi</th></tr></thead>'
+        +'<tbody>'+rows+'</tbody>'
+      +'</table>'
+      +noteHtml
+      +'<a class="wa-order" href="https://wa.me/'+WA+'?text='+buildWAMsg(item)+'" target="_blank">💬 Tanya & Pesan</a>'
+    +'</div>'
+    +'</div>';
+}
+
+function render(){
+  var items = getFilteredSorted();
+  var container = document.getElementById("gridContainer");
+  document.getElementById("countInfo").textContent = items.length+" item ditampilkan";
+
+  if(items.length===0){
+    container.innerHTML='<div class="empty-state">Tidak ada undangan untuk filter ini.</div>';
+    return;
+  }
+
+  // Group by type if "semua"
+  if(activeTab==="semua" && activeFilter==="Semua"){
+    var groups = {};
+    var order = [];
+    items.forEach(function(i){
+      var g = i.tab;
+      if(!groups[g]){groups[g]=[];order.push(g);}
+      groups[g].push(i);
+    });
+    var html = "";
+    order.forEach(function(g){
+      html += '<div class="section-title">'+tabLabel(g)+'<span>('+groups[g].length+' model)</span></div>';
+      html += '<div class="grid">'+groups[g].map(renderCard).join("")+'</div>';
+    });
+    container.innerHTML = html;
+  } else {
+    container.innerHTML = '<div class="grid">'+items.map(renderCard).join("")+'</div>';
+  }
+}
+
+// Init
+document.querySelectorAll(".tab-btn").forEach(function(b){
+  b.addEventListener("click",function(){setTab(b.dataset.tab);});
+});
+document.getElementById("sortSel").addEventListener("change",function(){
+  activeSort = this.value;
+  render();
+});
+
+buildFilterBar("semua");
+render();
+</script></body></html>
