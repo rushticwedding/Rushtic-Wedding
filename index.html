@@ -656,176 +656,347 @@ footer{background:#1A0E06;color:rgba(245,245,220,.45);padding:3rem 2.5rem;text-a
     <button class="pkg-tab active" onclick="switchPkg('wo',this)">Wedding Organizer</button>
     <button class="pkg-tab" onclick="switchPkg('dekor',this)"><span class="id">Dekorasi</span><span class="en">Decoration</span></button>
     <button class="pkg-tab" onclick="switchPkg('full',this)"><span class="id">Paket Lengkap</span><span class="en">Full Package</span></button>
+    <button class="pkg-tab" onclick="switchPkg('tc',this)">Syarat &amp; Ketentuan</button>
   </div>
 
   <!-- WO Packages -->
   <div class="pkg-content active" id="pkg-wo">
     <div class="pkg-grid">
+
       <div class="pkg-card fade-in">
         <div class="pkg-name">Bronze WO</div>
         <div class="pkg-price">Rp 3.500.000</div>
         <div class="pkg-divider"></div>
-        <div class="cat-label">Crew Only – Akad/Pemberkatan</div>
+        <div class="cat-label">Crew Only – Akad / Pemberkatan</div>
         <ul class="pkg-items">
-          <li class="pkg-item">Durasi acara maks. 3 jam</li>
-          <li class="pkg-item">Maks. 300 tamu & 4 personil tim WO</li>
-          <li class="pkg-item">Penyusunan konsep & run down</li>
-          <li class="pkg-item">Layout venue & 10 buku panduan pernikahan</li>
+          <li class="pkg-item">Penyusunan konsep, run down acara &amp; lay out venue</li>
+          <li class="pkg-item">Organizing acara di hari H</li>
+          <li class="pkg-item">Cetak buku panduan pernikahan 10 pcs</li>
+          <li class="pkg-item">Durasi acara maksimal 3 jam</li>
+          <li class="pkg-item">Jumlah tamu maksimal 150 tamu</li>
+          <li class="pkg-item">Jumlah personil team WO hari H 4 Crew</li>
         </ul>
-        <button class="pkg-cta" onclick="addToCart('Bronze WO',3500000)"><span class="id">+ Keranjang</span><span class="en">+ Cart</span></button>
+        <button class="pkg-cta" onclick="addToCart('Paket Bronze WO',3500000)">+ Keranjang</button>
       </div>
+
       <div class="pkg-card fade-in">
         <div class="pkg-name">Silver WO</div>
         <div class="pkg-price">Rp 5.900.000</div>
         <div class="pkg-divider"></div>
-        <div class="cat-label">Akad & Resepsi</div>
+        <div class="cat-label">Akad &amp; Resepsi</div>
         <ul class="pkg-items">
-          <li class="pkg-item">Durasi acara maks. 6 jam</li>
-          <li class="pkg-item">Maks. 500 tamu & 7 personil tim WO</li>
-          <li class="pkg-item">Semua layanan Bronze</li>
-          <li class="pkg-item">Free sewa & hias 4 kotak hantaran</li>
+          <li class="pkg-item">All services Paket Bronze</li>
+          <li class="pkg-item">Durasi acara maksimal 6 jam</li>
+          <li class="pkg-item">Jumlah tamu maksimal 500 tamu</li>
+          <li class="pkg-item">Jumlah personil team WO hari H 7 Crew</li>
+          <li class="pkg-item">Free sewa dan hias 4 kotak hantaran</li>
         </ul>
-        <button class="pkg-cta" onclick="addToCart('Silver WO',5900000)"><span class="id">+ Keranjang</span><span class="en">+ Cart</span></button>
+        <button class="pkg-cta" onclick="addToCart('Paket Silver WO',5900000)">+ Keranjang</button>
       </div>
-      <div class="pkg-card featured fade-in">
-        <div class="best-tag">Best Seller</div>
+
+      <div class="pkg-card fade-in best-seller">
+        <div class="pkg-badge">⭐ Best Seller</div>
         <div class="pkg-name">Gold WO</div>
         <div class="pkg-price">Rp 7.900.000</div>
         <div class="pkg-divider"></div>
-        <div class="cat-label">Akad & Resepsi Hari Berbeda</div>
+        <div class="cat-label">Akad &amp; Resepsi Hari Berbeda</div>
         <ul class="pkg-items">
-          <li class="pkg-item">Durasi acara maks. 12 jam</li>
-          <li class="pkg-item">Maks. 1000 tamu & 10 personil tim WO</li>
-          <li class="pkg-item">Semua layanan Silver</li>
-          <li class="pkg-item">Free Wedding Car Coordinator (WCC)</li>
+          <li class="pkg-item">All services Paket Silver</li>
+          <li class="pkg-item">Durasi acara maksimal 12 jam</li>
+          <li class="pkg-item">Jumlah tamu maksimal 1000 tamu</li>
+          <li class="pkg-item">Jumlah personil team WO hari H 10 Crew</li>
+          <li class="pkg-item">Fotografer eksklusif khusus pengantin</li>
+          <li class="pkg-item">Free sewa dan hias 4 kotak hantaran</li>
           <li class="pkg-item">Free dekorasi mobil pengantin</li>
         </ul>
-        <button class="pkg-cta" onclick="addToCart('Gold WO',7900000)"><span class="id">+ Keranjang</span><span class="en">+ Cart</span></button>
+        <button class="pkg-cta" onclick="addToCart('Paket Gold WO',7900000)">+ Keranjang</button>
       </div>
+
+    </div>
+    <div class="pkg-note fade-in">
+      <span class="id">· Konsultasi gratis, tanpa tekanan &nbsp;·&nbsp; DP minimal Rp 1.000.000 untuk booking tanggal &nbsp;·&nbsp; Melayani Yogyakarta, Sleman, Bantul &amp; sekitarnya</span>
     </div>
   </div>
 
-  <!-- Dekor Packages -->
-  <div class="pkg-content" id="pkg-dekor">
+  <div class="pkg-content" id="pkg-dekor" style="display:none">
     <div class="pkg-grid">
+
       <div class="pkg-card fade-in">
         <div class="pkg-name">Bronze Dekor</div>
         <div class="pkg-price">Rp 1.500.000</div>
         <div class="pkg-divider"></div>
         <ul class="pkg-items">
-          <li class="pkg-item">Pelaminan maks. 3 meter</li>
+          <li class="pkg-item">Pelaminan artificial mix fresh flower (20%) maks. 3 m</li>
+          <li class="pkg-item">Set dekorasi meja akad / pemberkatan</li>
           <li class="pkg-item">Welcome gate</li>
-          <li class="pkg-item">Welcome sign</li>
-          <li class="pkg-item">Free transport radius 5 km</li>
+          <li class="pkg-item">Welcome sign custom nama pengantin</li>
         </ul>
-        <button class="pkg-cta" onclick="addToCart('Bronze Dekorasi',1500000)">+ Keranjang</button>
+        <div class="cat-label">* Transport: Gratis radius 5 km, selebihnya Rp 25.000/km</div>
+        <button class="pkg-cta" onclick="addToCart('Paket Bronze Dekor',1500000)">+ Keranjang</button>
       </div>
+
       <div class="pkg-card fade-in">
         <div class="pkg-name">Silver Dekor</div>
         <div class="pkg-price">Rp 3.500.000</div>
         <div class="pkg-divider"></div>
         <ul class="pkg-items">
-          <li class="pkg-item">Pelaminan maks. 6 meter</li>
-          <li class="pkg-item">4 standing flowers</li>
-          <li class="pkg-item">Kursi pengantin & orang tua</li>
-          <li class="pkg-item">Meja buku tamu & kotak angpau</li>
-          <li class="pkg-item">Free transport radius 5 km</li>
+          <li class="pkg-item">Pelaminan artificial mix fresh flower (20%) maks. 6 m</li>
+          <li class="pkg-item">Standing flowers &amp; karpet jalan (aisle) 4 pcs</li>
+          <li class="pkg-item">Set dekorasi meja akad / pemberkatan</li>
+          <li class="pkg-item">Kursi pelaminan pengantin &amp; ortu</li>
+          <li class="pkg-item">Welcome gate</li>
+          <li class="pkg-item">Welcome sign custom nama pengantin</li>
+          <li class="pkg-item">Dekorasi meja buku tamu &amp; kotak amplop</li>
         </ul>
-        <button class="pkg-cta" onclick="addToCart('Silver Dekorasi',3500000)">+ Keranjang</button>
+        <div class="cat-label">* Transport: Gratis radius 5 km, selebihnya Rp 25.000/km</div>
+        <button class="pkg-cta" onclick="addToCart('Paket Silver Dekor',3500000)">+ Keranjang</button>
       </div>
-      <div class="pkg-card featured fade-in">
-        <div class="best-tag">Popular</div>
+
+      <div class="pkg-card fade-in">
         <div class="pkg-name">Gold Dekor</div>
         <div class="pkg-price">Rp 5.500.000</div>
         <div class="pkg-divider"></div>
         <ul class="pkg-items">
-          <li class="pkg-item">Pelaminan maks. 9 meter</li>
-          <li class="pkg-item">6 standing flowers</li>
-          <li class="pkg-item">Panggung pelaminan 15 cm</li>
-          <li class="pkg-item">Pergola / gazebo</li>
-          <li class="pkg-item">Backdrop meja buku tamu</li>
-          <li class="pkg-item">Fresh garden</li>
+          <li class="pkg-item">Pelaminan artificial mix fresh flower (20%) maks. 9 m</li>
+          <li class="pkg-item">Standing flowers &amp; karpet jalan (aisle) 6 pcs</li>
+          <li class="pkg-item">Set dekorasi meja akad / pemberkatan</li>
+          <li class="pkg-item">Kursi pelaminan pengantin &amp; ortu</li>
+          <li class="pkg-item">Welcome gate</li>
+          <li class="pkg-item">Welcome sign custom nama pengantin</li>
+          <li class="pkg-item">Dekorasi meja buku tamu &amp; kotak amplop</li>
+          <li class="pkg-item">Backdrop dekorasi meja buku tamu</li>
+          <li class="pkg-item">Panggung pelaminan level 15 cm</li>
+          <li class="pkg-item">Fresh garden depan pelaminan</li>
+          <li class="pkg-item">Pergola karpet jalan / gazebo</li>
         </ul>
-        <button class="pkg-cta" onclick="addToCart('Gold Dekorasi',5500000)">+ Keranjang</button>
+        <div class="cat-label">* Transport: Gratis radius 5 km, selebihnya Rp 25.000/km</div>
+        <button class="pkg-cta" onclick="addToCart('Paket Gold Dekor',5500000)">+ Keranjang</button>
       </div>
+
       <div class="pkg-card fade-in">
         <div class="pkg-name">Platinum Dekor</div>
         <div class="pkg-price">Rp 7.500.000</div>
         <div class="pkg-divider"></div>
         <ul class="pkg-items">
-          <li class="pkg-item">Pelaminan maks. 12 meter</li>
-          <li class="pkg-item">8 standing flowers</li>
+          <li class="pkg-item">Pelaminan artificial mix fresh flower (20%) maks. 12 m</li>
+          <li class="pkg-item">Standing flowers &amp; karpet jalan (aisle) 8 pcs</li>
+          <li class="pkg-item">Set dekorasi meja akad / pemberkatan</li>
+          <li class="pkg-item">Kursi pelaminan pengantin &amp; ortu</li>
+          <li class="pkg-item">Welcome gate</li>
+          <li class="pkg-item">Welcome sign custom nama pengantin</li>
+          <li class="pkg-item">Dekorasi meja buku tamu &amp; kotak amplop</li>
+          <li class="pkg-item">Backdrop dekorasi meja buku tamu</li>
+          <li class="pkg-item">Panggung pelaminan level 15 cm</li>
+          <li class="pkg-item">Fresh garden depan pelaminan</li>
+          <li class="pkg-item">Pergola karpet jalan / gazebo</li>
+          <li class="pkg-item">Dekorasi area entertainment</li>
           <li class="pkg-item">Backdrop photobooth</li>
           <li class="pkg-item">Dekorasi mobil pengantin</li>
-          <li class="pkg-item">Free transport radius 5 km</li>
         </ul>
-        <button class="pkg-cta" onclick="addToCart('Platinum Dekorasi',7500000)">+ Keranjang</button>
+        <div class="cat-label">* Transport: Gratis radius 5 km, selebihnya Rp 25.000/km</div>
+        <button class="pkg-cta" onclick="addToCart('Paket Platinum Dekor',7500000)">+ Keranjang</button>
       </div>
+
     </div>
-    <p style="text-align:center;font-size:.75rem;color:var(--muted);margin-top:1rem;"><span class="id">* Transport: Gratis radius 5 km, selebihnya Rp 25.000/km</span><span class="en">* Transport: Free within 5 km radius, Rp 25,000/km beyond that</span></p>
   </div>
 
-  <!-- Full Packages -->
-  <div class="pkg-content" id="pkg-full">
+  <div class="pkg-content" id="pkg-full" style="display:none">
     <div class="pkg-grid">
+
       <div class="pkg-card fade-in">
         <div class="pkg-name">Engagement</div>
-        <div class="pkg-price">Rp 3.500.000</div>
+        <div class="pkg-price">Rp 2.900.000</div>
         <div class="pkg-divider"></div>
         <div class="cat-label">Dekorasi</div>
         <ul class="pkg-items">
           <li class="pkg-item">Backdrop Rustic Minimalis 2.5 m</li>
-          <li class="pkg-item">Standing Flower 2 pcs + Welcome Sign</li>
+          <li class="pkg-item">Standard lighting &amp; karpet backdrop</li>
+          <li class="pkg-item">Standing Flower 2 pcs</li>
+          <li class="pkg-item">Welcome Sign 1 pcs</li>
         </ul>
         <div class="cat-label">MUA</div>
         <ul class="pkg-items">
-          <li class="pkg-item">Makeup & hair do calon pengantin</li>
-          <li class="pkg-item">Free softlens, fake nails & sewa aksesoris</li>
+          <li class="pkg-item">Makeup dan hair do calon pengantin</li>
+          <li class="pkg-item">Free softlens, fake nails</li>
+          <li class="pkg-item">Free sewa aksesoris (mahkota, flower crown, dll)</li>
         </ul>
         <div class="cat-label">Dokumentasi</div>
         <ul class="pkg-items">
-          <li class="pkg-item">1 Fotografer profesional</li>
-          <li class="pkg-item">Unlimited shoot + file edit + flashdisk</li>
+          <li class="pkg-item">1 Profesional Fotografer</li>
+          <li class="pkg-item">Copy all file dalam flashdisk</li>
+          <li class="pkg-item">Unlimited photo shoot + file edit</li>
         </ul>
-        <button class="pkg-cta" onclick="addToCart('Paket Engagement',3500000)">+ Keranjang</button>
+        <button class="pkg-cta" onclick="addToCart('Paket Engagement',2900000)">+ Keranjang</button>
       </div>
+
       <div class="pkg-card fade-in">
-        <div class="pkg-name">Intimate Akad</div>
+        <div class="pkg-name">Nikah di KUA</div>
+        <div class="pkg-price">Rp 4.900.000 <span style="font-size:11px;font-weight:300;color:#888">/ 50 pax</span></div>
+        <div class="pkg-divider"></div>
+        <div class="cat-label">Catering — Nasi Box (50 pax)</div>
+        <ul class="pkg-items">
+          <li class="pkg-item">Paper bag custom nama pengantin</li>
+          <li class="pkg-item">Nasi putih</li>
+          <li class="pkg-item">Soup Ayam Sosis Rolade</li>
+          <li class="pkg-item">Ayam goreng tepung / Ayam Saos BBQ</li>
+          <li class="pkg-item">Sambal Goreng Ati, Krecek / Oseng jenggel</li>
+          <li class="pkg-item">Sayuran Soon Ayu / Bihun Telur</li>
+          <li class="pkg-item">Acar, kerupuk, buah iris</li>
+          <li class="pkg-item">Minuman Teh Botol</li>
+          <li class="pkg-item">Tambahan @Rp 50.000/pax</li>
+        </ul>
+        <div class="cat-label">Rias MUA</div>
+        <ul class="pkg-items">
+          <li class="pkg-item">Rias pengantin flawless natural look</li>
+          <li class="pkg-item">Busana sepasang pengantin akad</li>
+          <li class="pkg-item">Free sewa aksesoris</li>
+          <li class="pkg-item">Nail art dan softlens</li>
+        </ul>
+        <div class="cat-label">Dokumentasi</div>
+        <ul class="pkg-items">
+          <li class="pkg-item">1 Profesional Fotografer + Studio Lighting</li>
+          <li class="pkg-item">Copy all file dalam flashdisk</li>
+          <li class="pkg-item">Unlimited photo shoot + file edit</li>
+        </ul>
+        <button class="pkg-cta" onclick="addToCart('Paket Nikah di KUA',4900000)">+ Keranjang</button>
+      </div>
+
+      <div class="pkg-card fade-in">
+        <div class="pkg-name">Ashana</div>
         <div class="pkg-price">Rp 10.000.000</div>
         <div class="pkg-divider"></div>
         <div class="cat-label">Dekorasi</div>
-        <ul class="pkg-items"><li class="pkg-item">Backdrop 4m, set kursi akad, 4 standing flower</li></ul>
+        <ul class="pkg-items">
+          <li class="pkg-item">Backdrop Rustic Minimalis 4 m</li>
+          <li class="pkg-item">Set dekorasi meja kursi akad</li>
+          <li class="pkg-item">Standard lighting + karpet backdrop</li>
+          <li class="pkg-item">Standing Flower 4 pcs + Welcome Sign 1 pcs</li>
+        </ul>
         <div class="cat-label">Rias Pengantin</div>
-        <ul class="pkg-items"><li class="pkg-item">Makeup akad lengkap, sewa gaun & jas, softlens & nailarts</li></ul>
+        <ul class="pkg-items">
+          <li class="pkg-item">Makeup pengantin akad lengkap</li>
+          <li class="pkg-item">Sewa gaun dan jas sepasang pengantin</li>
+          <li class="pkg-item">Free softlens dan nailarts</li>
+          <li class="pkg-item">Sewa aksesoris (mahkota, flower crown, dll)</li>
+        </ul>
         <div class="cat-label">Dokumentasi</div>
-        <ul class="pkg-items"><li class="pkg-item">1 Fotografer + studio lighting + unlimited shoot</li></ul>
-        <button class="pkg-cta" onclick="addToCart('Paket Intimate Akad',10000000)">+ Keranjang</button>
+        <ul class="pkg-items">
+          <li class="pkg-item">1 Profesional Fotografer + Studio Lighting</li>
+          <li class="pkg-item">Copy all file dalam flashdisk</li>
+          <li class="pkg-item">Unlimited photo shoot + file edit</li>
+        </ul>
+        <button class="pkg-cta" onclick="addToCart('Paket Ashana',10000000)">+ Keranjang</button>
       </div>
+
       <div class="pkg-card fade-in">
-        <div class="pkg-name">Akad Resepsi</div>
+        <div class="pkg-name">Bonanza</div>
         <div class="pkg-price">Rp 15.000.000</div>
         <div class="pkg-divider"></div>
+        <div class="cat-label">Dekorasi</div>
         <ul class="pkg-items">
-          <li class="pkg-item">Backdrop up to 6m + welcome gate</li>
-          <li class="pkg-item">Makeup lengkap pengantin + orang tua</li>
-          <li class="pkg-item">2 Fotografer + cetak 100 lembar 4R</li>
-          <li class="pkg-item">1 MC maks 3 jam</li>
+          <li class="pkg-item">Backdrop Rustic Minimalis up to 6 m</li>
+          <li class="pkg-item">Set dekorasi meja kursi akad</li>
+          <li class="pkg-item">1 Welcome gate 2 m</li>
+          <li class="pkg-item">Standing picture 2 pcs + Welcome Sign Mirror 1 pcs</li>
         </ul>
-        <button class="pkg-cta" onclick="addToCart('Paket Akad Resepsi',15000000)">+ Keranjang</button>
+        <div class="cat-label">Rias Pengantin</div>
+        <ul class="pkg-items">
+          <li class="pkg-item">Makeup pengantin akad lengkap</li>
+          <li class="pkg-item">Sewa gaun dan jas sepasang pengantin</li>
+          <li class="pkg-item">Makeup dan busana ortu dan besan</li>
+        </ul>
+        <div class="cat-label">Dokumentasi</div>
+        <ul class="pkg-items">
+          <li class="pkg-item">2 Profesional Fotografer</li>
+          <li class="pkg-item">Copy dan all file edit dalam flashdisk</li>
+          <li class="pkg-item">Cetak 100 lembar 4R dalam album custom</li>
+          <li class="pkg-item">Cetak 2 figura 12R</li>
+        </ul>
+        <div class="cat-label">WO &amp; MC</div>
+        <ul class="pkg-items">
+          <li class="pkg-item">3 Profesional Wedding Organizer</li>
+          <li class="pkg-item">1 MC (durasi maks 3 jam)</li>
+        </ul>
+        <div class="cat-label">Extra Benefits</div>
+        <ul class="pkg-items">
+          <li class="pkg-item">Free sewa dan hias 4 kotak seserahan</li>
+          <li class="pkg-item">Free hand bouquets</li>
+        </ul>
+        <button class="pkg-cta" onclick="addToCart('Paket Bonanza',15000000)">+ Keranjang</button>
       </div>
-      <div class="pkg-card featured fade-in">
-        <div class="best-tag">Best Seller</div>
-        <div class="pkg-name">Complete Wedding</div>
+
+      <div class="pkg-card fade-in best-seller">
+        <div class="pkg-badge">✦ Paket Terlengkap</div>
+        <div class="pkg-name">Cassia</div>
         <div class="pkg-price">Rp 25.000.000</div>
         <div class="pkg-divider"></div>
+        <div class="cat-label">Dekorasi</div>
         <ul class="pkg-items">
-          <li class="pkg-item">Backdrop 6m fresh flowers + welcome gate + aisle</li>
-          <li class="pkg-item">Makeup akad & resepsi + 2 gaun + orang tua + buku tamu</li>
-          <li class="pkg-item">Fotografer & Videografer + video edit + cetak album</li>
-          <li class="pkg-item">6 WO profesional + 1 MC maks 6 jam</li>
-          <li class="pkg-item">Catering 100 pax + stall gubugan + minuman</li>
+          <li class="pkg-item">Backdrop Rustic Minimalis up to 8 m fresh flowers</li>
+          <li class="pkg-item">Set dekorasi meja kursi akad</li>
+          <li class="pkg-item">1 Welcome gate + welcome sign 1 pcs</li>
+          <li class="pkg-item">Dekorasi aisle karpet jalan</li>
+          <li class="pkg-item">Dekorasi buku tamu dan kotak angpau</li>
         </ul>
-        <button class="pkg-cta" onclick="addToCart('Complete Wedding',25000000)">+ Keranjang</button>
+        <div class="cat-label">Rias Pengantin</div>
+        <ul class="pkg-items">
+          <li class="pkg-item">Makeup pengantin akad dan resepsi</li>
+          <li class="pkg-item">Sewa 2 gaun dan jas pengantin</li>
+          <li class="pkg-item">Makeup dan busana ortu dan besan</li>
+          <li class="pkg-item">Makeup dan busana 2 pasang among tamu</li>
+          <li class="pkg-item">Makeup dan busana 2 petugas buku tamu</li>
+        </ul>
+        <div class="cat-label">Dokumentasi</div>
+        <ul class="pkg-items">
+          <li class="pkg-item">Profesional fotografer &amp; videografer</li>
+          <li class="pkg-item">Cetak 100 lembar 4R dalam album custom</li>
+          <li class="pkg-item">Cetak 2 figura 12R</li>
+          <li class="pkg-item">Video edit dan all foto edit</li>
+        </ul>
+        <div class="cat-label">WO, MC &amp; Entertainment</div>
+        <ul class="pkg-items">
+          <li class="pkg-item">6 Profesional Wedding Organizer</li>
+          <li class="pkg-item">1 MC (durasi maks 6 jam)</li>
+          <li class="pkg-item">1 electone dan 1 singer</li>
+        </ul>
+        <div class="cat-label">Catering</div>
+        <ul class="pkg-items">
+          <li class="pkg-item">100 pax Buffet menu lauk ayam</li>
+          <li class="pkg-item">2 macam × 50 pax stall gubugan</li>
+          <li class="pkg-item">Minuman, buah, ice cream</li>
+        </ul>
+        <button class="pkg-cta" onclick="addToCart('Paket Cassia',25000000)">+ Keranjang</button>
+      </div>
+
+    </div>
+    <div class="pkg-note fade-in">
+      <span class="id">· Semua paket bisa disesuaikan &nbsp;·&nbsp; Konsultasi gratis sebelum booking &nbsp;·&nbsp; DP minimal Rp 1.000.000 untuk booking tanggal</span>
+    </div>
+  </div>
+
+  <div class="pkg-content" id="pkg-tc" style="display:none">
+    <div class="pkg-grid" style="max-width:680px;margin:0 auto">
+      <div class="pkg-card fade-in" style="grid-column:1/-1">
+        <div class="pkg-name" style="margin-bottom:16px">Syarat &amp; Ketentuan</div>
+        <ol style="list-style:none;display:flex;flex-direction:column;gap:12px;padding:0">
+          <li style="display:flex;gap:12px;font-size:13px;line-height:1.7"><span style="font-weight:700;color:var(--gold, #C9A84C);flex-shrink:0;min-width:20px">1.</span><span>Uang muka sebesar <strong>10%</strong> dari total pemesanan atau minimal <strong>Rp 1.000.000</strong> untuk booking tempat dan tanggal.</span></li>
+          <li style="display:flex;gap:12px;font-size:13px;line-height:1.7"><span style="font-weight:700;color:var(--gold, #C9A84C);flex-shrink:0;min-width:20px">2.</span><span>Pembayaran ke-2 sebesar <strong>50%</strong> dari total pemesanan paling lambat <strong>3 bulan</strong> setelah DP pertama.</span></li>
+          <li style="display:flex;gap:12px;font-size:13px;line-height:1.7"><span style="font-weight:700;color:var(--gold, #C9A84C);flex-shrink:0;min-width:20px">3.</span><span>Pembayaran ke-3 sebesar <strong>90%</strong> dari total pemesanan paling lambat <strong>2 minggu</strong> sebelum acara.</span></li>
+          <li style="display:flex;gap:12px;font-size:13px;line-height:1.7"><span style="font-weight:700;color:var(--gold, #C9A84C);flex-shrink:0;min-width:20px">4.</span><span>Sisa pembayaran harus dilunasi paling lambat <strong>H-7</strong> sebelum resepsi/acara.</span></li>
+          <li style="display:flex;gap:12px;font-size:13px;line-height:1.7"><span style="font-weight:700;color:var(--gold, #C9A84C);flex-shrink:0;min-width:20px">5.</span><span>Perubahan tanggal acara dapat dilakukan paling lambat <strong>3 bulan</strong> sebelum tanggal reservasi awal dan perpindahan hanya diijinkan <strong>1 kali</strong>.</span></li>
+          <li style="display:flex;gap:12px;font-size:13px;line-height:1.7"><span style="font-weight:700;color:var(--gold, #C9A84C);flex-shrink:0;min-width:20px">6.</span><span>Pemesanan paket pernikahan dapat <strong>disesuaikan</strong> dengan kebutuhan calon pengantin.</span></li>
+          <li style="display:flex;gap:12px;font-size:13px;line-height:1.7"><span style="font-weight:700;color:var(--gold, #C9A84C);flex-shrink:0;min-width:20px">7.</span><span>Dana yang telah dibayarkan <strong>tidak dapat dikembalikan</strong> dan tidak dapat dipindahtangankan.</span></li>
+          <li style="display:flex;gap:12px;font-size:13px;line-height:1.7"><span style="font-weight:700;color:var(--gold, #C9A84C);flex-shrink:0;min-width:20px">8.</span><span>Harga dan ketentuan dapat berubah sewaktu-waktu tanpa pemberitahuan terlebih dahulu.</span></li>
+        </ol>
+        <div style="margin-top:20px;background:#FDF8F0;border-left:3px solid #C9A84C;padding:14px 16px;border-radius:0 4px 4px 0">
+          <div style="font-size:12px;font-weight:600;margin-bottom:8px;color:#5c3d1e">Rekening Pembayaran</div>
+          <div style="font-size:12.5px;line-height:2.2;color:#555">
+            · BCA <strong>4451512611</strong> a/n Aan Fajar Lestari<br>
+            · BRI <strong>7001-01-013421-53-7</strong> a/n Aan Fajar Lestari<br>
+            · Seabank <strong>901982885443</strong> a/n Aan Fajar Lestari<br>
+            · BNI <strong>0903321338</strong> a/n Aan Fajar Lestari
+          </div>
+        </div>
       </div>
     </div>
   </div>
