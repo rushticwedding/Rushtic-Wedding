@@ -771,6 +771,8 @@ function showSheet(v){
   document.getElementById('sheet').scrollTop=0;
   document.getElementById('overlay').classList.add('open');
   document.body.style.overflow='hidden';
+  // Push state so back button closes sheet, not navigate away
+  history.pushState({sheet:v}, '', window.location.pathname);
 }
 
 function closeSheet(){
@@ -778,6 +780,14 @@ function closeSheet(){
   document.body.style.overflow='';
 }
 function overlayClick(e){if(e.target===document.getElementById('overlay'))closeSheet();}
+
+// Handle browser back button — close sheet instead of leaving page
+window.addEventListener('popstate', function(e){
+  if(document.getElementById('overlay').classList.contains('open')){
+    document.getElementById('overlay').classList.remove('open');
+    document.body.style.overflow='';
+  }
+});
 
 function pickBank(bank,btn){
   currentBank=bank;
