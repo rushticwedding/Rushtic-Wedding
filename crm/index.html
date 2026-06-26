@@ -628,6 +628,110 @@
   }
   .note-input:focus { border-color: var(--accent); }
 
+  /* ── AI SECTION ── */
+  .ai-box {
+    background: linear-gradient(135deg, #1a1410 0%, #2d2018 100%);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 0;
+  }
+  .ai-box-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .ai-update-input {
+    width: 100%;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 7px;
+    padding: 9px 12px;
+    font-size: 13px;
+    font-family: inherit;
+    color: #f0ebe4;
+    resize: vertical;
+    min-height: 70px;
+    outline: none;
+    margin-bottom: 10px;
+  }
+  .ai-update-input::placeholder { color: rgba(240,235,228,0.4); }
+  .ai-update-input:focus { border-color: var(--accent); }
+  .btn-ai {
+    width: 100%;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 7px;
+    padding: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: opacity 0.15s;
+  }
+  .btn-ai:hover { opacity: 0.88; }
+  .btn-ai:disabled { opacity: 0.5; cursor: not-allowed; }
+  .ai-result {
+    margin-top: 12px;
+    display: none;
+  }
+  .ai-result.show { display: block; }
+  .ai-result-block {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+  .ai-result-block h5 {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .ai-result-block p {
+    font-size: 13px;
+    color: #f0ebe4;
+    line-height: 1.6;
+    white-space: pre-wrap;
+  }
+  .ai-copy-btn {
+    background: rgba(196,115,42,0.2);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    margin-top: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .ai-spinner {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
   /* ── EMPTY ── */
   .empty-col {
     background: var(--paper);
@@ -1194,9 +1298,39 @@ function openDetail(id) {
     </div>
     <div class="detail-section">
       <h4>Catatan</h4>
-      <p style="color:var(--muted);font-size:13px;margin-bottom:8px">${c.notes||'Belum ada catatan.'}</p>
+      <p style="color:var(--muted);font-size:13px;margin-bottom:8px;white-space:pre-wrap">${c.notes||'Belum ada catatan.'}</p>
       <textarea class="note-input" id="newNote" placeholder="Tambah catatan baru..."></textarea>
       <button class="btn-primary" style="margin-top:8px;width:100%" onclick="addNote('${id}')">Simpan Catatan</button>
+    </div>
+    <div class="detail-section">
+      <h4>✨ AI Follow-up Generator</h4>
+      <div class="ai-box">
+        <div class="ai-box-label">✦ Update Perkembangan Klien</div>
+        <textarea class="ai-update-input" id="aiUpdate" placeholder="Ceritakan perkembangan terkini...
+Contoh: sudah survey kemarin, suka venue tapi minta diskon 500rb, event September, masih nunggu acc suami"></textarea>
+        <button class="btn-ai" id="btnGenAI" onclick="generateFollowup('${id}')">
+          ✦ Generate Pesan WA + Jadwal Follow-up
+        </button>
+        <div class="ai-result" id="aiResult">
+          <div class="ai-result-block">
+            <h5>📱 Pesan WA Siap Kirim</h5>
+            <p id="aiMsgWA"></p>
+            <button class="ai-copy-btn" onclick="copyAI('aiMsgWA')">📋 Copy</button>
+          </div>
+          <div class="ai-result-block">
+            <h5>📅 Jadwal Follow-up Berikutnya</h5>
+            <p id="aiSchedule"></p>
+            <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+              <button class="ai-copy-btn" id="btnGcal" onclick="addToCalendar('${id}')" style="background:rgba(66,133,244,0.15);border-color:#4285f4;color:#4285f4">🗓 Tambah ke Google Calendar</button>
+              <button class="ai-copy-btn" id="btnWaSelf" onclick="remindViaWA('${id}')" style="background:rgba(37,211,102,0.15);border-color:#25D366;color:#25D366">💬 Ingatkan via WA</button>
+            </div>
+          </div>
+          <div class="ai-result-block">
+            <h5>🎯 Langkah Selanjutnya</h5>
+            <p id="aiNextStep"></p>
+          </div>
+        </div>
+      </div>
     </div>`;
 
   document.getElementById('detailModal').classList.add('open');
@@ -1228,6 +1362,178 @@ function addNote(id) {
   openDetail(id);
   renderAll();
   showToast('✓ Catatan ditambahkan');
+}
+
+// ── AI FOLLOW-UP GENERATOR ──
+let lastAIResult = {}; // simpan hasil AI terakhir untuk dipakai tombol Calendar & WA
+
+async function generateFollowup(id) {
+  const c = clients.find(x => x.id === id);
+  if (!c) return;
+
+  const update = document.getElementById('aiUpdate').value.trim();
+  if (!update) { showToast('⚠ Isi dulu perkembangan kliennya'); return; }
+
+  const btn = document.getElementById('btnGenAI');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="ai-spinner"></span> Generating...';
+
+  const today = new Date().toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  const eventDate = c.date ? new Date(c.date).toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' }) : 'belum ditentukan';
+  const hariH = c.date ? Math.ceil((new Date(c.date) - new Date()) / (1000*60*60*24)) : null;
+
+  const prompt = `Kamu adalah asisten bisnis untuk Aan Fajar Lestari, pemilik Rushtic Wedding & Decoration Jogja.
+Aan adalah MC bilingual yang hangat, personal, dan profesional. Gaya komunikasinya: akrab tapi sopan, pakai "kak" untuk klien, nama Aan sebagai pengirim.
+
+DATA KLIEN:
+- Nama: ${c.name}
+- Sub-brand: ${c.brand}
+- Stage sekarang: ${c.stage}
+- Tanggal event: ${eventDate}${hariH ? ` (${hariH} hari lagi)` : ''}
+- Paket: ${c.package || 'belum ditentukan'}
+- Nilai: ${c.value ? 'Rp ' + parseInt(c.value).toLocaleString('id-ID') : 'belum ditentukan'}
+- Catatan sebelumnya: ${c.notes || 'tidak ada'}
+
+PERKEMBANGAN TERKINI (dari Aan):
+${update}
+
+Hari ini: ${today}
+
+Buatkan output dalam format JSON persis seperti ini (tidak ada teks lain di luar JSON):
+{
+  "pesan_wa": "pesan WA siap kirim, hangat dan personal, pakai emoji secukupnya, maksimal 5 kalimat, langsung ke poin, jangan terlalu panjang",
+  "jadwal_followup": "kapan harus follow-up berikutnya dan jam berapa, beserta alasannya singkat — contoh: Besok Senin 30 Juni 2026 jam 10.00 pagi, karena klien biasanya aktif pagi hari",
+  "followup_datetime": "tanggal dan waktu follow-up dalam format ISO 8601, contoh: 2026-06-30T10:00:00",
+  "followup_title": "judul singkat untuk kalender, contoh: Follow Up Budi & Sinta – Penawaran WO",
+  "langkah_selanjutnya": "1-3 langkah konkret yang harus Aan lakukan untuk mendorong klien ke stage berikutnya"
+}`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await resp.json();
+    const raw = data.content?.find(b => b.type === 'text')?.text || '';
+    const clean = raw.replace(/```json|```/g, '').trim();
+    const result = JSON.parse(clean);
+
+    // Simpan untuk tombol Calendar & WA
+    lastAIResult = {
+      clientName: c.name,
+      datetime: result.followup_datetime || '',
+      title: result.followup_title || `Follow Up ${c.name}`,
+      jadwal: result.jadwal_followup || '',
+      pesanWA: result.pesan_wa || '',
+    };
+
+    document.getElementById('aiMsgWA').textContent = result.pesan_wa || '—';
+    document.getElementById('aiSchedule').textContent = result.jadwal_followup || '—';
+    document.getElementById('aiNextStep').textContent = result.langkah_selanjutnya || '—';
+    document.getElementById('aiResult').classList.add('show');
+
+    // Auto-save update as note
+    const idx = clients.findIndex(x => x.id === id);
+    const timestamp = new Date().toLocaleDateString('id-ID', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+    const prev = clients[idx].notes || '';
+    clients[idx].notes = `[${timestamp}] ${update}${prev ? '\n\n' + prev : ''}`;
+    clients[idx].updatedAt = Date.now();
+    pushClient(clients[idx]);
+
+    showToast('✓ Follow-up generated & catatan disimpan');
+  } catch(e) {
+    showToast('⚠ Gagal generate — coba lagi');
+    console.error(e);
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '✦ Generate Ulang';
+}
+
+function addToCalendar(id) {
+  const c = clients.find(x => x.id === id);
+  if (!lastAIResult.datetime) { showToast('⚠ Generate dulu jadwalnya'); return; }
+
+  const dt = new Date(lastAIResult.datetime);
+  if (isNaN(dt.getTime())) { showToast('⚠ Format tanggal tidak valid, coba generate ulang'); return; }
+
+  const pad = n => String(n).padStart(2, '0');
+  const fmt = d => `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
+  const start = fmt(dt);
+  const end   = fmt(new Date(dt.getTime() + 30 * 60 * 1000));
+
+  // WA number clean
+  const waRaw = (c.wa || '').replace(/\D/g, '');
+  const waClean = waRaw.startsWith('0') ? '62' + waRaw.slice(1) : waRaw;
+  const waLink = waClean ? `https://wa.me/${waClean}` : '(nomor belum diisi)';
+
+  // Script WA dari AI result
+  const scriptWA = lastAIResult.pesanWA || '(generate dulu dari CRM)';
+
+  // Deskripsi event — ini yang muncul saat kamu tap di kalender
+  const details = [
+    `✅ FOLLOW UP: ${c.name}`,
+    `━━━━━━━━━━━━━━━━━━`,
+    ``,
+    `📱 BUKA WA KLIEN:`,
+    waLink,
+    ``,
+    `💬 SCRIPT PESAN (tinggal copy-paste):`,
+    `───────────────────`,
+    scriptWA,
+    `───────────────────`,
+    ``,
+    `📋 INFO KLIEN:`,
+    `• Stage    : ${c.stage}`,
+    `• Sub-brand: ${c.brand}`,
+    `• Paket    : ${c.package || '-'}`,
+    `• Nilai    : ${c.value ? 'Rp ' + parseInt(c.value).toLocaleString('id-ID') : '-'}`,
+    `• Event    : ${c.date ? formatDate(c.date) : '-'}`,
+    `• Venue    : ${c.venue || '-'}`,
+    ``,
+    `📝 CATATAN TERAKHIR:`,
+    (c.notes || '-').split('\n').slice(0,3).join('\n'),
+    ``,
+    `━━━━━━━━━━━━━━━━━━`,
+    `_Dibuat otomatis dari Rushtic CRM_`,
+  ].join('\n');
+
+  const title    = encodeURIComponent(`✅ Follow Up ${c.name} – ${c.stage}`);
+  const detailsE = encodeURIComponent(details);
+
+  // color=11 = Tomato (merah muda — mencolok di kalender)
+  const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${start}/${end}&details=${detailsE}&color=11`;
+  window.open(url, '_blank');
+  showToast('✓ Event kalender dibuka — tap Save di Google Calendar');
+}
+
+function remindViaWA(id) {
+  const c = clients.find(x => x.id === id);
+  if (!lastAIResult.jadwal) { showToast('⚠ Generate dulu jadwalnya'); return; }
+
+  const myNumber = '6289608068804';
+  const msg = encodeURIComponent(
+    `🔔 *REMINDER FOLLOW UP*\n\n` +
+    `Klien: *${c.name}*\n` +
+    `Stage: ${c.stage}\n` +
+    `Paket: ${c.package||'-'}\n` +
+    `WA Klien: ${c.wa||'-'}\n\n` +
+    `📅 ${lastAIResult.jadwal}\n\n` +
+    `_Dikirim otomatis dari Rushtic CRM_`
+  );
+  window.open(`https://wa.me/${myNumber}?text=${msg}`, '_blank');
+  showToast('✓ Reminder dikirim ke WA kamu');
+}
+
+function copyAI(elId) {
+  const text = document.getElementById(elId).textContent;
+  navigator.clipboard.writeText(text).then(() => showToast('✓ Tersalin ke clipboard'));
 }
 
 // ── WA ──
