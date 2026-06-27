@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+  <meta name="theme-color" content="#2D1B6B"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="Keuangan"/>
+  <title>Keuangan Rushtic</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+    body{font-family:'Segoe UI',system-ui,sans-serif;background:#F7F8FA;min-height:100vh;max-width:480px;margin:0 auto;}
+    button{font-family:inherit;cursor:pointer;}
+    input,select{font-family:inherit;}
+
+    /* HEADER */
+    .header{background:linear-gradient(135deg,#2D1B6B 0%,#4A2FA0 100%);color:#fff;padding:16px 16px 14px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
+    .header-title{font-size:18px;font-weight:700;letter-spacing:.3px;}
+    .header-sub{font-size:11px;opacity:.7;margin-top:2px;}
+    .header-btns{display:flex;gap:8px;align-items:center;}
+    .btn-export{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:600;}
+    .btn-add-header{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:5px;}
+
+    /* TABS */
+    .tabbar{display:flex;background:#fff;border-bottom:1px solid #E8E8F0;position:sticky;top:58px;z-index:99;}
+    .tab{flex:1;padding:11px 0;font-size:13px;font-weight:500;background:none;border:none;color:#888;border-bottom:2px solid transparent;}
+    .tab.active{color:#4A2FA0;border-bottom:2px solid #4A2FA0;font-weight:700;}
+
+    /* PAGE */
+    .page{padding:14px 12px;padding-bottom:80px;}
+
+    /* SECTION LABEL */
+    .sec-label{font-size:11px;font-weight:700;letter-spacing:1px;color:#999;text-transform:uppercase;margin-bottom:8px;margin-top:4px;}
+
+    /* WALLET GRID */
+    .wallet-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+    .wallet-card{border-radius:10px;padding:12px 14px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+    .wallet-name{font-size:12px;font-weight:700;margin-bottom:4px;}
+    .wallet-bal{font-size:16px;font-weight:800;margin-bottom:4px;}
+    .wallet-sub{font-size:10px;color:#777;}
+
+    /* TOTAL CARD */
+    .total-card{background:#fff;border-radius:12px;padding:14px 16px;box-shadow:0 1px 6px rgba(0,0,0,.07);margin-bottom:18px;}
+    .total-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+    .total-label{font-size:14px;font-weight:700;color:#333;}
+    .total-amt{font-size:18px;font-weight:800;}
+
+    /* TX ROW */
+    .tx-row{background:#fff;border-radius:10px;padding:11px 12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.05);border-left:3px solid #ccc;}
+    .tx-left{flex:1;min-width:0;}
+    .tx-cat{font-size:14px;font-weight:600;color:#222;margin-bottom:3px;}
+    .tx-meta{display:flex;flex-wrap:wrap;gap:4px;align-items:center;}
+    .tx-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;}
+    .tx-date{font-size:11px;color:#999;}
+    .tx-note{font-size:11px;color:#bbb;font-style:italic;}
+    .tx-right{display:flex;align-items:center;gap:8px;margin-left:8px;}
+    .tx-amt{font-size:14px;font-weight:700;white-space:nowrap;}
+    .btn-trash{background:none;border:none;color:#ccc;padding:2px;font-size:16px;}
+
+    /* EMPTY */
+    .empty{text-align:center;color:#bbb;font-size:14px;padding:30px 0;}
+    .see-all{display:block;text-align:center;background:none;border:none;color:#4A2FA0;font-size:13px;font-weight:600;margin-top:8px;width:100%;padding:8px;}
+
+    /* FILTER */
+    .filter-row{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;}
+    .filter-input{flex:1;min-width:90px;padding:7px 8px;border-radius:8px;border:1px solid #ddd;font-size:12px;background:#fff;}
+    .period-bar{background:#fff;border-radius:8px;padding:8px 12px;display:flex;gap:10px;align-items:center;margin-bottom:12px;font-size:13px;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.05);}
+
+    /* FORM */
+    .card{background:#fff;border-radius:14px;padding:18px 16px;box-shadow:0 2px 8px rgba(0,0,0,.07);}
+    .type-toggle{display:flex;border-radius:10px;overflow:hidden;border:1px solid #e0e0e0;margin-bottom:18px;}
+    .type-btn{flex:1;padding:10px 0;font-size:13px;font-weight:600;background:#f5f5f5;border:none;color:#888;}
+    .type-btn.income.active{background:#e8f7f0;color:#1a7a4a;}
+    .type-btn.expense.active{background:#fdeaea;color:#c0392b;}
+    .form-label{display:block;font-size:12px;font-weight:600;color:#555;margin-bottom:5px;margin-top:12px;}
+    .form-select,.form-input{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #ddd;font-size:14px;background:#fff;}
+    .btn-submit{width:100%;margin-top:22px;padding:13px 0;background:linear-gradient(135deg,#2D1B6B,#4A2FA0);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;letter-spacing:.3px;}
+    .btn-submit:disabled{opacity:.4;}
+
+    /* MODAL */
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:999;}
+    .modal{background:#fff;border-radius:14px;padding:22px 20px;width:280px;box-shadow:0 8px 30px rgba(0,0,0,.2);}
+    .modal-title{font-size:16px;font-weight:700;color:#222;margin-bottom:6px;}
+    .modal-sub{font-size:13px;color:#888;margin-bottom:18px;}
+    .modal-btns{display:flex;gap:10px;}
+    .btn-cancel{flex:1;padding:10px 0;border-radius:8px;background:#f0f0f0;border:none;font-size:14px;font-weight:600;color:#555;}
+    .btn-delete{flex:1;padding:10px 0;border-radius:8px;background:#c0392b;border:none;font-size:14px;font-weight:600;color:#fff;}
+
+    /* BOTTOM NAV */
+    .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-top:1px solid #eee;display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom);}
+    .nav-btn{flex:1;padding:10px 0 8px;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;font-size:10px;font-weight:600;color:#aaa;}
+    .nav-btn.active{color:#4A2FA0;}
+    .nav-icon{font-size:20px;line-height:1;}
+
+    .color-green{color:#1a7a4a;}
+    .color-red{color:#c0392b;}
+    .fw700{font-weight:700;}
+    .fs13{font-size:13px;}
+
+    /* CHART TAB */
+    .chart-toggle{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
+    .chart-toggle-btn{padding:6px 12px;border-radius:20px;border:1px solid #ddd;background:#fff;font-size:12px;font-weight:600;color:#888;}
+    .chart-toggle-btn.active{background:#4A2FA0;color:#fff;border-color:#4A2FA0;}
+    .donut-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:8px;}
+    canvas#donutChart{max-width:220px;max-height:220px;}
+    .legend-list{width:100%;margin-top:12px;}
+    .legend-item{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid #f0f0f0;}
+    .legend-left{display:flex;align-items:center;gap:8px;}
+    .legend-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+    .legend-name{font-size:13px;color:#333;}
+    .legend-right{text-align:right;}
+    .legend-amt{font-size:13px;font-weight:700;color:#333;}
+    .legend-pct{font-size:11px;color:#999;}
+    .chart-empty{text-align:center;color:#bbb;font-size:14px;padding:40px 0;}
+    .chart-card{background:#fff;border-radius:12px;padding:16px;box-shadow:0 1px 6px rgba(0,0,0,.07);margin-bottom:14px;}
+    .chart-title{font-size:13px;font-weight:700;color:#555;margin-bottom:12px;}
+  </style>
+</head>
+<body>
+
+<div id="app"></div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────
+const WALLETS = [
+  {id:"pribadi",  label:"Pribadi",       color:"#7C6FCD", bg:"#EEF0FF"},
+  {id:"wo",       label:"Rushtic WO",    color:"#2D9B6F", bg:"#E8F7F0"},
+  {id:"decor",    label:"Rushtic Decor", color:"#C4783A", bg:"#FDF0E6"},
+  {id:"freelance",label:"Freelance Lain",color:"#B04E6F", bg:"#FDEEF3"},
+];
+
+const INCOME_CAT = {
+  pribadi:   ["Jatah Suami","Sumber Lain"],
+  wo:        ["Rushtic WO","Sumber Lain"],
+  decor:     ["Rushtic Decor","Sumber Lain"],
+  freelance: ["MC","Mengajar","Sumber Lain"],
+};
+
+const EXPENSE_CAT = {
+  pribadi:  ["Makan Sehari-hari","Jajan Hanan","Kebutuhan Harian","Listrik","Pulsa","Shodaqoh","Jatah Ibu","Keperluan Pribadi Aan","Kesehatan","Marketing","Lain-lain"],
+  wo:       ["Bayar Karyawan Freelance","Administrasi","Keperluan Wedding","Bayar Vendor","Marketing","Lain-lain"],
+  decor:    ["Bayar Tim","Bunga Segar","Properti Dekor","Transportasi","Konsumsi","Marketing","Lain-lain"],
+  freelance:["Keperluan Freelance","Marketing","Lain-lain"],
+};
+
+// ─── STORAGE ────────────────────────────────────────────────────
+const KEY = "rushtic_finance_v1";
+let transactions = [];
+try { transactions = JSON.parse(localStorage.getItem(KEY) || "[]"); } catch(e){}
+const persist = () => localStorage.setItem(KEY, JSON.stringify(transactions));
+
+// ─── HELPERS ────────────────────────────────────────────────────
+const fmt = n => "Rp " + Math.abs(n).toLocaleString("id-ID");
+const today = () => new Date().toISOString().split("T")[0];
+const thisMonth = () => today().slice(0,7);
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
+const wColor = id => (WALLETS.find(w=>w.id===id)||{}).color||"#888";
+const wBg    = id => (WALLETS.find(w=>w.id===id)||{}).bg   ||"#f5f5f5";
+const wLabel = id => (WALLETS.find(w=>w.id===id)||{}).label||id;
+
+// ─── STATE ──────────────────────────────────────────────────────
+let state = {
+  tab: "dashboard",
+  filterWallet: "all",
+  filterType: "all",
+  filterMonth: thisMonth(),
+  deleteId: null,
+  chartWallet: "all",
+  chartMonth: thisMonth(),
+  form: { wallet:"pribadi", type:"income", category:"", amount:"", note:"", date:today() },
+};
+
+// ─── EXPORT CSV ─────────────────────────────────────────────────
+function exportCSV(){
+  if(!transactions.length){ alert("Belum ada data untuk diekspor."); return; }
+  const rows = [["Tanggal","Dompet","Jenis","Kategori","Jumlah","Catatan"]];
+  transactions.forEach(t => rows.push([
+    t.date, wLabel(t.wallet),
+    t.type==="income"?"Pemasukan":"Pengeluaran",
+    t.category, t.amount, t.note||""
+  ]));
+  const csv = rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");
+  const blob = new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href=url; a.download=`keuangan-rushtic-${today()}.csv`; a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ─── RENDER ─────────────────────────────────────────────────────
+function render(){
+  const app = document.getElementById("app");
+  const {tab, form, filterWallet, filterType, filterMonth, deleteId} = state;
+
+  const filtered = transactions.filter(t=>{
+    if(filterWallet!=="all" && t.wallet!==filterWallet) return false;
+    if(filterType!=="all"   && t.type!==filterType)     return false;
+    if(filterMonth && !t.date.startsWith(filterMonth))  return false;
+    return true;
+  });
+  const pIn  = filtered.filter(t=>t.type==="income" ).reduce((a,t)=>a+t.amount,0);
+  const pOut = filtered.filter(t=>t.type==="expense").reduce((a,t)=>a+t.amount,0);
+
+  const totalBal = transactions.reduce((a,t)=>a+(t.type==="income"?t.amount:-t.amount),0);
+  const totalIn  = transactions.filter(t=>t.type==="income" ).reduce((a,t)=>a+t.amount,0);
+  const totalOut = transactions.filter(t=>t.type==="expense").reduce((a,t)=>a+t.amount,0);
+
+  const cats = form.type==="income" ? INCOME_CAT[form.wallet] : EXPENSE_CAT[form.wallet];
+
+  // TX ROW HTML
+  const txHTML = (list) => list.map(t=>`
+    <div class="tx-row" style="border-left-color:${wColor(t.wallet)}">
+      <div class="tx-left">
+        <div class="tx-cat">${t.category}</div>
+        <div class="tx-meta">
+          <span class="tx-badge" style="background:${wBg(t.wallet)};color:${wColor(t.wallet)}">${wLabel(t.wallet)}</span>
+          <span class="tx-date">${t.date}</span>
+          ${t.note?`<span class="tx-note">${t.note}</span>`:""}
+        </div>
+      </div>
+      <div class="tx-right">
+        <span class="tx-amt" style="color:${t.type==="income"?"#1a7a4a":"#c0392b"}">
+          ${t.type==="income"?"+":"−"}${fmt(t.amount)}
+        </span>
+        <button class="btn-trash" onclick="confirmDelete('${t.id}')">🗑</button>
+      </div>
+    </div>
+  `).join("");
+
+  // DASHBOARD
+  const dashHTML = `
+    <div class="page">
+      <div class="sec-label">Saldo per Dompet</div>
+      <div class="wallet-grid">
+        ${WALLETS.map(w=>{
+          const bal = transactions.filter(t=>t.wallet===w.id).reduce((a,t)=>a+(t.type==="income"?t.amount:-t.amount),0);
+          const wIn  = transactions.filter(t=>t.wallet===w.id&&t.type==="income" ).reduce((a,t)=>a+t.amount,0);
+          const wOut = transactions.filter(t=>t.wallet===w.id&&t.type==="expense").reduce((a,t)=>a+t.amount,0);
+          return `<div class="wallet-card" style="background:${w.bg};border-left:4px solid ${w.color}">
+            <div class="wallet-name" style="color:${w.color}">${w.label}</div>
+            <div class="wallet-bal" style="color:${bal>=0?"#1a7a4a":"#c0392b"}">${bal<0?"−":""}${fmt(bal)}</div>
+            <div class="wallet-sub">
+              <span style="color:#2D9B6F">▲ ${fmt(wIn)}</span>&nbsp;
+              <span style="color:#c0392b">▼ ${fmt(wOut)}</span>
+            </div>
+          </div>`;
+        }).join("")}
+      </div>
+      <div class="total-card">
+        <div class="total-row">
+          <span class="total-label">Total Saldo</span>
+          <span class="total-amt" style="color:${totalBal>=0?"#1a7a4a":"#c0392b"}">${totalBal<0?"−":""}${fmt(totalBal)}</span>
+        </div>
+        <div class="total-row">
+          <span class="fs13 color-green">Total Pemasukan</span>
+          <span class="fw700 color-green">${fmt(totalIn)}</span>
+        </div>
+        <div class="total-row">
+          <span class="fs13 color-red">Total Pengeluaran</span>
+          <span class="fw700 color-red">${fmt(totalOut)}</span>
+        </div>
+      </div>
+      <div class="sec-label">Transaksi Terakhir</div>
+      ${transactions.length===0?'<div class="empty">Belum ada transaksi. Tap "＋" untuk mulai.</div>':txHTML(transactions.slice(0,5))}
+      ${transactions.length>5?`<button class="see-all" onclick="setTab('history')">Lihat Semua →</button>`:""}
+    </div>`;
+
+  // HISTORY
+  const histHTML = `
+    <div class="page">
+      <div class="filter-row">
+        <input type="month" class="filter-input" value="${filterMonth}" onchange="setFilter('filterMonth',this.value)"/>
+        <select class="filter-input" onchange="setFilter('filterWallet',this.value)">
+          <option value="all" ${filterWallet==="all"?"selected":""}>Semua Dompet</option>
+          ${WALLETS.map(w=>`<option value="${w.id}" ${filterWallet===w.id?"selected":""}>${w.label}</option>`).join("")}
+        </select>
+        <select class="filter-input" onchange="setFilter('filterType',this.value)">
+          <option value="all" ${filterType==="all"?"selected":""}>Semua</option>
+          <option value="income" ${filterType==="income"?"selected":""}>Pemasukan</option>
+          <option value="expense" ${filterType==="expense"?"selected":""}>Pengeluaran</option>
+        </select>
+      </div>
+      <div class="period-bar">
+        <span class="color-green">▲ ${fmt(pIn)}</span>
+        <span style="color:#ccc">|</span>
+        <span class="color-red">▼ ${fmt(pOut)}</span>
+        <span style="color:#ccc">|</span>
+        <span class="fw700" style="color:${pIn-pOut>=0?"#1a7a4a":"#c0392b"}">${pIn-pOut<0?"−":""}${fmt(pIn-pOut)}</span>
+      </div>
+      ${filtered.length===0?'<div class="empty">Tidak ada transaksi untuk filter ini.</div>':txHTML(filtered)}
+    </div>`;
+
+  // ADD FORM
+  const addHTML = `
+    <div class="page">
+      <div class="card">
+        <div class="type-toggle">
+          <button class="type-btn income ${form.type==="income"?"active":""}" onclick="setFormType('income')">▲ Pemasukan</button>
+          <button class="type-btn expense ${form.type==="expense"?"active":""}" onclick="setFormType('expense')">▼ Pengeluaran</button>
+        </div>
+        <label class="form-label">Dompet</label>
+        <select class="form-select" onchange="setFormWallet(this.value)">
+          ${WALLETS.map(w=>`<option value="${w.id}" ${form.wallet===w.id?"selected":""}>${w.label}</option>`).join("")}
+        </select>
+        <label class="form-label">Kategori</label>
+        <select class="form-select" onchange="setFormField('category',this.value)">
+          <option value="">-- Pilih Kategori --</option>
+          ${cats.map(c=>`<option value="${c}" ${form.category===c?"selected":""}>${c}</option>`).join("")}
+        </select>
+        <label class="form-label">Jumlah (Rp)</label>
+        <input type="number" inputmode="numeric" class="form-input" placeholder="0" value="${form.amount}" oninput="setFormField('amount',this.value)"/>
+        <label class="form-label">Tanggal</label>
+        <input type="date" class="form-input" value="${form.date}" onchange="setFormField('date',this.value)"/>
+        <label class="form-label">Catatan (opsional)</label>
+        <input type="text" class="form-input" placeholder="Misal: bayar katering Bu Ari" value="${form.note}" oninput="setFormField('note',this.value)"/>
+        <button class="btn-submit" onclick="addTx()" ${(!form.amount||!form.category)?"disabled":""}>Simpan Transaksi</button>
+      </div>
+    </div>`;
+
+  // CHART
+  const chartFilteredTx = transactions.filter(t=>{
+    if(state.chartWallet!=="all" && t.wallet!==state.chartWallet) return false;
+    if(state.chartMonth && !t.date.startsWith(state.chartMonth)) return false;
+    return true;
+  });
+  const expTx = chartFilteredTx.filter(t=>t.type==="expense");
+  const catMap = {};
+  expTx.forEach(t=>{ catMap[t.category]=(catMap[t.category]||0)+t.amount; });
+  const catEntries = Object.entries(catMap).sort((a,b)=>b[1]-a[1]);
+  const totalExp = catEntries.reduce((a,c)=>a+c[1],0);
+
+  const CHART_COLORS = ["#4A2FA0","#2D9B6F","#C4783A","#B04E6F","#3A85C4","#9B2D7A","#6FC47A","#C4A23A","#3AC4B4","#A03A3A","#7C6FCD","#6FB87C"];
+
+  const chartHTML = `
+    <div class="page">
+      <div class="chart-card">
+        <div class="chart-title">Filter Bagan</div>
+        <div class="filter-row">
+          <input type="month" class="filter-input" value="${state.chartMonth}" onchange="setChartFilter('chartMonth',this.value)"/>
+          <select class="filter-input" onchange="setChartFilter('chartWallet',this.value)">
+            <option value="all" ${state.chartWallet==="all"?"selected":""}>Semua Dompet</option>
+            ${WALLETS.map(w=>`<option value="${w.id}" ${state.chartWallet===w.id?"selected":""}>${w.label}</option>`).join("")}
+          </select>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-title">Pengeluaran per Kategori</div>
+        ${totalExp===0
+          ? `<div class="chart-empty">Belum ada data pengeluaran untuk periode ini.</div>`
+          : `<div class="donut-wrap">
+               <canvas id="donutChart" width="220" height="220"></canvas>
+             </div>
+             <div class="legend-list">
+               ${catEntries.map(([cat,amt],i)=>`
+                 <div class="legend-item">
+                   <div class="legend-left">
+                     <div class="legend-dot" style="background:${CHART_COLORS[i%CHART_COLORS.length]}"></div>
+                     <span class="legend-name">${cat}</span>
+                   </div>
+                   <div class="legend-right">
+                     <div class="legend-amt">${fmt(amt)}</div>
+                     <div class="legend-pct">${((amt/totalExp)*100).toFixed(1)}%</div>
+                   </div>
+                 </div>`).join("")}
+             </div>`
+        }
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-title">Pengeluaran per Dompet</div>
+        ${WALLETS.map(w=>{
+          const amt = chartFilteredTx.filter(t=>t.wallet===w.id&&t.type==="expense").reduce((a,t)=>a+t.amount,0);
+          const pct = totalExp>0?((amt/totalExp)*100).toFixed(1):0;
+          return `<div style="margin-bottom:12px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:13px;font-weight:600;color:${w.color}">${w.label}</span>
+              <span style="font-size:13px;font-weight:700;color:#333">${pct}% · ${fmt(amt)}</span>
+            </div>
+            <div style="background:#f0f0f0;border-radius:6px;height:8px;overflow:hidden;">
+              <div style="background:${w.color};height:100%;width:${pct}%;border-radius:6px;transition:width .4s;"></div>
+            </div>
+          </div>`;
+        }).join("")}
+      </div>
+    </div>`;
+
+
+  const modalHTML = deleteId ? `
+    <div class="overlay">
+      <div class="modal">
+        <div class="modal-title">Hapus transaksi ini?</div>
+        <div class="modal-sub">Tindakan ini tidak bisa dibatalkan.</div>
+        <div class="modal-btns">
+          <button class="btn-cancel" onclick="cancelDelete()">Batal</button>
+          <button class="btn-delete" onclick="doDelete()">Hapus</button>
+        </div>
+      </div>
+    </div>` : "";
+
+  app.innerHTML = `
+    <div class="header">
+      <div>
+        <div class="header-title">Keuangan Rushtic</div>
+        <div class="header-sub">Personal Finance Tracker</div>
+      </div>
+      <div class="header-btns">
+        <button class="btn-export" onclick="exportCSV()">↓ CSV</button>
+        <button class="btn-add-header" onclick="setTab('add')">＋ Tambah</button>
+      </div>
+    </div>
+    <div class="tabbar">
+      <button class="tab ${tab==="dashboard"?"active":""}" onclick="setTab('dashboard')">Dashboard</button>
+      <button class="tab ${tab==="history"?"active":""}"   onclick="setTab('history')">Riwayat</button>
+      <button class="tab ${tab==="chart"?"active":""}"     onclick="setTab('chart')">Bagan</button>
+      <button class="tab ${tab==="add"?"active":""}"       onclick="setTab('add')">Tambah</button>
+    </div>
+    ${tab==="dashboard" ? dashHTML : tab==="history" ? histHTML : tab==="chart" ? chartHTML : addHTML}
+    ${modalHTML}
+    <div class="bottom-nav">
+      <button class="nav-btn ${tab==="dashboard"?"active":""}" onclick="setTab('dashboard')">
+        <span class="nav-icon">🏠</span>Dashboard
+      </button>
+      <button class="nav-btn ${tab==="history"?"active":""}" onclick="setTab('history')">
+        <span class="nav-icon">📋</span>Riwayat
+      </button>
+      <button class="nav-btn ${tab==="chart"?"active":""}" onclick="setTab('chart')">
+        <span class="nav-icon">📊</span>Bagan
+      </button>
+      <button class="nav-btn ${tab==="add"?"active":""}" onclick="setTab('add')">
+        <span class="nav-icon">➕</span>Tambah
+      </button>
+    </div>
+  `;
+}
+
+// ─── ACTIONS ────────────────────────────────────────────────────
+function setTab(t){ state.tab=t; render(); if(t==="chart") setTimeout(drawDonut,50); }
+function setFilter(k,v){ state[k]=v; render(); }
+function setChartFilter(k,v){ state[k]=v; render(); setTimeout(drawDonut,50); }
+function setFormType(t){ state.form={...state.form,type:t,category:""}; render(); }
+function setFormWallet(w){ state.form={...state.form,wallet:w,category:""}; render(); }
+function setFormField(k,v){ state.form={...state.form,[k]:v}; render(); }
+
+function addTx(){
+  const f = state.form;
+  if(!f.amount||!f.category) return;
+  transactions.unshift({id:uid(),...f,amount:parseFloat(f.amount)});
+  persist();
+  state.form={wallet:f.wallet,type:f.type,category:"",amount:"",note:"",date:today()};
+  state.tab="history";
+  render();
+}
+
+function confirmDelete(id){ state.deleteId=id; render(); }
+function cancelDelete(){ state.deleteId=null; render(); }
+function doDelete(){
+  transactions=transactions.filter(t=>t.id!==state.deleteId);
+  persist();
+  state.deleteId=null;
+  render();
+}
+
+// ─── DRAW DONUT ─────────────────────────────────────────────────
+function drawDonut(){
+  const canvas = document.getElementById("donutChart");
+  if(!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0,0,W,H);
+
+  const chartFilteredTx = transactions.filter(t=>{
+    if(state.chartWallet!=="all" && t.wallet!==state.chartWallet) return false;
+    if(state.chartMonth && !t.date.startsWith(state.chartMonth)) return false;
+    return true;
+  });
+  const expTx = chartFilteredTx.filter(t=>t.type==="expense");
+  const catMap = {};
+  expTx.forEach(t=>{ catMap[t.category]=(catMap[t.category]||0)+t.amount; });
+  const catEntries = Object.entries(catMap).sort((a,b)=>b[1]-a[1]);
+  const total = catEntries.reduce((a,c)=>a+c[1],0);
+  if(!total) return;
+
+  const CHART_COLORS = ["#4A2FA0","#2D9B6F","#C4783A","#B04E6F","#3A85C4","#9B2D7A","#6FC47A","#C4A23A","#3AC4B4","#A03A3A","#7C6FCD","#6FB87C"];
+  const cx=W/2, cy=H/2, r=90, inner=52;
+  let angle = -Math.PI/2;
+
+  catEntries.forEach(([cat,amt],i)=>{
+    const slice = (amt/total)*2*Math.PI;
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,angle,angle+slice);
+    ctx.closePath();
+    ctx.fillStyle = CHART_COLORS[i%CHART_COLORS.length];
+    ctx.fill();
+    angle+=slice;
+  });
+
+  // inner hole
+  ctx.beginPath();
+  ctx.arc(cx,cy,inner,0,2*Math.PI);
+  ctx.fillStyle="#fff";
+  ctx.fill();
+
+  // center text
+  ctx.fillStyle="#333";
+  ctx.font="bold 13px 'Segoe UI',sans-serif";
+  ctx.textAlign="center";
+  ctx.textBaseline="middle";
+  ctx.fillText("Pengeluaran",cx,cy-9);
+  ctx.font="bold 11px 'Segoe UI',sans-serif";
+  ctx.fillStyle="#888";
+  ctx.fillText(catEntries.length+" kategori",cx,cy+9);
+}
+
+// ─── INIT ───────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
