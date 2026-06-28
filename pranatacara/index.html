@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kelas Pranatacara — Rushtic Wedding & Decoration Yogyakarta</title>
+<meta name="description" content="Kelas pelatihan Pranatacara profesional di Yogyakarta. Pelajari seni memandu acara pernikahan adat Jawa. Sabtu & Minggu, 13.30–15.00 WIB.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════
+   TOKENS
+════════════════════════════════════ */
+:root {
+  --ink:      #0B0907;
+  --ink2:     #161109;
+  --gold:     #C9A84C;
+  --gold-dk:  #8B6914;
+  --gold-lt:  #E8C96A;
+  --cream:    #F5E6B8;
+  --cream2:   #D4BC82;
+  --muted:    rgba(245,230,184,0.45);
+  --muted2:   rgba(245,230,184,0.2);
+  --border:   rgba(201,168,76,0.22);
+  --border2:  rgba(201,168,76,0.4);
+  --r:        0px;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body:    'Inter', system-ui, sans-serif;
+}
+
+/* ════════════════════════════════════
+   RESET & BASE
+════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--ink);
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+
+/* ════════════════════════════════════
+   UTILITIES
+════════════════════════════════════ */
+.container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+.eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.gold-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+}
+.gold-line::before, .gold-line::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border2);
+}
+.gold-line span {
+  font-size: 10px;
+  color: var(--gold);
+}
+section { padding: 72px 0; }
+
+/* ════════════════════════════════════
+   NAV
+════════════════════════════════════ */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: rgba(11,9,7,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 20px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-brand {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.nav-cta {
+  background: var(--gold);
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 8px 20px;
+  transition: background 0.2s;
+}
+.nav-cta:hover { background: var(--gold-lt); }
+
+/* ════════════════════════════════════
+   HERO
+════════════════════════════════════ */
+.hero {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 100px 0 72px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 20%, rgba(184,134,11,0.15) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 80% 60%, rgba(184,134,11,0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* Animated ornament lines */
+.hero-ornament {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent 0%, var(--gold) 40%, var(--gold-lt) 50%, var(--gold) 60%, transparent 100%);
+  animation: shimmer 3s ease-in-out infinite;
+}
+@keyframes shimmer {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+}
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border2);
+  padding: 7px 16px;
+  margin-bottom: 32px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-lt);
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(52px, 12vw, 80px);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+}
+.hero-title .word-pranata {
+  display: block;
+  color: var(--gold);
+  font-style: italic;
+  font-size: 1.15em;
+}
+.hero-title .word-cara {
+  display: block;
+  color: var(--cream);
+}
+.hero-sub {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 17px;
+  color: var(--muted);
+  margin-bottom: 40px;
+  line-height: 1.5;
+}
+.hero-meta {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+.hero-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.hero-meta-item .lbl {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.hero-meta-item .val {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cream);
+}
+.hero-cta-group {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, var(--gold-lt), var(--gold-dk));
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 16px 32px;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border2);
+  color: var(--gold);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding: 16px 28px;
+  transition: background 0.2s;
+}
+.btn-secondary:hover { background: rgba(201,168,76,0.06); }
+
+/* Scroll indicator */
+.scroll-hint {
+  margin-top: 56px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.scroll-hint::before {
+  content: '';
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, transparent, var(--gold));
+  animation: scrollLine 1.5s ease-in-out infinite;
+}
+@keyframes scrollLine {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+/* ════════════════════════════════════
+   HIGHLIGHTS
+════════════════════════════════════ */
+.highlights-section {
+  padding: 0 0 72px;
+}
+.highlight-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-top: 32px;
+}
+.hl-card {
+  background: var(--ink2);
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: background 0.2s;
+}
+.hl-card:hover { background: rgba(201,168,76,0.05); }
+.hl-icon { font-size: 28px; line-height: 1; }
+.hl-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gold-lt);
+  line-height: 1.3;
+}
+.hl-desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* ════════════════════════════════════
+   HARGA
+════════════════════════════════════ */
+.harga-section { background: var(--ink2); }
+.harga-main {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.harga-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+.harga-angka {
+  font-family: var(--font-display);
+  font-size: clamp(48px, 12vw, 72px);
+  font-weight: 900;
+  color: var(--cream);
+  line-height: 1;
+}
+.harga-unit {
+  font-size: 14px;
+  color: var(--muted);
+  margin-top: 6px;
+  letter-spacing: 0.08em;
+}
+.promo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+.promo-card {
+  border: 1px solid var(--border2);
+  padding: 24px 16px;
+  text-align: center;
+  background: rgba(201,168,76,0.04);
+  position: relative;
+  overflow: hidden;
+}
+.promo-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.promo-tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+.promo-harga {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--cream);
+  margin-bottom: 4px;
+}
+.promo-hemat {
+  font-size: 11px;
+  color: #7EC8A0;
+  font-weight: 600;
+}
+.quota-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: rgba(220,60,60,0.07);
+  border: 1px solid rgba(220,80,80,0.25);
+  padding: 18px 20px;
+}
+.quota-notice .icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.quota-notice p { font-size: 13.5px; color: #FFB0B0; line-height: 1.6; }
+.quota-notice strong { color: #FF8888; }
+
+/* ════════════════════════════════════
+   BENEFITS
+════════════════════════════════════ */
+.benefit-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--border);
+}
+.benefit-item:last-child { border-bottom: none; }
+.benefit-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+.benefit-body {}
+.benefit-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--cream);
+  margin-bottom: 3px;
+  line-height: 1.4;
+}
+.benefit-desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* ════════════════════════════════════
+   KURIKULUM
+════════════════════════════════════ */
+.kurikulum-section { background: var(--ink2); }
+.kurikulum-grid {
+  display: grid;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-top: 32px;
+}
+.kur-item {
+  background: var(--ink2);
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px 18px;
+  transition: background 0.15s;
+}
+.kur-item:hover { background: rgba(201,168,76,0.04); }
+.kur-no {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gold-dk);
+  min-width: 24px;
+  padding-top: 1px;
+  flex-shrink: 0;
+}
+.kur-nama {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--cream2);
+  line-height: 1.4;
+}
+.kur-desc {
+  font-size: 11.5px;
+  color: var(--muted);
+  margin-top: 2px;
+  line-height: 1.5;
+}
+
+/* ════════════════════════════════════
+   CARA DAFTAR
+════════════════════════════════════ */
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 32px;
+  position: relative;
+}
+.steps::before {
+  content: '';
+  position: absolute;
+  left: 20px;
+  top: 40px;
+  bottom: 40px;
+  width: 1px;
+  background: var(--border2);
+}
+.step {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  padding: 20px 0;
+}
+.step-num {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--gold);
+  background: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gold);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+.step-body {}
+.step-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--cream);
+  margin-bottom: 4px;
+}
+.step-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+/* ════════════════════════════════════
+   CTA FINAL
+════════════════════════════════════ */
+.cta-section {
+  background: var(--ink2);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.cta-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(184,134,11,0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cta-title {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 8vw, 48px);
+  font-weight: 900;
+  color: var(--cream);
+  line-height: 1.1;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+}
+.cta-title em { font-style: italic; color: var(--gold); }
+.cta-sub {
+  font-size: 15px;
+  color: var(--muted);
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 1;
+}
+.cta-wa {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, var(--gold-lt), var(--gold-dk));
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 20px 40px;
+  margin-bottom: 20px;
+  transition: transform 0.2s, opacity 0.2s;
+  position: relative;
+  z-index: 1;
+}
+.cta-wa:hover { transform: translateY(-2px); opacity: 0.92; }
+.cta-social {
+  font-size: 13px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  position: relative;
+  z-index: 1;
+}
+.cta-social strong { color: var(--gold); }
+
+/* ════════════════════════════════════
+   FOOTER
+════════════════════════════════════ */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 32px 0;
+  text-align: center;
+}
+footer p {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+footer a { color: var(--gold); }
+
+/* ════════════════════════════════════
+   SECTION HEADERS
+════════════════════════════════════ */
+.section-header {
+  margin-bottom: 8px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 7vw, 40px);
+  font-weight: 900;
+  color: var(--cream);
+  line-height: 1.1;
+  margin-top: 10px;
+  margin-bottom: 12px;
+}
+.section-desc {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 520px;
+}
+
+/* ════════════════════════════════════
+   REVEAL ANIMATION
+════════════════════════════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ════════════════════════════════════
+   RESPONSIVE
+════════════════════════════════════ */
+@media (max-width: 480px) {
+  .highlight-cards { grid-template-columns: 1fr; }
+  .promo-grid { grid-template-columns: 1fr; }
+  .hero-meta { gap: 16px; }
+  .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+  .hero-cta-group { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <span class="nav-brand">Rushtic WO Jogja</span>
+    <a href="https://wa.me/6289608068804?text=Halo%2C+saya+mau+daftar+Kelas+Pranatacara" class="nav-cta">Daftar Sekarang</a>
+  </div>
+</nav>
+
+<!-- ══ HERO ══════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-ornament"></div>
+  <div class="hero-glow"></div>
+  <div class="container hero-content">
+    <div class="hero-tag reveal">✦ &nbsp; Program Pelatihan Budaya Jawa</div>
+    <h1 class="hero-title reveal">
+      <span class="word-cara">Kelas</span>
+      <span class="word-pranata">Pranata</span>
+      <span class="word-cara">Cara</span>
+    </h1>
+    <p class="hero-sub reveal">Seni Memandu Acara Pernikahan Adat Jawa<br>bersama Narasumber Profesional PPY Yogyakarta</p>
+    <div class="hero-meta reveal">
+      <div class="hero-meta-item">
+        <span class="lbl">Jadwal</span>
+        <span class="val">Sabtu & Minggu</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="lbl">Waktu</span>
+        <span class="val">13.30 – 15.00 WIB</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="lbl">Pertemuan</span>
+        <span class="val">7 Sesi</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="lbl">Biaya</span>
+        <span class="val">Rp 750.000</span>
+      </div>
+    </div>
+    <div class="hero-cta-group reveal">
+      <a href="https://wa.me/6289608068804?text=Halo%2C+saya+mau+daftar+Kelas+Pranatacara" class="btn-primary">
+        💬 &nbsp;Daftar via WhatsApp
+      </a>
+      <a href="#kurikulum" class="btn-secondary">Lihat Kurikulum →</a>
+    </div>
+    <div class="scroll-hint reveal">Scroll untuk info lengkap</div>
+  </div>
+</section>
+
+<!-- ══ HIGHLIGHTS ════════════════════════════════ -->
+<section class="highlights-section">
+  <div class="container">
+    <div class="eyebrow reveal">Keistimewaan Program</div>
+    <h2 class="section-title reveal">Bukan kelas biasa.</h2>
+    <p class="section-desc reveal">Dua keuntungan eksklusif yang tidak ada di tempat lain:</p>
+    <div class="highlight-cards reveal">
+      <div class="hl-card">
+        <div class="hl-icon">🏛️</div>
+        <div class="hl-title">Otomatis Jadi Anggota PPY Kota Yogyakarta</div>
+        <div class="hl-desc">Setiap alumni kelas langsung terdaftar sebagai anggota Paguyuban Pranatacara Yogyakarta — komunitas resmi Pranatacara di Kota Yogyakarta.</div>
+      </div>
+      <div class="hl-card">
+        <div class="hl-icon">🎙️</div>
+        <div class="hl-title">Kesempatan Jadi MC Pernikahan di Rushtic WO</div>
+        <div class="hl-desc">Peserta terbaik mendapat kesempatan bergabung dan bertugas sebagai MC profesional pernikahan bersama tim Rushtic WO Jogja.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ HARGA ══════════════════════════════════════ -->
+<section class="harga-section" id="harga">
+  <div class="container">
+    <div class="eyebrow reveal">Investasi</div>
+    <div class="harga-main reveal">
+      <div class="harga-label">Biaya Kursus</div>
+      <div class="harga-angka">Rp 750.000</div>
+      <div class="harga-unit">per orang &nbsp;·&nbsp; 7 Pertemuan</div>
+    </div>
+    <div class="gold-line reveal"><span>✦</span></div>
+    <p style="text-align:center; font-size:13px; color:var(--muted); margin-bottom:20px;" class="reveal">Daftar bareng lebih hemat 👇</p>
+    <div class="promo-grid reveal">
+      <div class="promo-card">
+        <div class="promo-tag">👫 Daftar 2 Orang</div>
+        <div class="promo-harga">Rp 1,4 jt</div>
+        <div class="promo-hemat">hemat Rp 100.000</div>
+      </div>
+      <div class="promo-card">
+        <div class="promo-tag">👨‍👩‍👧 Daftar 3 Orang</div>
+        <div class="promo-harga">Rp 2 jt</div>
+        <div class="promo-hemat">hemat Rp 250.000</div>
+      </div>
+    </div>
+    <div class="quota-notice reveal">
+      <div class="icon">⚡</div>
+      <p><strong>Kelas dimulai setelah minimal 15 peserta terdaftar.</strong> Segera daftar sekarang — tempat terbatas per angkatan!</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ BENEFITS ═══════════════════════════════════ -->
+<section id="benefit">
+  <div class="container">
+    <div class="eyebrow reveal">Yang Kamu Dapatkan</div>
+    <h2 class="section-title reveal">7 Pertemuan,<br><em style="font-style:italic;color:var(--gold)">bekal seumur hidup.</em></h2>
+    <div class="reveal">
+      <div class="benefit-item">
+        <div class="benefit-icon">📚</div>
+        <div class="benefit-body">
+          <div class="benefit-title">Modul Pembelajaran Digital Lengkap</div>
+          <div class="benefit-desc">PDF 12 bab berisi teori, contoh teks Pranatacara asli bahasa Jawa Krama Inggil, latihan, dan glosarium.</div>
+        </div>
+      </div>
+      <div class="benefit-item">
+        <div class="benefit-icon">🎓</div>
+        <div class="benefit-body">
+          <div class="benefit-title">Sertifikat Kelulusan Resmi</div>
+          <div class="benefit-desc">Sertifikat dari Rushtic Wedding & Decoration yang dapat digunakan sebagai portofolio dan bukti kompetensi.</div>
+        </div>
+      </div>
+      <div class="benefit-item">
+        <div class="benefit-icon">🎥</div>
+        <div class="benefit-body">
+          <div class="benefit-title">Rekaman Video Setiap Sesi Latihan</div>
+          <div class="benefit-desc">Setiap penampilan direkam untuk bahan evaluasi mandiri — kamu bisa melihat perkembangan diri sendiri.</div>
+        </div>
+      </div>
+      <div class="benefit-item">
+        <div class="benefit-icon">💬</div>
+        <div class="benefit-body">
+          <div class="benefit-title">Pendampingan via WhatsApp Group</div>
+          <div class="benefit-desc">Tanya jawab dan konsultasi dengan narasumber selama program berlangsung, tidak hanya saat kelas.</div>
+        </div>
+      </div>
+      <div class="benefit-item">
+        <div class="benefit-icon">👘</div>
+        <div class="benefit-body">
+          <div class="benefit-title">Tata Busana Jawa & Undha Usuk Basa</div>
+          <div class="benefit-desc">Pakem busana adat Jawa yang benar dan penguasaan tingkatan bahasa Jawa dari ngoko hingga krama inggil.</div>
+        </div>
+      </div>
+      <div class="benefit-item">
+        <div class="benefit-icon">🤝</div>
+        <div class="benefit-body">
+          <div class="benefit-title">Jaringan Alumni Komunitas Pranatacara</div>
+          <div class="benefit-desc">Bergabung dengan komunitas alumni yang saling mendukung dan berpotensi saling mereferensikan job.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ KURIKULUM ═══════════════════════════════════ -->
+<section class="kurikulum-section" id="kurikulum">
+  <div class="container">
+    <div class="eyebrow reveal">Kurikulum</div>
+    <h2 class="section-title reveal">7 Pertemuan,<br><em style="font-style:italic;color:var(--gold)">1 Tujuan.</em></h2>
+    <p class="section-desc reveal">Dari dasar filosofi hingga praktik memandu acara pernikahan lengkap — padat dalam 7 sesi.</p>
+    <div class="kurikulum-grid reveal">
+      <div class="kur-item"><div class="kur-no">01</div><div><div class="kur-nama">Catur Kawruh & Undha Usuk Basa</div><div class="kur-desc">Empat pilar ilmu Pranatacara + tingkatan bahasa Jawa ngoko s.d. krama inggil</div></div></div>
+      <div class="kur-item"><div class="kur-no">02</div><div><div class="kur-nama">MC Seserahan & Pambagyaharja Pasrah Panampi</div><div class="kur-desc">Memandu seserahan, sambutan adat, prosesi pasrah dan panampi</div></div></div>
+      <div class="kur-item"><div class="kur-no">03</div><div><div class="kur-nama">MC Ijab Qobul & Upacara Adat Panggih</div><div class="kur-desc">Akad nikah, koordinasi penghulu, siraman, midodareni, panggih, sungkeman</div></div></div>
+      <div class="kur-item"><div class="kur-no">04</div><div><div class="kur-nama">Resepsi Pernikahan & Tata Busana Jawa</div><div class="kur-desc">Manajemen waktu resepsi, koordinasi vendor + pakem busana adat Jawa</div></div></div>
+      <div class="kur-item"><div class="kur-no">05</div><div><div class="kur-nama">Pamedharsabda Umum & MC Umum</div><div class="kur-desc">Seni pidato bahasa Jawa: atur pambuka + MC seminar, wisuda, pelantikan</div></div></div>
+      <div class="kur-item"><div class="kur-no">06</div><div><div class="kur-nama">Review Materi & Gladi Bersih</div><div class="kur-desc">Latihan intensif seluruh materi dan persiapan ujian praktik</div></div></div>
+      <div class="kur-item"><div class="kur-no">07</div><div><div class="kur-nama">Penilaian Hasil Akhir, Evaluasi & Sertifikasi</div><div class="kur-desc">Simulasi acara pernikahan lengkap, umpan balik personal, dan sertifikat kelulusan</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CARA DAFTAR ════════════════════════════════ -->
+<section id="daftar">
+  <div class="container">
+    <div class="eyebrow reveal">Cara Daftar</div>
+    <h2 class="section-title reveal">Mudah, cukup 3 langkah.</h2>
+    <div class="steps reveal">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Hubungi via WhatsApp</div>
+          <div class="step-desc">Chat ke +62 896-0806-8804 dengan menyebutkan nama dan jumlah peserta yang akan didaftarkan.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Lakukan Pembayaran</div>
+          <div class="step-desc">Transfer ke rekening Rushtic (BCA / BRI / Seabank / BNI a.n. Aan Fajar Lestari) dan kirim bukti pembayaran.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Bergabung di Grup Kelas</div>
+          <div class="step-desc">Setelah pembayaran dikonfirmasi, kamu akan dimasukkan ke grup WhatsApp kelas dan mendapat info jadwal & modul.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA FINAL ══════════════════════════════════ -->
+<section class="cta-section">
+  <div class="cta-glow"></div>
+  <div class="container">
+    <p class="eyebrow reveal" style="margin-bottom:16px;">Mulai perjalananmu</p>
+    <h2 class="cta-title reveal">Siap jadi<br><em>Pranatacara</em><br>profesional?</h2>
+    <p class="cta-sub reveal">Kelas dimulai setelah 15 peserta terdaftar.<br>Jangan sampai ketinggalan angkatan pertama.</p>
+    <div class="reveal">
+      <a href="https://wa.me/6289608068804?text=Halo%20Kak%20Aan%2C%20saya%20mau%20daftar%20Kelas%20Pranatacara%20%F0%9F%99%8F" class="cta-wa">
+        💬 &nbsp; Daftar Sekarang via WA
+      </a>
+    </div>
+    <div class="cta-social reveal" style="margin-top:20px;">
+      <strong>@rushtic.wojogja</strong> &nbsp;|&nbsp; <strong>@aan.f.l</strong> &nbsp;|&nbsp; rushticwojogja.com
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ═════════════════════════════════════ -->
+<footer>
+  <div class="container">
+    <p>© 2025 <a href="https://rushticwojogja.com">Rushtic Wedding & Decoration</a> — Banguntapan, Bantul, Yogyakarta</p>
+    <p style="margin-top:6px;">WA: <a href="https://wa.me/6289608068804">+62 896-0806-8804</a></p>
+  </div>
+</footer>
+
+<script>
+// Reveal on scroll
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 60);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
