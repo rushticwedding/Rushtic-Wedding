@@ -513,8 +513,15 @@ function savePatch(patch) {
 async function loadData(manual = false) {
   if (manual) showToast('🔄 Memuat data terbaru...');
   setSyncStatus('syncing', 'Memuat...');
+  // Tutup layar loading langsung — daftar posisi sudah bisa dipakai walau
+  // server belum jawab. Jadi sinyal jelek tidak bikin nyangkut di "Memuat data".
+  hideOverlay();
   try {
-    const data = await readBin();
+    // Batasi tunggu maksimal 8 detik. Kalau server lama, jangan gantung selamanya.
+    const data = await Promise.race([
+      readBin(),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 8000))
+    ]);
     appData = data || defaultData();
     setSyncStatus('ok', 'Tersambung');
     renderAll();
@@ -525,7 +532,6 @@ async function loadData(manual = false) {
     renderAll();
     if (manual) showToast('❌ Gagal memuat, tampil data lokal');
   }
-  hideOverlay();
 }
 
 // Dengarkan perubahan dari HP lain secara langsung (real-time),
@@ -919,6 +925,8 @@ function downloadPDF() {
 // ============================================================
 // INIT
 // ============================================================
+// Pengaman: apapun yang terjadi, layar loading wajib ketutup dalam 3 detik.
+setTimeout(hideOverlay, 3000);
 // Render tampilan posisi dulu (instan, tidak butuh internet)
 if (!appData || !Object.keys(appData).length) appData = defaultData();
 try { renderAll(); } catch(e) { console.warn('initial render', e); }
