@@ -325,10 +325,6 @@
 // ============================================================
 // CONFIG
 // ============================================================
-const MASTER_KEY = '$2a$10$S7Sbz2WPzeCYV9AckaZKMuZreJ5iVVF7yvQUTqr7lPD8kbCKLBmwy';
-const BIN_NAME = 'rushtic-wo-data';
-let BIN_ID = '6a11dc8b6877513b27beb099'; // hardcoded agar semua device sinkron
-
 const ROLES = [
   {
     id: 'koordinator', name: 'Koordinator', icon: '📋',
@@ -500,14 +496,19 @@ async function readBin() {
   return snap.exists() ? snap.val() : null;
 }
 
-async function writeBin(data) {
-  data.updatedAt = new Date().toISOString();
-  await DATA_REF.set(data);
-  return true;
+// Tulis HANYA bagian yang berubah, bukan timpa seluruh data.
+// Ini mencegah 2 HP yang edit bersamaan saling menghapus perubahan satu sama lain.
+function savePatch(patch) {
+  patch.updatedAt = new Date().toISOString();
+  pendingSync = true;
+  setSyncStatus('syncing', 'Menyimpan...');
+  DATA_REF.update(patch)
+    .then(() => { setSyncStatus('ok', 'Tersimpan ✓'); pendingSync = false; })
+    .catch(() => { setSyncStatus('error', 'Gagal menyimpan'); pendingSync = false; });
 }
 
 // ============================================================
-// LOAD & SYNC
+// LOAD & LIVE SYNC
 // ============================================================
 async function loadData(manual = false) {
   if (manual) showToast('🔄 Memuat data terbaru...');
@@ -519,7 +520,6 @@ async function loadData(manual = false) {
     renderAll();
     if (manual) showToast('✅ Data berhasil dimuat');
   } catch(e) {
-    // Walau gagal terhubung, tetap render tampilan dari data lokal/default
     if (!appData || !Object.keys(appData).length) appData = defaultData();
     setSyncStatus('error', 'Offline — data lokal');
     renderAll();
@@ -528,19 +528,18 @@ async function loadData(manual = false) {
   hideOverlay();
 }
 
-function scheduleSave() {
-  pendingSync = true;
-  setSyncStatus('syncing', 'Menyimpan...');
-  clearTimeout(syncTimer);
-  syncTimer = setTimeout(async () => {
-    try {
-      await writeBin(appData);
-      setSyncStatus('ok', 'Tersimpan ✓');
-      pendingSync = false;
-    } catch(e) {
-      setSyncStatus('error', 'Gagal menyimpan');
-    }
-  }, 1200);
+// Dengarkan perubahan dari HP lain secara langsung (real-time),
+// bukan nunggu refresh manual atau cek tiap 30 detik.
+function listenLive() {
+  DATA_REF.on('value', (snap) => {
+    const data = snap.exists() ? snap.val() : null;
+    if (!data) return;
+    appData = data;
+    setSyncStatus('ok', 'Tersambung');
+    renderAll();
+  }, () => {
+    setSyncStatus('error', 'Offline — data lokal');
+  });
 }
 
 function setSyncStatus(type, text) {
@@ -756,7 +755,7 @@ function toggleTask(roleId, idx, el) {
   el.classList.toggle('checked');
   const role = ROLES.find(r => r.id === roleId);
   updateRoleProgress(role, appData[roleId]);
-  scheduleSave();
+  savePatch({ [`${roleId}/checks`]: checks });
 }
 
 function updateField(roleId, fieldId, value, radioEl) {
@@ -767,7 +766,7 @@ function updateField(roleId, fieldId, value, radioEl) {
     radioEl.closest('.radio-group').querySelectorAll('.radio-btn').forEach(b => b.classList.remove('selected'));
     radioEl.classList.add('selected');
   }
-  scheduleSave();
+  savePatch({ [`${roleId}/fields/${fieldId}`]: value });
 }
 
 function updateMeta(key, value) {
@@ -777,7 +776,7 @@ function updateMeta(key, value) {
   const eventInfo = meta.pengantin ? `${meta.pengantin} · ${meta.tanggal||''}` : 'Isi info acara di bagian Koordinator';
   const el = document.getElementById('header-event-info');
   if (el) el.textContent = eventInfo;
-  scheduleSave();
+  savePatch({ [`meta/${key}`]: value });
 }
 
 function updateRoleProgress(role, rd) {
@@ -918,22 +917,14 @@ function downloadPDF() {
 }
 
 // ============================================================
-// AUTO REFRESH (setiap 30 detik)
-// ============================================================
-setInterval(() => {
-  if (!pendingSync && currentRoleId) {
-    loadData(false).then(() => { if(currentRoleId) renderRoleView(currentRoleId); });
-  }
-}, 30000);
-
-// ============================================================
 // INIT
 // ============================================================
 // Render tampilan posisi dulu (instan, tidak butuh internet)
 if (!appData || !Object.keys(appData).length) appData = defaultData();
 try { renderAll(); } catch(e) { console.warn('initial render', e); }
-// Lalu ambil data terbaru dari server
-loadData();
+// Ambil data awal, lalu pasang listener real-time —
+// begitu HP lain centang/isi sesuatu, langsung muncul di sini juga.
+loadData().then(() => listenLive());
 </script>
 </body>
 </html>
