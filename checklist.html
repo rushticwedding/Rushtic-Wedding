@@ -476,6 +476,20 @@ function defaultData() {
   return d;
 }
 
+// Firebase MENGHAPUS array/objek kosong saat menyimpan. Jadi posisi yang belum
+// pernah dicentang balik dari server TANPA key 'checks' — dan kode tampilan
+// error karenanya. Fungsi ini melengkapi kembali struktur yang hilang.
+function normalize(data) {
+  if (!data || typeof data !== 'object') return defaultData();
+  if (!data.meta) data.meta = { pengantin:'', tanggal:'', venue:'' };
+  ROLES.forEach(r => {
+    if (!data[r.id]) data[r.id] = { checks: [], fields: {} };
+    if (!Array.isArray(data[r.id].checks)) data[r.id].checks = Object.values(data[r.id].checks || {});
+    if (!data[r.id].fields || typeof data[r.id].fields !== 'object') data[r.id].fields = {};
+  });
+  return data;
+}
+
 // ============================================================
 // FIREBASE (rushtic-deco) sebagai database — aman tanpa token publik
 // ============================================================
@@ -522,7 +536,7 @@ async function loadData(manual = false) {
       readBin(),
       new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 8000))
     ]);
-    appData = data || defaultData();
+    appData = normalize(data);
     setSyncStatus('ok', 'Tersambung');
     renderAll();
     if (manual) showToast('✅ Data berhasil dimuat');
@@ -540,7 +554,7 @@ function listenLive() {
   DATA_REF.on('value', (snap) => {
     const data = snap.exists() ? snap.val() : null;
     if (!data) return;
-    appData = data;
+    appData = normalize(data);
     setSyncStatus('ok', 'Tersambung');
     renderAll();
   }, () => {
