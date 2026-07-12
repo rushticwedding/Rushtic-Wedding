@@ -263,6 +263,11 @@ function render(){
         <span style="font-size:18px;font-weight:800;color:${totalBal>=0?"#1a7a4a":"#c0392b"}">${totalBal<0?"−":""}${fmt(totalBal)}</span></div>
       <div class="total-row"><span class="fs12 color-green">Total Pemasukan</span><span class="fw700 color-green">${fmt(totalIn)}</span></div>
       <div class="total-row"><span class="fs12 color-red">Total Pengeluaran</span><span class="fw700 color-red">${fmt(totalOut)}</span></div>
+      <div style="border-top:1px solid #f0f0f0;margin:8px 0 4px"></div>
+      <div class="total-row">
+        <span style="font-size:13px;font-weight:700;color:#B8860B">🪙 Total Emas</span>
+        <span style="font-size:16px;font-weight:800;color:#B8860B">${fmt(walletBal("emas",transactions))}</span>
+      </div>
     </div>
 
     ${totalDP>0?`<div class="dp-card">
