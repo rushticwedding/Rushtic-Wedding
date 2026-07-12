@@ -175,7 +175,7 @@ let state = {
   chartWallet:"all", chartMonth:month(),
   deleteId:null,
   walletDetail:null,
-  form:{mode:"income", wallet:"pribadi", toWallet:"pribadi", type:"income", category:"", amount:"", note:"", date:today()},
+  form:{mode:"income", wallet:"pribadi", toWallet:"pribadi", type:"income", category:"", amount:"", note:"", date:today(), gram:""},
 };
 
 // ─── EXPORT CSV ─────────────────────────────────────────────────
@@ -206,6 +206,7 @@ function txRowHTML(t){
       <div class="tx-meta">
         <span class="tx-badge" style="background:${wBg(t.wallet)};color:${wColor(t.wallet)}">${wLabel(t.wallet)}</span>
         ${isTransfer?`<span style="font-size:11px;color:#7C6FCD">→ ${wLabel(t.toWallet)}</span>`:""}
+        ${t.gram?`<span style="font-size:10px;font-weight:700;color:#B8860B;background:#FFF3D6;padding:2px 6px;border-radius:10px">🪙 ${t.gram}gr</span>`:""}
         <span class="tx-date">${t.date}</span>
         ${t.note?`<span class="tx-note">${t.note}</span>`:""}
       </div>
@@ -239,6 +240,11 @@ function render(){
   const totalOut = transactions.filter(t=>t.type==="expense").reduce((a,t)=>a+t.amount,0);
   const totalBal = totalIn-totalOut;
   const totalDP  = transactions.filter(t=>isDP(t)).reduce((a,t)=>a+t.amount,0);
+  const totalGram = transactions.filter(t=>t.gram).reduce((a,t)=>{
+    const inFlow = (t.type==="transfer"&&t.toWallet==="emas") || (t.type==="income"&&t.wallet==="emas");
+    const outFlow = (t.type==="expense"&&t.wallet==="emas");
+    return a + (inFlow ? t.gram : outFlow ? -t.gram : 0);
+  },0);
 
   // ── form categories ──
   const cats = form.mode==="income" ? INCOME_CAT[form.wallet]||[] : form.mode==="expense" ? EXPENSE_CAT[form.wallet]||[] : [];
@@ -268,6 +274,10 @@ function render(){
       <div class="total-row">
         <span style="font-size:13px;font-weight:700;color:#B8860B">🪙 Total Emas</span>
         <span style="font-size:16px;font-weight:800;color:#B8860B">${fmt(walletBal("emas",transactions))}</span>
+      </div>
+      <div class="total-row" style="margin-top:-2px">
+        <span style="font-size:11px;color:#B8860B">Total Berat</span>
+        <span style="font-size:13px;font-weight:700;color:#B8860B">${totalGram.toFixed(2)} gram</span>
       </div>
     </div>
 
@@ -339,6 +349,12 @@ function render(){
 
     <label class="form-label">Jumlah (Rp)</label>
     <input type="number" inputmode="numeric" class="form-input" id="inp-amount" placeholder="0" value="${form.amount}" onblur="setFormField('amount',this.value)"/>
+
+    ${(form.mode==="transfer"&&form.toWallet==="emas")||(form.mode==="expense"&&form.wallet==="emas")?`
+      <label class="form-label">🪙 Berat Emas (gram)</label>
+      <input type="number" inputmode="decimal" step="0.01" class="form-input" id="inp-gram" placeholder="Misal: 1.7" value="${form.gram}" onblur="setFormField('gram',this.value)"/>
+    `:""}
+
     <label class="form-label">Tanggal</label>
     <input type="date" class="form-input" value="${form.date}" onchange="setFormField('date',this.value)"/>
     <label class="form-label">Catatan (opsional)</label>
@@ -501,9 +517,11 @@ function addTx(){
     amount:parseFloat(f.amount), note:f.note,
   };
   if(f.mode==="transfer") tx.toWallet=f.toWallet;
+  const isEmasGram=(f.mode==="transfer"&&f.toWallet==="emas")||(f.mode==="expense"&&f.wallet==="emas");
+  if(isEmasGram&&f.gram) tx.gram=parseFloat(f.gram);
   transactions.unshift(tx);
   persist();
-  state.form={...f,category:"",amount:"",note:"",date:today()};
+  state.form={...f,category:"",amount:"",note:"",date:today(),gram:""};
   state.tab="history";
   render();
 }
