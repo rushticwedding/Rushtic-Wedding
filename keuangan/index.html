@@ -332,11 +332,11 @@ function render(){
     `}
 
     <label class="form-label">Jumlah (Rp)</label>
-    <input type="number" inputmode="numeric" class="form-input" placeholder="0" value="${form.amount}" oninput="setFormField('amount',this.value)"/>
+    <input type="number" inputmode="numeric" class="form-input" id="inp-amount" placeholder="0" value="${form.amount}" onblur="setFormField('amount',this.value)"/>
     <label class="form-label">Tanggal</label>
     <input type="date" class="form-input" value="${form.date}" onchange="setFormField('date',this.value)"/>
     <label class="form-label">Catatan (opsional)</label>
-    <input type="text" class="form-input" placeholder="${form.mode==="transfer"?"Misal: pindah untuk bayar emas":"Misal: bayar katering Bu Ari"}" value="${form.note}" oninput="setFormField('note',this.value)"/>
+    <input type="text" class="form-input" placeholder="${form.mode==="transfer"?"Misal: pindah untuk bayar emas":"Misal: bayar katering Bu Ari"}" value="${form.note}" onblur="setFormField('note',this.value)"/>
     <button class="btn-submit" onclick="addTx()" ${(!form.amount||(form.mode!=="transfer"&&!form.category))?"disabled":""}>Simpan</button>
   </div></div>`;
 
