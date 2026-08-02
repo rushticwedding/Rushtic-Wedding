@@ -888,6 +888,7 @@
             <option value="DP">DP</option>
             <option value="Lunas">Lunas</option>
             <option value="Selesai">Selesai</option>
+            <option value="Arsip">Arsip (tidak jadi / tidak balas)</option>
           </select>
         </div>
       </div>
@@ -961,7 +962,7 @@ let filterMode = 'all'; // 'all' | 'overdue'
 let editingId = null;
 let detailId = null;
 
-const STAGES = ['Lead','Survey','Penawaran','DP','Lunas','Selesai'];
+const STAGES = ['Lead','Survey','Penawaran','DP','Lunas','Selesai','Arsip'];
 const BRANDS = { WO:'tag-wo', Dekor:'tag-dekor', Wisuda:'tag-wisuda', Paket:'tag-paket' };
 
 // ── INIT ──
@@ -1123,10 +1124,11 @@ function updateStats() {
   const thisMonth = new Date().getMonth();
   const thisYear = new Date().getFullYear();
 
-  const totalActive = clients.filter(c => c.stage !== 'Selesai').length;
-  const overdue = clients.filter(c => getFollowupStatus(c) === 'overdue' && c.stage !== 'Selesai').length;
+  const DEAD = ['Selesai','Arsip'];
+  const totalActive = clients.filter(c => !DEAD.includes(c.stage)).length;
+  const overdue = clients.filter(c => getFollowupStatus(c) === 'overdue' && !DEAD.includes(c.stage)).length;
   const totalValue = clients
-    .filter(c => !['Lunas','Selesai'].includes(c.stage))
+    .filter(c => !['Lunas','Selesai','Arsip'].includes(c.stage))
     .reduce((sum, c) => sum + (parseFloat(c.value)||0), 0);
   const closing = clients.filter(c => {
     if (c.stage !== 'Lunas' && c.stage !== 'Selesai') return false;
@@ -1143,7 +1145,7 @@ function updateStats() {
 
 // ── FOLLOW-UP LOGIC ──
 function getFollowupStatus(c) {
-  if (['Lunas','Selesai'].includes(c.stage)) return 'ok';
+  if (['Lunas','Selesai','Arsip'].includes(c.stage)) return 'ok';
   const hours = daysSince(c.lastContact);
   if (hours > 48) return 'overdue';
   if (hours > 24) return 'soon';
@@ -1863,7 +1865,7 @@ const RB = (() => {
 
   /* ══ ANTRIAN ══ */
   const pending = () => clients
-    .filter(c => !['Lunas','Selesai'].includes(c.stage) && H(c) > 48)
+    .filter(c => !['Lunas','Selesai','Arsip'].includes(c.stage) && H(c) > 48)
     .sort((a,b) => (parseFloat(b.value)||0) - (parseFloat(a.value)||0));
 
   function start() {
@@ -1871,6 +1873,23 @@ const RB = (() => {
     document.getElementById('rbOverlay').classList.add('show');
     render();
   }
+  function waCard(id) {
+    const c = clients.find(x => x.id === id); if (!c) return;
+    const g = build(c);
+    navigator.clipboard?.writeText(g.pesan).catch(()=>{});
+    touch(c, g.pesan);
+    const l = waLink(c.wa);
+    if (l) window.open(l + '?text=' + encodeURIComponent(g.pesan), '_blank');
+    else showToast('\u26a0 Nomor WA kosong \u2014 script sudah tersalin');
+    if (typeof renderAll === 'function') renderAll();
+  }
+  function archive(id) {
+    const i = clients.findIndex(x => x.id === id); if (i < 0) return;
+    clients[i].stage = 'Arsip'; clients[i].updatedAt = Date.now();
+    pushClient(clients[i]); showToast('\u2713 Dipindah ke Arsip');
+    if (typeof renderAll === 'function') renderAll();
+  }
+  function archiveCur() { if (cur) { archive(cur.id); next(); } }
   function close() { document.getElementById('rbOverlay').classList.remove('show'); if (typeof renderAll==='function') renderAll(); }
 
   function render() {
@@ -1895,7 +1914,8 @@ const RB = (() => {
     acts.innerHTML = `
       <button class="rb-a go" onclick="RB.send()">💬 Salin script &amp; buka WA</button>
       <button class="rb-a" onclick="RB.snooze()">Tunda 3 hari</button>
-      <button class="rb-a done" onclick="RB.next()">Sudah / lewati →</button>`;
+      <button class="rb-a done" onclick="RB.next()">Sudah / lewati →</button>
+      <button class="rb-a" style="grid-column:1/-1;color:#a8474a" onclick="RB.archiveCur()">🗄 Arsipkan — sudah pakai vendor lain / tidak balas</button>`;
   }
 
   function send() {
@@ -2029,6 +2049,15 @@ const RB = (() => {
       if (typeof renderAll === 'function') renderAll();
     }
     // jaga hitungan tetap update
+    if (typeof window.waClick === 'function' && !window.__rbWa) {
+      const ow = window.waClick; window.__rbWa = true;
+      window.waClick = function(wa, name) {
+        const c = clients.find(x => (x.wa||'') === wa && (x.name||'').replace(/'/g,'') === name)
+               || clients.find(x => (x.wa||'') === wa);
+        if (c) return waCard(c.id);
+        return ow(wa, name);
+      };
+    }
     if (typeof window.updateStats === 'function' && !window.__rbStats) {
       const o = window.updateStats; window.__rbStats = true;
       window.updateStats = function(){ o.apply(this, arguments); const n=document.getElementById('rbN'); if(n) n.textContent = pending().length; };
@@ -2039,7 +2068,7 @@ const RB = (() => {
   window.addEventListener('load', () => setTimeout(mount, 300));
   setTimeout(mount, 1200);
 
-  return { start, close, next, send, snooze, remindOne, saveOne, icsBulk, dailyAlarm, waSelf, closeSheet, build };
+  return { start, close, next, send, snooze, remindOne, saveOne, icsBulk, dailyAlarm, waSelf, closeSheet, build, waCard, archive, archiveCur };
 })();
 </script>
 
