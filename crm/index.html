@@ -1762,6 +1762,21 @@ setTimeout(() => {
 .rb-row label{font-size:12px;color:#8a8378;flex:0 0 96px}
 .rb-row input,.rb-row select{flex:1;padding:10px;border:1px solid #e0dad0;border-radius:10px;font-size:14px;background:#fcfbf9}
 .rb-note{font-size:11.5px;color:#a89b88;line-height:1.6;margin-top:10px}
+.rb-stages{display:flex;gap:7px;padding:10px 14px;overflow-x:auto;background:#fff;border-bottom:1px solid #ece6dc;position:sticky;top:0;z-index:39}
+.rb-stages::-webkit-scrollbar{display:none}
+.rb-chip{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-start;gap:1px;padding:8px 12px;border-radius:12px;border:1px solid #e8e2d8;background:#fcfbf9;cursor:pointer;min-width:84px}
+.rb-chip.on{border-color:#C7A24B;background:#fbf6e9}
+.rb-chip.arch{opacity:.55}
+.rb-chip b{font-size:11px;color:#8a8378;font-weight:600;letter-spacing:.02em}
+.rb-chip i{font-size:19px;font-weight:700;font-style:normal;color:#151515;font-variant-numeric:tabular-nums;line-height:1.1}
+.rb-chip u{font-size:10px;color:#a89b88;text-decoration:none;font-variant-numeric:tabular-nums}
+.rb-steps-strip{display:flex;align-items:center;gap:3px;margin-top:9px}
+.rb-steps-strip i{width:13px;height:3px;border-radius:2px;background:#e8e2d8;display:block}
+.rb-steps-strip i.past{background:#c9bda6}
+.rb-steps-strip i.on{background:#C7A24B;width:20px}
+.rb-steps-strip b{margin-left:6px;font-size:10px;color:#8a8378;font-weight:600}
+.rb-adv{width:100%;margin-top:7px;padding:9px;border-radius:9px;border:1px solid #151515;background:#151515;color:#C7A24B;font-size:12px;font-weight:700;cursor:pointer}
+.rb-adv:active{transform:scale(.98)}
 .rb-bell{background:#fff;border:1px solid #e6dfd3;border-radius:8px;padding:6px 9px;cursor:pointer;font-size:13px}
 </style>
 
@@ -1902,6 +1917,34 @@ const RB = (() => {
     touch(c, g.pesan);
     if (!openWA(c.wa, g.pesan)) showToast('\u26a0 Nomor WA kosong \u2014 script sudah tersalin');
     if (typeof renderAll === 'function') renderAll();
+  }
+  const FLOW = ['Lead','Survey','Penawaran','DP','Lunas','Selesai'];
+  function nextStage(st) { const i = FLOW.indexOf(st||'Lead'); return (i < 0 || i >= FLOW.length-1) ? null : FLOW[i+1]; }
+  function advance(id) {
+    const i = clients.findIndex(x => x.id === id); if (i < 0) return;
+    const nx = nextStage(clients[i].stage); if (!nx) return;
+    clients[i].stage = nx; clients[i].updatedAt = Date.now(); clients[i].lastContact = Date.now();
+    pushClient(clients[i]);
+    showToast(`\uD83C\uDF89 ${clients[i].name||'Klien'} naik ke ${nx}`);
+    if (typeof renderAll === 'function') renderAll();
+  }
+  function jumpTo(st) {
+    const el = document.getElementById('col-' + st);
+    if (el) el.parentNode.scrollIntoView({behavior:'smooth', inline:'start', block:'nearest'});
+    paintStrip(st);
+  }
+  function paintStrip(active) {
+    const wrap = document.getElementById('rbStages'); if (!wrap) return;
+    const rpS = v => v >= 1e6 ? (v/1e6).toFixed(1).replace('.0','') + 'jt' : String(v||0);
+    wrap.innerHTML = FLOW.map(st => {
+      const list = clients.filter(c => (c.stage||'Lead') === st);
+      const val = list.reduce((a,c) => a + (parseFloat(c.value)||0), 0);
+      return `<button class="rb-chip ${active===st?'on':''}" onclick="RB.jumpTo('${st}')">
+        <b>${st}</b><i>${list.length}</i><u>${val ? 'Rp '+rpS(val) : '—'}</u></button>`;
+    }).join('') + (() => {
+      const n = clients.filter(c => c.stage === 'Arsip').length;
+      return n ? `<button class="rb-chip arch" onclick="RB.jumpTo('Arsip')"><b>Arsip</b><i>${n}</i><u>&nbsp;</u></button>` : '';
+    })();
   }
   function archiveAsk(id) {
     const c = clients.find(x => x.id === id); if (!c) return;
@@ -2062,16 +2105,49 @@ const RB = (() => {
       <button class="rb-btn" onclick="RB.dailyAlarm()">⏰ Alarm harian</button>
       <button class="rb-btn" id="rbWaApp" onclick="RB.toggleWaApp()">📱 WA Bisnis</button>
       <button class="rb-btn" onclick="RB.waSelf()">💬 Kirim daftar ke WA-ku</button>
-      <span style="flex:0 0 auto;align-self:center;font-size:10px;color:#666;padding:0 6px">v2.1</span>`;
+      <span style="flex:0 0 auto;align-self:center;font-size:10px;color:#666;padding:0 6px">v2.2</span>`;
     const sb = document.getElementById('statsBar');
     sb.parentNode.insertBefore(bar, sb.nextSibling);
+    const strip = document.createElement('div');
+    strip.className = 'rb-stages'; strip.id = 'rbStages';
+    bar.parentNode.insertBefore(strip, bar.nextSibling);
 
-    // tombol 🔔 di tiap kartu
+    // kartu ditulis ulang: WA + arsip + naik stage
     if (typeof window.cardHTML === 'function' && !window.__rbCard) {
-      const orig = window.cardHTML; window.__rbCard = true;
+      window.__rbCard = true;
       window.cardHTML = function(c) {
-        return orig(c).replace('<button class="btn-edit"',
-          `<button class="rb-bell" onclick="event.stopPropagation(); RB.remindOne('${c.id}')" title="Ingatkan lewat kalender">🔔</button><button class="rb-bell" onclick="event.stopPropagation(); RB.archiveAsk('${c.id}')" title="Arsipkan">🗄</button><button class="btn-edit"`);
+        const fu = getFollowupStatus(c);
+        const cls = fu === 'overdue' ? 'client-card overdue' : fu === 'soon' ? 'client-card due-soon' : 'client-card';
+        const badge = fu === 'overdue'
+          ? `<span class="card-followup followup-overdue">\u26a0 Belum disentuh ${Math.floor(H(c)/24)} hari</span>`
+          : fu === 'soon'
+          ? `<span class="card-followup followup-soon">\u23f0 ${H(c)}j lalu</span>`
+          : `<span class="card-followup followup-ok">\u2713 ${H(c)}j lalu</span>`;
+        const ini = (c.name||'?').split('&').map(n => n.trim()[0]||'?').join('').toUpperCase().slice(0,2);
+        const nx = nextStage(c.stage);
+        return `
+    <div class="${cls}" onclick="openDetail('${c.id}')">
+      <div class="card-top">
+        <div>
+          <span class="card-tag ${BRANDS[c.brand]||'tag-wo'}">${c.brand||'WO'}</span>
+          <div class="card-name">${c.name||'Tanpa Nama'}</div>
+        </div>
+        <div class="card-avatar">${ini}</div>
+      </div>
+      ${c.date ? `<div class="card-date">\uD83D\uDCC5 ${formatDate(c.date)}</div>` : ''}
+      ${c.value ? `<div class="card-value">${formatRp(c.value)}</div>` : ''}
+      ${badge}
+      <div class="rb-steps-strip">${STAGES.slice(0,6).map(st =>
+        `<i class="${st===c.stage?'on':(STAGES.indexOf(st) < STAGES.indexOf(c.stage) ? 'past':'')}"></i>`).join('')}
+        <b>${c.stage||'Lead'}</b></div>
+      <div class="card-actions">
+        <button class="btn-wa" onclick="event.stopPropagation(); RB.waCard('${c.id}')" ${!c.wa ? 'disabled style="opacity:0.5"' : ''}>\uD83D\uDCAC WA</button>
+        <button class="rb-bell" onclick="event.stopPropagation(); RB.archiveAsk('${c.id}')" title="Arsipkan">\uD83D\uDDC4</button>
+        <button class="rb-bell" onclick="event.stopPropagation(); RB.remindOne('${c.id}')" title="Ingatkan">\uD83D\uDD14</button>
+        <button class="btn-edit" onclick="event.stopPropagation(); openEdit('${c.id}')">\u270F</button>
+      </div>
+      ${nx ? `<button class="rb-adv" onclick="event.stopPropagation(); RB.advance('${c.id}')">Naik ke ${nx} \u2192</button>` : ''}
+    </div>`;
       };
       if (typeof renderAll === 'function') renderAll();
     }
@@ -2087,16 +2163,16 @@ const RB = (() => {
     }
     if (typeof window.updateStats === 'function' && !window.__rbStats) {
       const o = window.updateStats; window.__rbStats = true;
-      window.updateStats = function(){ o.apply(this, arguments); const n=document.getElementById('rbN'); if(n) n.textContent = pending().length; };
+      window.updateStats = function(){ o.apply(this, arguments); paintStrip(); const n=document.getElementById('rbN'); if(n) n.textContent = pending().length; };
     }
-    paintWaBtn();
+    paintWaBtn(); paintStrip();
     const n = document.getElementById('rbN'); if (n) n.textContent = pending().length;
   }
 
   window.addEventListener('load', () => setTimeout(mount, 300));
   setTimeout(mount, 1200);
 
-  return { start, close, next, send, snooze, remindOne, saveOne, icsBulk, dailyAlarm, waSelf, closeSheet, build, waCard, archive, archiveAsk, archiveCur, toggleWaApp };
+  return { start, close, next, send, snooze, remindOne, saveOne, icsBulk, dailyAlarm, waSelf, closeSheet, build, waCard, archive, archiveAsk, archiveCur, toggleWaApp, advance, jumpTo, paintStrip };
 })();
 </script>
 
