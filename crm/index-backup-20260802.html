@@ -1,0 +1,1709 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rushtic CRM</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap');
+
+  :root {
+    --ink: #1a1410;
+    --paper: #faf8f5;
+    --warm-mid: #e8e2d9;
+    --accent: #c4732a;
+    --accent-light: #f5ead9;
+    --danger: #d63030;
+    --danger-light: #fdeaea;
+    --success: #2a7a4a;
+    --success-light: #e8f5ee;
+    --warning: #c49a2a;
+    --warning-light: #fdf6e8;
+    --muted: #7a6f65;
+    --card: #ffffff;
+    --border: #e0d9d0;
+    --shadow: 0 1px 4px rgba(26,20,16,0.08);
+    --shadow-md: 0 4px 16px rgba(26,20,16,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    font-size: 14px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .header-brand .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    letter-spacing: -0.5px;
+    color: var(--paper);
+  }
+  .header-brand .logo span { color: var(--accent); }
+  .header-badge {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-left: 1px solid #333;
+    padding-left: 10px;
+    margin-left: 4px;
+  }
+  .header-actions { display: flex; gap: 8px; align-items: center; }
+  .btn-header {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity 0.15s;
+  }
+  .btn-header:hover { opacity: 0.88; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--paper);
+    border: 1px solid #444;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    background: var(--card);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .stats-bar::-webkit-scrollbar { display: none; }
+  .stat-item {
+    flex: 1;
+    min-width: 120px;
+    padding: 14px 20px;
+    border-right: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-item:hover { background: var(--paper); }
+  .stat-item.active { background: var(--accent-light); }
+  .stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .stat-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .stat-sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .alert-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    background: var(--danger);
+    border-radius: 50%;
+    margin-left: 4px;
+    vertical-align: middle;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* ── CONTROLS ── */
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--card);
+    flex-wrap: wrap;
+  }
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 180px;
+  }
+  .search-wrap input {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 8px 12px 8px 34px;
+    font-size: 13px;
+    font-family: inherit;
+    background: var(--paper);
+    color: var(--ink);
+    outline: none;
+  }
+  .search-wrap input:focus { border-color: var(--accent); }
+  .search-icon {
+    position: absolute;
+    left: 10px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 14px;
+    pointer-events: none;
+  }
+  .filter-btn {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    background: var(--accent-light);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .view-toggle {
+    display: flex;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    overflow: hidden;
+  }
+  .view-btn {
+    padding: 8px 12px;
+    background: var(--paper);
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    color: var(--muted);
+  }
+  .view-btn.active {
+    background: var(--ink);
+    color: white;
+  }
+
+  /* ── PIPELINE KANBAN ── */
+  .pipeline {
+    display: flex;
+    gap: 0;
+    padding: 20px;
+    overflow-x: auto;
+    min-height: calc(100vh - 200px);
+    align-items: flex-start;
+  }
+  .pipeline-col {
+    flex: 0 0 220px;
+    margin-right: 14px;
+  }
+  .col-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding: 0 4px;
+  }
+  .col-title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .col-count {
+    background: var(--warm-mid);
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 20px;
+  }
+  .col-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 100px;
+  }
+
+  /* ── CLIENT CARD ── */
+  .client-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: var(--shadow);
+    position: relative;
+  }
+  .client-card:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+  .client-card.overdue {
+    border-left: 3px solid var(--danger);
+  }
+  .client-card.due-soon {
+    border-left: 3px solid var(--warning);
+  }
+  .card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .card-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .card-avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-left: 8px;
+  }
+  .card-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+  }
+  .tag-wo { background: #e8f0fe; color: #2952b0; }
+  .tag-dekor { background: #fde8f5; color: #912e6e; }
+  .tag-wisuda { background: var(--success-light); color: var(--success); }
+  .tag-paket { background: var(--accent-light); color: var(--accent); }
+
+  .card-date {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .card-value {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .card-followup {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 7px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .followup-overdue {
+    background: var(--danger-light);
+    color: var(--danger);
+  }
+  .followup-soon {
+    background: var(--warning-light);
+    color: var(--warning);
+  }
+  .followup-ok {
+    background: var(--success-light);
+    color: var(--success);
+  }
+  .card-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+  .btn-wa {
+    flex: 1;
+    background: #25D366;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+  .btn-edit {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 12px;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  /* ── LIST VIEW ── */
+  .list-view {
+    padding: 20px;
+    display: none;
+  }
+  .list-view.active { display: block; }
+  .pipeline.active { display: flex; }
+  .pipeline { display: flex; }
+
+  .list-table {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .list-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .list-table th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    background: var(--paper);
+    border-bottom: 1px solid var(--border);
+  }
+  .list-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    vertical-align: middle;
+  }
+  .list-table tr:last-child td { border-bottom: none; }
+  .list-table tr:hover td { background: var(--paper); }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--card);
+    border-radius: 14px;
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .modal-header {
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    background: var(--card);
+    z-index: 1;
+  }
+  .modal-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: var(--ink);
+  }
+  .btn-close {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    width: 32px; height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--muted);
+  }
+  .modal-body { padding: 20px; }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .form-group { margin-bottom: 12px; }
+  .form-group label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 9px 12px;
+    font-size: 13px;
+    font-family: inherit;
+    background: var(--paper);
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: var(--accent);
+  }
+  .form-group textarea { resize: vertical; min-height: 70px; }
+  .modal-footer {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .btn-secondary {
+    background: var(--paper);
+    color: var(--ink);
+    border: 1px solid var(--border);
+    padding: 10px 16px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .btn-danger {
+    background: var(--danger-light);
+    color: var(--danger);
+    border: 1px solid #f5c5c5;
+    padding: 10px 16px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    margin-right: auto;
+  }
+
+  /* ── DETAIL PANEL ── */
+  .detail-section {
+    margin-bottom: 18px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .detail-section:last-child { border-bottom: none; margin-bottom: 0; }
+  .detail-section h4 {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .detail-item label {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .detail-item p {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .stage-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .stage-pill {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 2px solid var(--border);
+    cursor: pointer;
+    background: var(--paper);
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+  .stage-pill.active-stage {
+    border-color: var(--accent);
+    background: var(--accent-light);
+    color: var(--accent);
+  }
+  .note-input {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 9px 12px;
+    font-size: 13px;
+    font-family: inherit;
+    background: var(--paper);
+    resize: vertical;
+    min-height: 70px;
+    outline: none;
+    color: var(--ink);
+  }
+  .note-input:focus { border-color: var(--accent); }
+
+  /* ── AI SECTION ── */
+  .ai-box {
+    background: linear-gradient(135deg, #1a1410 0%, #2d2018 100%);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 0;
+  }
+  .ai-box-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .ai-update-input {
+    width: 100%;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 7px;
+    padding: 9px 12px;
+    font-size: 13px;
+    font-family: inherit;
+    color: #f0ebe4;
+    resize: vertical;
+    min-height: 70px;
+    outline: none;
+    margin-bottom: 10px;
+  }
+  .ai-update-input::placeholder { color: rgba(240,235,228,0.4); }
+  .ai-update-input:focus { border-color: var(--accent); }
+  .btn-ai {
+    width: 100%;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 7px;
+    padding: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: opacity 0.15s;
+  }
+  .btn-ai:hover { opacity: 0.88; }
+  .btn-ai:disabled { opacity: 0.5; cursor: not-allowed; }
+  .ai-result {
+    margin-top: 12px;
+    display: none;
+  }
+  .ai-result.show { display: block; }
+  .ai-result-block {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+  .ai-result-block h5 {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .ai-result-block p {
+    font-size: 13px;
+    color: #f0ebe4;
+    line-height: 1.6;
+    white-space: pre-wrap;
+  }
+  .ai-copy-btn {
+    background: rgba(196,115,42,0.2);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    margin-top: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .ai-spinner {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── EMPTY ── */
+  .empty-col {
+    background: var(--paper);
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--ink);
+    color: white;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    z-index: 999;
+    transform: translateY(60px);
+    opacity: 0;
+    transition: all 0.3s;
+    max-width: 280px;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ── MOBILE ── */
+  @media (max-width: 600px) {
+    .header-badge { display: none; }
+    .pipeline { padding: 14px; }
+    .controls { padding: 10px 14px; gap: 8px; }
+    .form-row { grid-template-columns: 1fr; }
+    .detail-grid { grid-template-columns: 1fr; }
+    .stat-item { min-width: 100px; padding: 12px 14px; }
+    .stat-value { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-brand">
+    <span class="logo">Rushtic<span>.</span></span>
+    <span class="header-badge">CRM</span>
+  </div>
+  <div class="header-actions">
+    <button class="btn-ghost" onclick="syncToFirebase()">☁ Sync</button>
+    <button class="btn-header" onclick="openAddModal()">+ Klien</button>
+  </div>
+</header>
+
+<!-- STATS BAR -->
+<div class="stats-bar" id="statsBar">
+  <div class="stat-item active" onclick="filterAll()">
+    <div class="stat-label">Semua Klien</div>
+    <div class="stat-value" id="statTotal">0</div>
+    <div class="stat-sub">aktif pipeline</div>
+  </div>
+  <div class="stat-item" onclick="filterOverdue()">
+    <div class="stat-label">Perlu Follow-up <span class="alert-dot" id="alertDot" style="display:none"></span></div>
+    <div class="stat-value" id="statOverdue" style="color:var(--danger)">0</div>
+    <div class="stat-sub">&gt;48 jam tidak disentuh</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-label">Nilai Pipeline</div>
+    <div class="stat-value" id="statValue">0</div>
+    <div class="stat-sub">total estimasi</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-label">Closing Bulan Ini</div>
+    <div class="stat-value" id="statClosing" style="color:var(--success)">0</div>
+    <div class="stat-sub">deal lunas</div>
+  </div>
+</div>
+
+<!-- CONTROLS -->
+<div class="controls">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="Cari nama, WA, event..." oninput="renderAll()">
+  </div>
+  <button class="filter-btn active" id="fAll" onclick="setSubBrand('all')">Semua</button>
+  <button class="filter-btn" id="fWO" onclick="setSubBrand('WO')">WO</button>
+  <button class="filter-btn" id="fDekor" onclick="setSubBrand('Dekor')">Dekor</button>
+  <button class="filter-btn" id="fWisuda" onclick="setSubBrand('Wisuda')">Wisuda</button>
+  <div class="view-toggle">
+    <button class="view-btn active" id="btnKanban" onclick="setView('kanban')" title="Kanban">▦</button>
+    <button class="view-btn" id="btnList" onclick="setView('list')" title="List">☰</button>
+  </div>
+</div>
+
+<!-- KANBAN -->
+<div class="pipeline" id="kanbanView"></div>
+
+<!-- LIST VIEW -->
+<div class="list-view" id="listView">
+  <div class="list-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Klien</th>
+          <th>Sub-brand</th>
+          <th>Stage</th>
+          <th>Event</th>
+          <th>Nilai</th>
+          <th>Follow-up</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="listBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ADD/EDIT MODAL -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modalTitle">Tambah Klien</h2>
+      <button class="btn-close" onclick="closeModal('addModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nama Klien / Pasangan</label>
+          <input type="text" id="fName" placeholder="Aris & Rosi">
+        </div>
+        <div class="form-group">
+          <label>No. WhatsApp</label>
+          <input type="text" id="fWa" placeholder="08xxx">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Sub-brand</label>
+          <select id="fBrand">
+            <option value="WO">WO Jogja</option>
+            <option value="Dekor">Dekor</option>
+            <option value="Wisuda">Wisuda</option>
+            <option value="Paket">Paket Lengkap</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Stage</label>
+          <select id="fStage">
+            <option value="Lead">Lead</option>
+            <option value="Survey">Survey</option>
+            <option value="Penawaran">Penawaran</option>
+            <option value="DP">DP</option>
+            <option value="Lunas">Lunas</option>
+            <option value="Selesai">Selesai</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Tanggal Event</label>
+          <input type="date" id="fDate">
+        </div>
+        <div class="form-group">
+          <label>Estimasi Nilai (Rp)</label>
+          <input type="number" id="fValue" placeholder="5000000">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Venue / Lokasi</label>
+        <input type="text" id="fVenue" placeholder="Balai Desa Banguntapan">
+      </div>
+      <div class="form-group">
+        <label>Paket</label>
+        <input type="text" id="fPackage" placeholder="Silver WO + Bronze Dekor">
+      </div>
+      <div class="form-group">
+        <label>Catatan</label>
+        <textarea id="fNotes" placeholder="Info penting, permintaan khusus, hasil diskusi..."></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>DP Diterima (Rp)</label>
+          <input type="number" id="fDP" placeholder="0">
+        </div>
+        <div class="form-group">
+          <label>Sisa Pembayaran (Rp)</label>
+          <input type="number" id="fRemaining" placeholder="0">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-danger" id="btnDelete" onclick="deleteClient()" style="display:none">Hapus</button>
+      <button class="btn-secondary" onclick="closeModal('addModal')">Batal</button>
+      <button class="btn-primary" onclick="saveClient()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="detailName">—</h2>
+      <button class="btn-close" onclick="closeModal('detailModal')">✕</button>
+    </div>
+    <div class="modal-body" id="detailBody"></div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('detailModal')">Tutup</button>
+      <button class="btn-primary" onclick="editFromDetail()">Edit</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIG ──
+const FIREBASE_URL = 'https://rushtic-deco-default-rtdb.firebaseio.com/crm';
+
+// ── STATE ──
+let clients = [];
+let currentView = 'kanban';
+let activeFilter = 'all';
+let filterMode = 'all'; // 'all' | 'overdue'
+let editingId = null;
+let detailId = null;
+
+const STAGES = ['Lead','Survey','Penawaran','DP','Lunas','Selesai'];
+const BRANDS = { WO:'tag-wo', Dekor:'tag-dekor', Wisuda:'tag-wisuda', Paket:'tag-paket' };
+
+// ── INIT ──
+window.addEventListener('load', () => {
+  loadFromFirebase();
+});
+
+// ── FIREBASE ──
+async function loadFromFirebase() {
+  try {
+    const r = await fetch(FIREBASE_URL + '.json');
+    const data = await r.json();
+    if (data) {
+      clients = Object.entries(data).map(([id, c]) => ({ ...c, id }));
+    }
+  } catch(e) {
+    // Load from localStorage fallback
+    const local = localStorage.getItem('rushtic_crm');
+    if (local) clients = JSON.parse(local);
+  }
+  renderAll();
+  updateStats();
+}
+
+async function syncToFirebase() {
+  try {
+    // Save each client individually
+    const promises = clients.map(c => {
+      const { id, ...data } = c;
+      return fetch(`${FIREBASE_URL}/${id}.json`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+    });
+    await Promise.all(promises);
+    showToast('✓ Tersync ke Firebase');
+  } catch(e) {
+    showToast('⚠ Sync gagal — tersimpan lokal');
+  }
+  saveLocal();
+}
+
+function saveLocal() {
+  localStorage.setItem('rushtic_crm', JSON.stringify(clients));
+}
+
+async function pushClient(client) {
+  saveLocal();
+  try {
+    const { id, ...data } = client;
+    await fetch(`${FIREBASE_URL}/${id}.json`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+  } catch(e) { /* silent — local already saved */ }
+}
+
+async function deleteFromFirebase(id) {
+  saveLocal();
+  try {
+    await fetch(`${FIREBASE_URL}/${id}.json`, { method: 'DELETE' });
+  } catch(e) {}
+}
+
+// ── RENDER ──
+function renderAll() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  let filtered = clients.filter(c => {
+    const matchBrand = activeFilter === 'all' || c.brand === activeFilter;
+    const matchSearch = !search ||
+      (c.name||'').toLowerCase().includes(search) ||
+      (c.wa||'').includes(search) ||
+      (c.venue||'').toLowerCase().includes(search);
+    const matchMode = filterMode === 'all' || (filterMode === 'overdue' && getFollowupStatus(c) === 'overdue');
+    return matchBrand && matchSearch && matchMode;
+  });
+
+  renderKanban(filtered);
+  renderList(filtered);
+  updateStats();
+}
+
+function renderKanban(filtered) {
+  const container = document.getElementById('kanbanView');
+  container.innerHTML = '';
+  STAGES.forEach(stage => {
+    const col = document.createElement('div');
+    col.className = 'pipeline-col';
+    const stageClients = filtered.filter(c => c.stage === stage);
+    col.innerHTML = `
+      <div class="col-header">
+        <span class="col-title">${stage}</span>
+        <span class="col-count">${stageClients.length}</span>
+      </div>
+      <div class="col-body" id="col-${stage}">
+        ${stageClients.length === 0
+          ? `<div class="empty-col">Tidak ada klien</div>`
+          : stageClients.map(c => cardHTML(c)).join('')}
+      </div>`;
+    container.appendChild(col);
+  });
+}
+
+function cardHTML(c) {
+  const fu = getFollowupStatus(c);
+  const fuClass = fu === 'overdue' ? 'client-card overdue' : fu === 'soon' ? 'client-card due-soon' : 'client-card';
+  const fuBadge = fu === 'overdue'
+    ? `<span class="card-followup followup-overdue">⚠ Belum disentuh ${daysSince(c.lastContact)}h</span>`
+    : fu === 'soon'
+    ? `<span class="card-followup followup-soon">⏰ ${daysSince(c.lastContact)}h lalu</span>`
+    : `<span class="card-followup followup-ok">✓ ${daysSince(c.lastContact)}h lalu</span>`;
+  const initials = (c.name||'?').split('&').map(n => n.trim()[0]||'?').join('').toUpperCase().slice(0,2);
+  return `
+    <div class="${fuClass}" onclick="openDetail('${c.id}')">
+      <div class="card-top">
+        <div>
+          <span class="card-tag ${BRANDS[c.brand]||'tag-wo'}">${c.brand||'WO'}</span>
+          <div class="card-name">${c.name||'Tanpa Nama'}</div>
+        </div>
+        <div class="card-avatar">${initials}</div>
+      </div>
+      ${c.date ? `<div class="card-date">📅 ${formatDate(c.date)}</div>` : ''}
+      ${c.value ? `<div class="card-value">${formatRp(c.value)}</div>` : ''}
+      ${fuBadge}
+      <div class="card-actions">
+        <button class="btn-wa" onclick="event.stopPropagation(); waClick('${c.wa||''}','${(c.name||'').replace(/'/g,'')}')" ${!c.wa ? 'disabled style="opacity:0.5"' : ''}>
+          💬 WA
+        </button>
+        <button class="btn-edit" onclick="event.stopPropagation(); openEdit('${c.id}')">✏</button>
+      </div>
+    </div>`;
+}
+
+function renderList(filtered) {
+  const tbody = document.getElementById('listBody');
+  tbody.innerHTML = filtered.map(c => {
+    const fu = getFollowupStatus(c);
+    const fuColor = fu === 'overdue' ? 'var(--danger)' : fu === 'soon' ? 'var(--warning)' : 'var(--success)';
+    return `
+      <tr onclick="openDetail('${c.id}')" style="cursor:pointer">
+        <td><strong>${c.name||'—'}</strong><br><small style="color:var(--muted)">${c.wa||''}</small></td>
+        <td><span class="card-tag ${BRANDS[c.brand]||'tag-wo'}">${c.brand||'WO'}</span></td>
+        <td><span style="font-weight:600">${c.stage||'Lead'}</span></td>
+        <td>${c.date ? formatDate(c.date) : '—'}</td>
+        <td>${c.value ? formatRp(c.value) : '—'}</td>
+        <td style="color:${fuColor};font-weight:600">${daysSince(c.lastContact)}h lalu</td>
+        <td>
+          <button class="btn-wa" style="width:70px;padding:5px 8px" onclick="event.stopPropagation();waClick('${c.wa||''}','${(c.name||'').replace(/'/g,'')}')">💬 WA</button>
+        </td>
+      </tr>`;
+  }).join('') || `<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--muted)">Tidak ada klien</td></tr>`;
+}
+
+// ── STATS ──
+function updateStats() {
+  const now = Date.now();
+  const thisMonth = new Date().getMonth();
+  const thisYear = new Date().getFullYear();
+
+  const totalActive = clients.filter(c => c.stage !== 'Selesai').length;
+  const overdue = clients.filter(c => getFollowupStatus(c) === 'overdue' && c.stage !== 'Selesai').length;
+  const totalValue = clients
+    .filter(c => !['Lunas','Selesai'].includes(c.stage))
+    .reduce((sum, c) => sum + (parseFloat(c.value)||0), 0);
+  const closing = clients.filter(c => {
+    if (c.stage !== 'Lunas' && c.stage !== 'Selesai') return false;
+    const d = new Date(c.updatedAt||c.createdAt||now);
+    return d.getMonth() === thisMonth && d.getFullYear() === thisYear;
+  }).length;
+
+  document.getElementById('statTotal').textContent = totalActive;
+  document.getElementById('statOverdue').textContent = overdue;
+  document.getElementById('statValue').textContent = overdue > 0 ? formatRpShort(totalValue) : formatRpShort(totalValue);
+  document.getElementById('statClosing').textContent = closing;
+  document.getElementById('alertDot').style.display = overdue > 0 ? 'inline-block' : 'none';
+}
+
+// ── FOLLOW-UP LOGIC ──
+function getFollowupStatus(c) {
+  if (['Lunas','Selesai'].includes(c.stage)) return 'ok';
+  const hours = daysSince(c.lastContact);
+  if (hours > 48) return 'overdue';
+  if (hours > 24) return 'soon';
+  return 'ok';
+}
+
+function daysSince(ts) {
+  if (!ts) return 999;
+  const diff = Date.now() - ts;
+  return Math.floor(diff / (1000 * 60 * 60));
+}
+
+// ── MODAL: ADD/EDIT ──
+function openAddModal() {
+  editingId = null;
+  document.getElementById('modalTitle').textContent = 'Tambah Klien';
+  document.getElementById('btnDelete').style.display = 'none';
+  clearForm();
+  document.getElementById('addModal').classList.add('open');
+}
+
+function openEdit(id) {
+  editingId = id;
+  const c = clients.find(x => x.id === id);
+  if (!c) return;
+  document.getElementById('modalTitle').textContent = 'Edit Klien';
+  document.getElementById('btnDelete').style.display = 'block';
+  document.getElementById('fName').value = c.name||'';
+  document.getElementById('fWa').value = c.wa||'';
+  document.getElementById('fBrand').value = c.brand||'WO';
+  document.getElementById('fStage').value = c.stage||'Lead';
+  document.getElementById('fDate').value = c.date||'';
+  document.getElementById('fValue').value = c.value||'';
+  document.getElementById('fVenue').value = c.venue||'';
+  document.getElementById('fPackage').value = c.package||'';
+  document.getElementById('fNotes').value = c.notes||'';
+  document.getElementById('fDP').value = c.dp||'';
+  document.getElementById('fRemaining').value = c.remaining||'';
+  closeModal('detailModal');
+  document.getElementById('addModal').classList.add('open');
+}
+
+function clearForm() {
+  ['fName','fWa','fDate','fValue','fVenue','fPackage','fNotes','fDP','fRemaining']
+    .forEach(id => document.getElementById(id).value = '');
+  document.getElementById('fBrand').value = 'WO';
+  document.getElementById('fStage').value = 'Lead';
+}
+
+function saveClient() {
+  const name = document.getElementById('fName').value.trim();
+  if (!name) { showToast('⚠ Nama klien wajib diisi'); return; }
+
+  const now = Date.now();
+  if (editingId) {
+    const idx = clients.findIndex(c => c.id === editingId);
+    clients[idx] = {
+      ...clients[idx],
+      name,
+      wa: document.getElementById('fWa').value.trim(),
+      brand: document.getElementById('fBrand').value,
+      stage: document.getElementById('fStage').value,
+      date: document.getElementById('fDate').value,
+      value: document.getElementById('fValue').value,
+      venue: document.getElementById('fVenue').value.trim(),
+      package: document.getElementById('fPackage').value.trim(),
+      notes: document.getElementById('fNotes').value.trim(),
+      dp: document.getElementById('fDP').value,
+      remaining: document.getElementById('fRemaining').value,
+      updatedAt: now,
+    };
+    pushClient(clients[idx]);
+    showToast('✓ Klien diperbarui');
+  } else {
+    const newClient = {
+      id: 'c_' + now + '_' + Math.random().toString(36).slice(2,7),
+      name,
+      wa: document.getElementById('fWa').value.trim(),
+      brand: document.getElementById('fBrand').value,
+      stage: document.getElementById('fStage').value,
+      date: document.getElementById('fDate').value,
+      value: document.getElementById('fValue').value,
+      venue: document.getElementById('fVenue').value.trim(),
+      package: document.getElementById('fPackage').value.trim(),
+      notes: document.getElementById('fNotes').value.trim(),
+      dp: document.getElementById('fDP').value,
+      remaining: document.getElementById('fRemaining').value,
+      createdAt: now,
+      lastContact: now,
+    };
+    clients.unshift(newClient);
+    pushClient(newClient);
+    showToast('✓ Klien ditambahkan');
+  }
+
+  closeModal('addModal');
+  renderAll();
+}
+
+function deleteClient() {
+  if (!editingId) return;
+  if (!confirm('Yakin hapus klien ini?')) return;
+  const id = editingId;
+  clients = clients.filter(c => c.id !== id);
+  deleteFromFirebase(id);
+  closeModal('addModal');
+  renderAll();
+  showToast('Klien dihapus');
+}
+
+// ── DETAIL MODAL ──
+function openDetail(id) {
+  detailId = id;
+  const c = clients.find(x => x.id === id);
+  if (!c) return;
+
+  document.getElementById('detailName').textContent = c.name || 'Tanpa Nama';
+
+  const fu = getFollowupStatus(c);
+  const fuText = fu === 'overdue'
+    ? `<span style="color:var(--danger);font-weight:700">⚠ Belum disentuh ${daysSince(c.lastContact)} jam!</span>`
+    : fu === 'soon'
+    ? `<span style="color:var(--warning);font-weight:700">⏰ ${daysSince(c.lastContact)} jam lalu</span>`
+    : `<span style="color:var(--success);font-weight:700">✓ ${daysSince(c.lastContact)} jam lalu</span>`;
+
+  document.getElementById('detailBody').innerHTML = `
+    <div class="detail-section">
+      <h4>Pindah Stage</h4>
+      <div class="stage-pills">
+        ${STAGES.map(s => `<span class="stage-pill ${c.stage===s?'active-stage':''}" onclick="changeStage('${id}','${s}')">${s}</span>`).join('')}
+      </div>
+    </div>
+    <div class="detail-section">
+      <h4>Info Klien</h4>
+      <div class="detail-grid">
+        <div class="detail-item"><label>Sub-brand</label><p><span class="card-tag ${BRANDS[c.brand]||'tag-wo'}">${c.brand||'WO'}</span></p></div>
+        <div class="detail-item"><label>WhatsApp</label><p>${c.wa||'—'}</p></div>
+        <div class="detail-item"><label>Tanggal Event</label><p>${c.date ? formatDate(c.date) : '—'}</p></div>
+        <div class="detail-item"><label>Venue</label><p>${c.venue||'—'}</p></div>
+        <div class="detail-item"><label>Paket</label><p>${c.package||'—'}</p></div>
+        <div class="detail-item"><label>Estimasi Nilai</label><p>${c.value ? formatRp(c.value) : '—'}</p></div>
+        <div class="detail-item"><label>DP Diterima</label><p>${c.dp ? formatRp(c.dp) : '—'}</p></div>
+        <div class="detail-item"><label>Sisa Bayar</label><p style="color:${c.remaining > 0 ? 'var(--danger)' : 'inherit'}">${c.remaining ? formatRp(c.remaining) : '—'}</p></div>
+      </div>
+    </div>
+    <div class="detail-section">
+      <h4>Follow-up</h4>
+      <p style="margin-bottom:10px">${fuText}</p>
+      <button class="btn-wa" style="width:100%;border-radius:7px;padding:10px" onclick="waClickAndUpdate('${id}','${c.wa||''}','${(c.name||'').replace(/'/g,'')}')">
+        💬 Buka WA & Catat Follow-up Sekarang
+      </button>
+    </div>
+    <div class="detail-section">
+      <h4>Catatan</h4>
+      <p style="color:var(--muted);font-size:13px;margin-bottom:8px;white-space:pre-wrap">${c.notes||'Belum ada catatan.'}</p>
+      <textarea class="note-input" id="newNote" placeholder="Tambah catatan baru..."></textarea>
+      <button class="btn-primary" style="margin-top:8px;width:100%" onclick="addNote('${id}')">Simpan Catatan</button>
+    </div>
+    <div class="detail-section">
+      <h4>✨ AI Follow-up Generator</h4>
+      <div class="ai-box">
+        <div class="ai-box-label">✦ Update Perkembangan Klien</div>
+        <textarea class="ai-update-input" id="aiUpdate" placeholder="Ceritakan perkembangan terkini...
+Contoh: sudah survey kemarin, suka venue tapi minta diskon 500rb, event September, masih nunggu acc suami"></textarea>
+        <button class="btn-ai" id="btnGenAI" onclick="generateFollowup('${id}')">
+          ✦ Generate Pesan WA + Jadwal Follow-up
+        </button>
+        <div class="ai-result" id="aiResult">
+          <div class="ai-result-block">
+            <h5>📱 Pesan WA Siap Kirim</h5>
+            <p id="aiMsgWA"></p>
+            <button class="ai-copy-btn" onclick="copyAI('aiMsgWA')">📋 Copy</button>
+          </div>
+          <div class="ai-result-block">
+            <h5>📅 Jadwal Follow-up Berikutnya</h5>
+            <p id="aiSchedule"></p>
+            <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+              <button class="ai-copy-btn" id="btnGcal" onclick="addToCalendar('${id}')" style="background:rgba(66,133,244,0.15);border-color:#4285f4;color:#4285f4">🗓 Tambah ke Google Calendar</button>
+              <button class="ai-copy-btn" id="btnWaSelf" onclick="remindViaWA('${id}')" style="background:rgba(37,211,102,0.15);border-color:#25D366;color:#25D366">💬 Ingatkan via WA</button>
+            </div>
+          </div>
+          <div class="ai-result-block">
+            <h5>🎯 Langkah Selanjutnya</h5>
+            <p id="aiNextStep"></p>
+          </div>
+        </div>
+      </div>
+    </div>`;
+
+  document.getElementById('detailModal').classList.add('open');
+}
+
+function editFromDetail() {
+  if (detailId) openEdit(detailId);
+}
+
+function changeStage(id, newStage) {
+  const idx = clients.findIndex(c => c.id === id);
+  clients[idx].stage = newStage;
+  clients[idx].updatedAt = Date.now();
+  pushClient(clients[idx]);
+  openDetail(id); // re-render detail
+  renderAll();
+  showToast(`✓ Pindah ke stage: ${newStage}`);
+}
+
+function addNote(id) {
+  const note = document.getElementById('newNote').value.trim();
+  if (!note) return;
+  const idx = clients.findIndex(c => c.id === id);
+  const prev = clients[idx].notes || '';
+  const timestamp = new Date().toLocaleDateString('id-ID', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+  clients[idx].notes = `[${timestamp}] ${note}${prev ? '\n\n' + prev : ''}`;
+  clients[idx].updatedAt = Date.now();
+  pushClient(clients[idx]);
+  openDetail(id);
+  renderAll();
+  showToast('✓ Catatan ditambahkan');
+}
+
+// ── AI FOLLOW-UP GENERATOR ──
+let lastAIResult = {}; // simpan hasil AI terakhir untuk dipakai tombol Calendar & WA
+
+async function generateFollowup(id) {
+  const c = clients.find(x => x.id === id);
+  if (!c) return;
+
+  const update = document.getElementById('aiUpdate').value.trim();
+  if (!update) { showToast('⚠ Isi dulu perkembangan kliennya'); return; }
+
+  const btn = document.getElementById('btnGenAI');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="ai-spinner"></span> Generating...';
+
+  const today = new Date().toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  const eventDate = c.date ? new Date(c.date).toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' }) : 'belum ditentukan';
+  const hariH = c.date ? Math.ceil((new Date(c.date) - new Date()) / (1000*60*60*24)) : null;
+
+  const prompt = `Kamu adalah asisten bisnis untuk Aan Fajar Lestari, pemilik Rushtic Wedding & Decoration Jogja.
+Aan adalah MC bilingual yang hangat, personal, dan profesional. Gaya komunikasinya: akrab tapi sopan, pakai "kak" untuk klien, nama Aan sebagai pengirim.
+
+DATA KLIEN:
+- Nama: ${c.name}
+- Sub-brand: ${c.brand}
+- Stage sekarang: ${c.stage}
+- Tanggal event: ${eventDate}${hariH ? ` (${hariH} hari lagi)` : ''}
+- Paket: ${c.package || 'belum ditentukan'}
+- Nilai: ${c.value ? 'Rp ' + parseInt(c.value).toLocaleString('id-ID') : 'belum ditentukan'}
+- Catatan sebelumnya: ${c.notes || 'tidak ada'}
+
+PERKEMBANGAN TERKINI (dari Aan):
+${update}
+
+Hari ini: ${today}
+
+Buatkan output dalam format JSON persis seperti ini (tidak ada teks lain di luar JSON):
+{
+  "pesan_wa": "pesan WA siap kirim, hangat dan personal, pakai emoji secukupnya, maksimal 5 kalimat, langsung ke poin, jangan terlalu panjang",
+  "jadwal_followup": "kapan harus follow-up berikutnya dan jam berapa, beserta alasannya singkat — contoh: Besok Senin 30 Juni 2026 jam 10.00 pagi, karena klien biasanya aktif pagi hari",
+  "followup_datetime": "tanggal dan waktu follow-up dalam format ISO 8601, contoh: 2026-06-30T10:00:00",
+  "followup_title": "judul singkat untuk kalender, contoh: Follow Up Budi & Sinta – Penawaran WO",
+  "langkah_selanjutnya": "1-3 langkah konkret yang harus Aan lakukan untuk mendorong klien ke stage berikutnya"
+}`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await resp.json();
+    const raw = data.content?.find(b => b.type === 'text')?.text || '';
+    const clean = raw.replace(/```json|```/g, '').trim();
+    const result = JSON.parse(clean);
+
+    // Simpan untuk tombol Calendar & WA
+    lastAIResult = {
+      clientName: c.name,
+      datetime: result.followup_datetime || '',
+      title: result.followup_title || `Follow Up ${c.name}`,
+      jadwal: result.jadwal_followup || '',
+      pesanWA: result.pesan_wa || '',
+    };
+
+    document.getElementById('aiMsgWA').textContent = result.pesan_wa || '—';
+    document.getElementById('aiSchedule').textContent = result.jadwal_followup || '—';
+    document.getElementById('aiNextStep').textContent = result.langkah_selanjutnya || '—';
+    document.getElementById('aiResult').classList.add('show');
+
+    // Auto-save update as note
+    const idx = clients.findIndex(x => x.id === id);
+    const timestamp = new Date().toLocaleDateString('id-ID', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+    const prev = clients[idx].notes || '';
+    clients[idx].notes = `[${timestamp}] ${update}${prev ? '\n\n' + prev : ''}`;
+    clients[idx].updatedAt = Date.now();
+    pushClient(clients[idx]);
+
+    showToast('✓ Follow-up generated & catatan disimpan');
+  } catch(e) {
+    showToast('⚠ Gagal generate — coba lagi');
+    console.error(e);
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '✦ Generate Ulang';
+}
+
+function addToCalendar(id) {
+  const c = clients.find(x => x.id === id);
+  if (!lastAIResult.datetime) { showToast('⚠ Generate dulu jadwalnya'); return; }
+
+  const dt = new Date(lastAIResult.datetime);
+  if (isNaN(dt.getTime())) { showToast('⚠ Format tanggal tidak valid, coba generate ulang'); return; }
+
+  const pad = n => String(n).padStart(2, '0');
+  const fmt = d => `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
+  const start = fmt(dt);
+  const end   = fmt(new Date(dt.getTime() + 30 * 60 * 1000));
+
+  // WA number clean
+  const waRaw = (c.wa || '').replace(/\D/g, '');
+  const waClean = waRaw.startsWith('0') ? '62' + waRaw.slice(1) : waRaw;
+  const waLink = waClean ? `https://wa.me/${waClean}` : '(nomor belum diisi)';
+
+  // Script WA dari AI result
+  const scriptWA = lastAIResult.pesanWA || '(generate dulu dari CRM)';
+
+  // Deskripsi event — ini yang muncul saat kamu tap di kalender
+  const details = [
+    `✅ FOLLOW UP: ${c.name}`,
+    `━━━━━━━━━━━━━━━━━━`,
+    ``,
+    `📱 BUKA WA KLIEN:`,
+    waLink,
+    ``,
+    `💬 SCRIPT PESAN (tinggal copy-paste):`,
+    `───────────────────`,
+    scriptWA,
+    `───────────────────`,
+    ``,
+    `📋 INFO KLIEN:`,
+    `• Stage    : ${c.stage}`,
+    `• Sub-brand: ${c.brand}`,
+    `• Paket    : ${c.package || '-'}`,
+    `• Nilai    : ${c.value ? 'Rp ' + parseInt(c.value).toLocaleString('id-ID') : '-'}`,
+    `• Event    : ${c.date ? formatDate(c.date) : '-'}`,
+    `• Venue    : ${c.venue || '-'}`,
+    ``,
+    `📝 CATATAN TERAKHIR:`,
+    (c.notes || '-').split('\n').slice(0,3).join('\n'),
+    ``,
+    `━━━━━━━━━━━━━━━━━━`,
+    `_Dibuat otomatis dari Rushtic CRM_`,
+  ].join('\n');
+
+  const title    = encodeURIComponent(`✅ Follow Up ${c.name} – ${c.stage}`);
+  const detailsE = encodeURIComponent(details);
+
+  // color=11 = Tomato (merah muda — mencolok di kalender)
+  const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${start}/${end}&details=${detailsE}&color=11`;
+  window.open(url, '_blank');
+  showToast('✓ Event kalender dibuka — tap Save di Google Calendar');
+}
+
+function remindViaWA(id) {
+  const c = clients.find(x => x.id === id);
+  if (!lastAIResult.jadwal) { showToast('⚠ Generate dulu jadwalnya'); return; }
+
+  const myNumber = '6289608068804';
+  const msg = encodeURIComponent(
+    `🔔 *REMINDER FOLLOW UP*\n\n` +
+    `Klien: *${c.name}*\n` +
+    `Stage: ${c.stage}\n` +
+    `Paket: ${c.package||'-'}\n` +
+    `WA Klien: ${c.wa||'-'}\n\n` +
+    `📅 ${lastAIResult.jadwal}\n\n` +
+    `_Dikirim otomatis dari Rushtic CRM_`
+  );
+  window.open(`https://wa.me/${myNumber}?text=${msg}`, '_blank');
+  showToast('✓ Reminder dikirim ke WA kamu');
+}
+
+function copyAI(elId) {
+  const text = document.getElementById(elId).textContent;
+  navigator.clipboard.writeText(text).then(() => showToast('✓ Tersalin ke clipboard'));
+}
+
+// ── WA ──
+function waClick(wa, name) {
+  if (!wa) { showToast('⚠ Nomor WA belum diisi'); return; }
+  const num = wa.replace(/\D/g,'');
+  const clean = num.startsWith('0') ? '62' + num.slice(1) : num;
+  const msg = encodeURIComponent(`Halo kak ${name}, saya Aan dari Rushtic Wedding Jogja 🌸`);
+  window.open(`https://wa.me/${clean}?text=${msg}`, '_blank');
+}
+
+function waClickAndUpdate(id, wa, name) {
+  // Update lastContact
+  const idx = clients.findIndex(c => c.id === id);
+  clients[idx].lastContact = Date.now();
+  pushClient(clients[idx]);
+  renderAll();
+  openDetail(id);
+  waClick(wa, name);
+}
+
+// ── FILTERS ──
+function setSubBrand(brand) {
+  activeFilter = brand;
+  ['fAll','fWO','fDekor','fWisuda'].forEach(id => document.getElementById(id).classList.remove('active'));
+  const map = { all:'fAll', WO:'fWO', Dekor:'fDekor', Wisuda:'fWisuda' };
+  if (map[brand]) document.getElementById(map[brand]).classList.add('active');
+  renderAll();
+}
+
+function filterAll() {
+  filterMode = 'all';
+  document.querySelectorAll('.stat-item').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stat-item')[0].classList.add('active');
+  renderAll();
+}
+
+function filterOverdue() {
+  filterMode = 'overdue';
+  document.querySelectorAll('.stat-item').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stat-item')[1].classList.add('active');
+  renderAll();
+}
+
+// ── VIEW TOGGLE ──
+function setView(v) {
+  currentView = v;
+  const kanban = document.getElementById('kanbanView');
+  const list = document.getElementById('listView');
+  if (v === 'kanban') {
+    kanban.style.display = 'flex';
+    list.style.display = 'none';
+    document.getElementById('btnKanban').classList.add('active');
+    document.getElementById('btnList').classList.remove('active');
+  } else {
+    kanban.style.display = 'none';
+    list.style.display = 'block';
+    document.getElementById('btnKanban').classList.remove('active');
+    document.getElementById('btnList').classList.add('active');
+  }
+}
+
+// ── HELPERS ──
+function formatDate(d) {
+  if (!d) return '—';
+  return new Date(d).toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
+}
+
+function formatRp(v) {
+  return 'Rp ' + parseInt(v||0).toLocaleString('id-ID');
+}
+
+function formatRpShort(v) {
+  const n = parseFloat(v||0);
+  if (n >= 1000000) return 'Rp ' + (n/1000000).toFixed(1) + 'jt';
+  if (n >= 1000) return 'Rp ' + (n/1000).toFixed(0) + 'rb';
+  return 'Rp ' + n;
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// Close modal on backdrop click
+document.querySelectorAll('.modal-overlay').forEach(el => {
+  el.addEventListener('click', e => {
+    if (e.target === el) el.classList.remove('open');
+  });
+});
+
+// ── DEMO DATA (kalau Firebase kosong) ──
+function loadDemoIfEmpty() {
+  if (clients.length === 0) {
+    const now = Date.now();
+    clients = [
+      {
+        id: 'demo_1',
+        name: 'Budi & Sinta',
+        wa: '081234567890',
+        brand: 'WO',
+        stage: 'Lead',
+        date: '2026-09-14',
+        value: '5500000',
+        venue: 'Balai Desa Banguntapan',
+        package: 'Silver WO',
+        notes: 'Tanya lewat IG. Mau cek survey dulu.',
+        createdAt: now - 200000000,
+        lastContact: now - 200000000,
+      },
+      {
+        id: 'demo_2',
+        name: 'Ari & Dewi',
+        wa: '087654321000',
+        brand: 'Dekor',
+        stage: 'Penawaran',
+        date: '2026-08-03',
+        value: '3200000',
+        venue: 'Rumah mempelai, Sleman',
+        package: 'Bronze Dekor',
+        notes: 'Sudah kirim penawaran 2 hari lalu. Belum balas.',
+        createdAt: now - 500000000,
+        lastContact: now - 172800001,
+      },
+      {
+        id: 'demo_3',
+        name: 'Candra & Mira',
+        wa: '089112233445',
+        brand: 'Paket',
+        stage: 'DP',
+        date: '2026-07-20',
+        value: '15000000',
+        venue: 'Gedung Wanita Yogyakarta',
+        package: 'Bonanza',
+        notes: 'DP 3jt sudah masuk BCA. Sisa 12jt H-7.',
+        dp: '3000000',
+        remaining: '12000000',
+        createdAt: now - 1000000000,
+        lastContact: now - 3600000,
+      },
+      {
+        id: 'demo_4',
+        name: 'Wisuda Fitri',
+        wa: '082211223344',
+        brand: 'Wisuda',
+        stage: 'Lunas',
+        date: '2026-07-05',
+        value: '1800000',
+        venue: 'GSP UGM',
+        package: 'Dekor Wisuda Premium',
+        notes: 'Lunas. Minta foto hasil untuk testimoni.',
+        createdAt: now - 2000000000,
+        lastContact: now - 86400000,
+      },
+    ];
+    renderAll();
+    showToast('Demo data dimuat. Tambah klien asli kamu!');
+  }
+}
+
+// Call demo load after Firebase attempt
+setTimeout(() => {
+  if (clients.length === 0) loadDemoIfEmpty();
+}, 2000);
+</script>
+</body>
+</html>
