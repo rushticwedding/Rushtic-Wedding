@@ -1153,7 +1153,7 @@ function getFollowupStatus(c) {
 function daysSince(ts) {
   if (!ts) return 999;
   const diff = Date.now() - ts;
-  return Math.floor(diff / (1000 * 60 * 60));
+  return Math.max(0, Math.floor(diff / (1000 * 60 * 60)));
 }
 
 // ── MODAL: ADD/EDIT ──
@@ -1409,9 +1409,24 @@ Buatkan output dalam format JSON persis seperti ini (tidak ada teks lain di luar
 }`;
 
   try {
+    const __key = localStorage.getItem('rushtic_anthropic_key') || '';
+    if (!__key) {
+      // Tidak ada API key -> pakai generator offline bawaan (RB.build)
+      const g = RB.build(c);
+      lastAIResult = { clientName: c.name, datetime: new Date(Date.now() + g.nextDays*864e5).toISOString().slice(0,19),
+        title: `Follow Up ${c.name}`, jadwal: `${g.nextDays} hari lagi, pagi jam 09.00`, pesanWA: g.pesan };
+      document.getElementById('aiMsgWA').textContent = g.pesan;
+      document.getElementById('aiSchedule').textContent = `${g.nextDays} hari lagi, pagi jam 09.00 — ${g.strategi}`;
+      document.getElementById('aiNextStep').textContent = g.steps.join(' · ');
+      document.getElementById('aiResult').classList.add('show');
+      btn.disabled = false; btn.innerHTML = '\u2726 Generate Ulang';
+      showToast('\u2713 Script dibuat (mode offline)');
+      return;
+    }
     const resp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'x-api-key': __key,
+                 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
         max_tokens: 1000,
@@ -1458,7 +1473,7 @@ Buatkan output dalam format JSON persis seperti ini (tidak ada teks lain di luar
 
 function addToCalendar(id) {
   const c = clients.find(x => x.id === id);
-  if (!lastAIResult.datetime) { showToast('⚠ Generate dulu jadwalnya'); return; }
+  if (!lastAIResult.datetime) { RB.remindOne(id); return; }
 
   const dt = new Date(lastAIResult.datetime);
   if (isNaN(dt.getTime())) { showToast('⚠ Format tanggal tidak valid, coba generate ulang'); return; }
@@ -1515,7 +1530,7 @@ function addToCalendar(id) {
 
 function remindViaWA(id) {
   const c = clients.find(x => x.id === id);
-  if (!lastAIResult.jadwal) { showToast('⚠ Generate dulu jadwalnya'); return; }
+  if (!lastAIResult.jadwal) { const g = RB.build(c); lastAIResult = { jadwal: `${g.nextDays} hari lagi, pagi jam 09.00`, pesanWA: g.pesan }; }
 
   const myNumber = '6289608068804';
   const msg = encodeURIComponent(
@@ -1705,5 +1720,328 @@ setTimeout(() => {
   if (clients.length === 0) loadDemoIfEmpty();
 }, 2000);
 </script>
+<!-- ══════════ RUSHTIC BOOST — Antrian Follow-up, Script Otomatis, Reminder Kalender ══════════ -->
+<style>
+:root{ --rb-gold:#C7A24B; --rb-ink:#151515; }
+.rb-bar{display:flex;gap:8px;padding:10px 14px;overflow-x:auto;background:#151515;border-bottom:1px solid #2a2a2a;position:sticky;top:0;z-index:40}
+.rb-bar::-webkit-scrollbar{display:none}
+.rb-btn{flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:9px 14px;border-radius:999px;border:1px solid #3a3a3a;background:#1f1f1f;color:#e8e8e8;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.rb-btn.primary{background:var(--rb-gold);border-color:var(--rb-gold);color:#151515}
+.rb-btn:active{transform:scale(.97)}
+.rb-count{background:#e04b4b;color:#fff;border-radius:999px;padding:1px 7px;font-size:11px}
+.rb-overlay{position:fixed;inset:0;z-index:9999;background:#faf7f2;display:none;flex-direction:column}
+.rb-overlay.show{display:flex}
+.rb-head{display:flex;align-items:center;gap:10px;padding:14px 16px;background:#151515;color:#fff}
+.rb-head b{font-size:15px}
+.rb-prog{margin-left:auto;font-size:12px;color:var(--rb-gold);font-variant-numeric:tabular-nums}
+.rb-x{background:none;border:none;color:#999;font-size:22px;cursor:pointer;line-height:1}
+.rb-body{flex:1;overflow-y:auto;padding:16px;-webkit-overflow-scrolling:touch}
+.rb-card{background:#fff;border:1px solid #e8e2d8;border-radius:18px;padding:18px;max-width:640px;margin:0 auto}
+.rb-name{font-size:20px;font-weight:700;color:#151515}
+.rb-meta{font-size:12px;color:#8a8378;margin-top:4px;line-height:1.6}
+.rb-val{font-size:22px;font-weight:700;margin-top:10px;font-variant-numeric:tabular-nums}
+.rb-sec{margin-top:16px;padding-top:14px;border-top:1px dashed #e8e2d8}
+.rb-lbl{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#a89b88;margin-bottom:6px}
+.rb-strategy{font-size:13px;line-height:1.65;color:#4a453d;background:#fbf6e9;border-left:3px solid var(--rb-gold);padding:10px 12px;border-radius:0 10px 10px 0}
+.rb-script{font-size:14px;line-height:1.7;white-space:pre-wrap;background:#f4f7f4;border:1px solid #dfe8df;border-radius:12px;padding:14px;color:#232323}
+.rb-steps{font-size:13px;line-height:1.8;color:#4a453d;padding-left:18px;margin:0}
+.rb-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid #e8e2d8}
+.rb-a{padding:13px;border-radius:12px;border:1px solid #ddd6c9;background:#fff;font-size:13px;font-weight:600;cursor:pointer;color:#4a453d}
+.rb-a.go{grid-column:1/-1;background:#25D366;border-color:#25D366;color:#fff;font-size:15px}
+.rb-a.done{background:#151515;border-color:#151515;color:var(--rb-gold)}
+.rb-empty{text-align:center;padding:60px 24px;color:#8a8378;font-size:14px;line-height:1.7}
+.rb-empty span{font-size:44px;display:block;margin-bottom:12px}
+.rb-sheet{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.55);display:none;align-items:flex-end;justify-content:center}
+.rb-sheet.show{display:flex}
+.rb-sheet-in{background:#fff;width:100%;max-width:520px;border-radius:22px 22px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom));max-height:86vh;overflow-y:auto}
+.rb-sheet h3{margin:0 0 4px;font-size:17px}
+.rb-sheet p{font-size:12.5px;color:#8a8378;line-height:1.6;margin:0 0 14px}
+.rb-row{display:flex;gap:10px;align-items:center;margin-bottom:12px}
+.rb-row label{font-size:12px;color:#8a8378;flex:0 0 96px}
+.rb-row input,.rb-row select{flex:1;padding:10px;border:1px solid #e0dad0;border-radius:10px;font-size:14px;background:#fcfbf9}
+.rb-note{font-size:11.5px;color:#a89b88;line-height:1.6;margin-top:10px}
+.rb-bell{background:#fff;border:1px solid #e6dfd3;border-radius:8px;padding:6px 9px;cursor:pointer;font-size:13px}
+</style>
+
+<div class="rb-overlay" id="rbOverlay">
+  <div class="rb-head">
+    <button class="rb-x" onclick="RB.close()">✕</button>
+    <b>Follow-up Hari Ini</b>
+    <span class="rb-prog" id="rbProg"></span>
+  </div>
+  <div class="rb-body" id="rbBody"></div>
+  <div class="rb-actions" id="rbActions"></div>
+</div>
+
+<div class="rb-sheet" id="rbSheet" onclick="if(event.target.id==='rbSheet')RB.closeSheet()">
+  <div class="rb-sheet-in" id="rbSheetIn"></div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   RUSHTIC BOOST v1
+   Menambah ke CRM lama: antrian follow-up harian, generator
+   strategi + script otomatis (tanpa internet/AI), dan reminder
+   yang dikirim ke Google Calendar / alarm HP lewat file .ics.
+   ══════════════════════════════════════════════════════════════ */
+const RB = (() => {
+  const MY_WA = '6289608068804';
+  const PER_DAY = 5;            // maksimal follow-up per hari
+  const START_HOUR = 9;         // jam mulai follow-up
+  const GAP_MIN = 30;           // jarak antar reminder
+
+  let queue = [], qi = 0, cur = null;
+
+  /* ── util ── */
+  const H = (c) => (typeof daysSince === 'function' ? daysSince(c.lastContact) : 999);
+  const firstName = (n='') => (n.split(/[&/,]/)[0] || n).trim().split(' ')[0] || 'Kak';
+  const rp = (v) => 'Rp ' + (parseFloat(v)||0).toLocaleString('id-ID');
+  const daysToEvent = (c) => c.date ? Math.ceil((new Date(c.date) - new Date()) / 864e5) : null;
+  const waLink = (wa) => { const n=(wa||'').replace(/\D/g,''); return n ? 'https://wa.me/' + (n.startsWith('0') ? '62'+n.slice(1) : n) : ''; };
+  const esc = (s) => String(s||'').replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\r?\n/g,'\\n');
+
+  /* ══ MESIN STRATEGI + SCRIPT (rule-based, jalan offline) ══ */
+  function build(c) {
+    const nm = firstName(c.name), h = H(c), d = daysToEvent(c);
+    const cold = h > 168, warm = h > 48;
+    const pkg = c.package ? ` (${c.package})` : '';
+    const anon = !c.name || /anonim|tanpa nama|^-$/i.test(c.name);
+    let strategi, pesan, steps, nextDays = 3;
+
+    if (anon) {
+      strategi = 'Kartu ini tidak punya identitas. Selama namanya "Anonim", dia bukan lead — dia catatan. Jangan hitung nilainya di pipeline sampai datanya lengkap.';
+      pesan = `Halo Kak, ini Aan dari Rushtic Wedding Jogja 🌸\nMaaf ya baru balas — chat kakak sempat tertumpuk. Kalau rencana acaranya masih berjalan, boleh saya bantu cek ketersediaan tanggalnya?\nKalau sudah ada vendor lain juga tidak apa-apa, tinggal balas "sudah" supaya tidak saya ganggu lagi 🙏`;
+      steps = ['Cari chat aslinya di WA, lengkapi nama + tanggal event', 'Kalau tidak ketemu dalam 5 menit: arsipkan kartunya, jangan dibiarkan menggantung', 'Nilai pipeline dihitung ulang setelah kartu kosong dibersihkan'];
+      nextDays = 2;
+    }
+    else if (c.stage === 'Lead' && cold) {
+      strategi = `Sudah ${Math.floor(h/24)} hari didiamkan. Jangan pura-pura tidak ada jeda — akui duluan, itu justru mematikan rasa canggung. Lalu beri jalan keluar yang mudah ("balas sudah") supaya kakak tahu mana yang benar-benar hidup.`;
+      pesan = `Halo Kak ${nm}, ini Aan dari Rushtic Wedding Jogja 🌸\nSaya minta maaf, chat kakak sempat terlewat di antrean saya — itu salah saya.\nKalau rencana acaranya masih berjalan, saya siapkan ketersediaan tanggal + kisaran paket biar kakak gampang membandingkan.\nKalau sudah pakai vendor lain, balas "sudah" saja ya, aman kok 🙏`;
+      steps = ['Kirim pagi hari (08.00–10.00), jangan malam', 'Kalau dibaca tanpa balasan 2 hari → kirim 1 foto portfolio yang mirip konsepnya, tanpa pertanyaan', 'Tanpa respons setelah itu → pindahkan ke arsip, bukan didiamkan di pipeline'];
+      nextDays = 2;
+    }
+    else if (c.stage === 'Lead') {
+      strategi = 'Tahap kualifikasi. Jangan kirim harga dulu — tanya tanggal, lokasi, dan jumlah tamu. Beri dua pilihan arah, bukan pertanyaan terbuka, supaya kakak gampang menjawab.';
+      pesan = `Halo Kak ${nm}, ini Aan dari Rushtic Wedding Jogja 🌸\nTerima kasih sudah menghubungi. Biar saya bisa siapkan penawaran yang pas, boleh tahu tanggal acara${c.venue ? '' : ' dan lokasinya'}?\nBiasanya klien saya ambil salah satu dari dua arah ini: dekor lengkap tapi tim kecil, atau tim WO penuh dengan dekor secukupnya. Kakak condong ke yang mana?`;
+      steps = ['Kunci tanggal + venue + estimasi tamu sebelum bicara harga', 'Kirim 2 opsi paket, jangan 5 — pilihan terlalu banyak bikin klien menunda', 'Catat siapa pengambil keputusan sebenarnya (sering ibu/orang tua)'];
+      nextDays = 2;
+    }
+    else if (c.stage === 'Survey') {
+      strategi = 'Momentum tertinggi ada 24 jam setelah survey. Kirim ringkasan hasil survey + langkah berikut yang spesifik, jangan menunggu klien yang bertanya.';
+      pesan = `Halo Kak ${nm} 🌸\nTerima kasih waktunya kemarin. Dari hasil survey${c.venue ? ' di ' + c.venue : ''}, saya sudah punya gambaran layout yang paling pas.\nSaya kirimkan penawaran + moodboard-nya hari ini ya. Kalau ada bagian yang mau disesuaikan, tinggal bilang, saya rombak sesuai budget kakak.`;
+      steps = ['Kirim penawaran maksimal 1×24 jam setelah survey', 'Sertakan 3–5 foto referensi yang relevan dengan venue-nya', 'Sebutkan berapa lama harga berlaku (mis. 7 hari) — bukan ancaman, tapi bikin ada keputusan'];
+      nextDays = 1;
+    }
+    else if (c.stage === 'Penawaran') {
+      strategi = warm
+        ? `Penawaran sudah ${Math.floor(h/24)} hari mengambang. Jangan tanya "gimana kak?" — itu mudah dijawab "nanti ya". Balik pertanyaannya: minta mereka menunjuk bagian mana yang belum sreg.`
+        : 'Penawaran baru terkirim. Pastikan sudah terbaca dan tanyakan bagian mana yang paling mendekati keinginan mereka — bukan ya/tidak.';
+      pesan = `Halo Kak ${nm} 🌸\nSaya mau memastikan penawaran${pkg} kemarin sudah sampai ya.\nDaripada kakak menimbang sendiri, lebih cepat kalau saya tahu: bagian mana yang sudah pas, dan bagian mana yang masih kurang sreg — harga, konsep, atau cakupan timnya?\nDari situ saya sesuaikan, tanpa harus mengganti paketnya dari nol.`;
+      steps = ['Kalau jawabannya "kemahalan": jangan langsung diskon — kurangi cakupan, bukan harga', 'Tawarkan 1 hal bernilai tanpa biaya (mis. rundown/teknis meeting) untuk mengunci keputusan', 'Tanyakan kapan mereka rencananya memutuskan, lalu catat tanggalnya'];
+      nextDays = 3;
+    }
+    else if (c.stage === 'DP') {
+      strategi = d !== null && d < 45
+        ? `Event tinggal ${d} hari. Alihkan pembicaraan dari uang ke persiapan — pelunasan jadi terasa bagian dari rundown, bukan tagihan.`
+        : 'Sudah DP. Jaga rasa aman klien: kabari progres walau belum ada yang perlu diputuskan.';
+      pesan = `Halo Kak ${nm} 🌸\nUpdate persiapan acara${d !== null ? ` (tinggal ${d} hari lagi)` : ''}: konsep dan tim sudah saya kunci.\nSupaya semuanya lancar, saya usul kita jadwalkan technical meeting minggu ini, sekalian saya jelaskan tahapan pelunasan${c.remaining ? ` (sisa ${rp(c.remaining)})` : ''}.\nKakak lebih enak awal minggu atau akhir pekan?`;
+      steps = ['Ajukan 2 pilihan jadwal, jangan tanya "kapan enaknya"', 'Kirim checklist persiapan biar klien merasa dipegang', 'Konfirmasi pelunasan H-14, jangan H-2'];
+      nextDays = 7;
+    }
+    else {
+      strategi = 'Klien selesai adalah aset termurahmu. Satu permintaan review + satu ajakan referral bernilai lebih besar dari iklan yang pernah kamu coba.';
+      pesan = `Halo Kak ${nm} 🌸\nTerima kasih sudah mempercayakan acaranya ke Rushtic — senang sekali bisa jadi bagian hari itu.\nKalau berkenan, boleh minta tolong tulis ulasan singkat? Sangat membantu saya.\nDan kalau ada teman atau saudara yang lagi cari WO/dekor, saya siapkan harga khusus untuk kenalan kakak 🙏`;
+      steps = ['Minta review maksimal 7 hari setelah acara, saat kesannya masih hangat', 'Kirim 3–5 foto terbaik mereka sebagai pemanis permintaan', 'Catat sebagai sumber referral di catatan klien'];
+      nextDays = 30;
+    }
+
+    if (d !== null && d > 0 && d < 30 && ['Lead','Survey','Penawaran'].includes(c.stage)) {
+      strategi += ` Acaranya tinggal ${d} hari — sebut ketersediaan tim secara jujur, itu urgensi yang nyata, bukan dibuat-buat.`;
+    }
+    return { strategi, pesan, steps, nextDays };
+  }
+
+  /* ══ ANTRIAN ══ */
+  const pending = () => clients
+    .filter(c => !['Lunas','Selesai'].includes(c.stage) && H(c) > 48)
+    .sort((a,b) => (parseFloat(b.value)||0) - (parseFloat(a.value)||0));
+
+  function start() {
+    queue = pending().slice(0, PER_DAY); qi = 0;
+    document.getElementById('rbOverlay').classList.add('show');
+    render();
+  }
+  function close() { document.getElementById('rbOverlay').classList.remove('show'); if (typeof renderAll==='function') renderAll(); }
+
+  function render() {
+    const body = document.getElementById('rbBody'), acts = document.getElementById('rbActions');
+    document.getElementById('rbProg').textContent = queue.length ? `${Math.min(qi+1,queue.length)} / ${queue.length}` : '';
+    if (qi >= queue.length) {
+      cur = null;
+      body.innerHTML = `<div class="rb-empty"><span>✓</span>Selesai untuk hari ini.<br>Sisa ${Math.max(pending().length,0)} lead menunggu besok.<br><br>Berhenti di sini. Lima follow-up yang benar-benar dikirim mengalahkan dua belas yang cuma dilihat.</div>`;
+      acts.innerHTML = `<button class="rb-a done" onclick="RB.close()">Tutup</button><button class="rb-a" onclick="RB.icsBulk()">🗓 Jadwalkan sisanya</button>`;
+      return;
+    }
+    const c = cur = queue[qi], g = build(c), d = daysToEvent(c);
+    body.innerHTML = `
+      <div class="rb-card">
+        <div class="rb-name">${c.name || 'Tanpa Nama'}</div>
+        <div class="rb-meta">${c.brand||'WO'} · ${c.stage||'Lead'} · belum disentuh ${Math.floor(H(c)/24)} hari${c.date ? ` · acara ${formatDate(c.date)}${d!==null?` (${d} hari lagi)`:''}` : ''}${c.venue?` · ${c.venue}`:''}</div>
+        ${c.value ? `<div class="rb-val">${rp(c.value)}</div>` : ''}
+        <div class="rb-sec"><div class="rb-lbl">Strategi</div><div class="rb-strategy">${g.strategi}</div></div>
+        <div class="rb-sec"><div class="rb-lbl">Script siap kirim</div><div class="rb-script" id="rbScript">${g.pesan}</div></div>
+        <div class="rb-sec"><div class="rb-lbl">Langkah setelah dibalas</div><ul class="rb-steps">${g.steps.map(s=>`<li>${s}</li>`).join('')}</ul></div>
+      </div>`;
+    acts.innerHTML = `
+      <button class="rb-a go" onclick="RB.send()">💬 Salin script &amp; buka WA</button>
+      <button class="rb-a" onclick="RB.snooze()">Tunda 3 hari</button>
+      <button class="rb-a done" onclick="RB.next()">Sudah / lewati →</button>`;
+  }
+
+  function send() {
+    const c = cur; if (!c) return;
+    const txt = document.getElementById('rbScript').textContent;
+    navigator.clipboard?.writeText(txt).catch(()=>{});
+    touch(c, txt);
+    const l = waLink(c.wa);
+    if (l) window.open(l + '?text=' + encodeURIComponent(txt), '_blank');
+    else showToast('⚠ Nomor WA kosong — script sudah tersalin');
+    next();
+  }
+  function touch(c, txt) {
+    const i = clients.findIndex(x => x.id === c.id); if (i < 0) return;
+    const t = new Date().toLocaleDateString('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+    clients[i].lastContact = Date.now();
+    clients[i].updatedAt = Date.now();
+    if (txt) clients[i].notes = `[${t}] Follow-up terkirim dari antrian.${clients[i].notes ? '\n\n'+clients[i].notes : ''}`;
+    pushClient(clients[i]);
+  }
+  function snooze() {
+    const c = cur; if (!c) return;
+    const i = clients.findIndex(x => x.id === c.id);
+    clients[i].lastContact = Date.now() + 24 * 3600e3; // ambang overdue (48j) tercapai lagi 3 hari lagi
+    clients[i].updatedAt = Date.now();
+    pushClient(clients[i]); showToast('✓ Ditunda 3 hari'); next();
+  }
+  function next() { qi++; render(); }
+
+  /* ══ REMINDER → KALENDER / ALARM (.ics) ══ */
+  function icsEvent({uid, start, mins, title, desc, rrule, alarmMin=10}) {
+    const p = n => String(n).padStart(2,'0');
+    const f = d => `${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}T${p(d.getHours())}${p(d.getMinutes())}00`;
+    const end = new Date(start.getTime() + mins*60000);
+    return ['BEGIN:VEVENT',`UID:${uid}@rushtic`,`DTSTAMP:${f(new Date())}`,`DTSTART:${f(start)}`,`DTEND:${f(end)}`,
+      rrule?`RRULE:${rrule}`:null,`SUMMARY:${esc(title)}`,`DESCRIPTION:${esc(desc)}`,
+      'BEGIN:VALARM',`TRIGGER:-PT${alarmMin}M`,'ACTION:DISPLAY',`DESCRIPTION:${esc(title)}`,'END:VALARM','END:VEVENT']
+      .filter(Boolean).join('\r\n');
+  }
+  function download(name, events) {
+    const ics = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Rushtic CRM//ID','CALSCALE:GREGORIAN', ...events, 'END:VCALENDAR'].join('\r\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([ics], {type:'text/calendar'}));
+    a.download = name; a.click();
+  }
+  function desc(c) {
+    const g = build(c);
+    return [`FOLLOW UP: ${c.name||'-'}`, '', 'BUKA WA KLIEN:', waLink(c.wa) || '(nomor belum diisi)', '',
+      'SCRIPT — TINGGAL COPAS:', '───────────────', g.pesan, '───────────────', '',
+      `STRATEGI: ${g.strategi}`, '',
+      `Stage: ${c.stage||'-'} | ${c.brand||'-'} | ${c.value?rp(c.value):'-'}`,
+      `Event: ${c.date?formatDate(c.date):'-'} | Venue: ${c.venue||'-'}`, '',
+      'Buka CRM: https://rushticwojogja.com/crm'].join('\n');
+  }
+  function slot(i) {
+    const d = new Date(); let day = Math.floor(i / PER_DAY) + 1;
+    d.setDate(d.getDate() + day); d.setHours(START_HOUR, 0, 0, 0);
+    if (d.getDay() === 0) d.setDate(d.getDate() + 1);              // lewati Minggu
+    d.setMinutes((i % PER_DAY) * GAP_MIN);
+    return d;
+  }
+  function remindOne(id) {
+    const c = clients.find(x => x.id === id); if (!c) return;
+    sheet(`<h3>Ingatkan saya soal ${c.name||'klien ini'}</h3>
+      <p>Event masuk ke kalender lengkap dengan script-nya. Alarm bunyi 10 menit sebelumnya.</p>
+      <div class="rb-row"><label>Tanggal</label><input type="date" id="rbD" value="${new Date(Date.now()+864e5).toISOString().slice(0,10)}"></div>
+      <div class="rb-row"><label>Jam</label><input type="time" id="rbT" value="09:00"></div>
+      <button class="rb-btn primary" style="width:100%;justify-content:center;padding:13px" onclick="RB.saveOne('${id}')">Simpan ke kalender</button>
+      <div class="rb-note">File .ics akan terunduh — buka file-nya, lalu pilih Google Calendar. Sekali tap, event + alarm langsung masuk.</div>`);
+  }
+  function saveOne(id) {
+    const c = clients.find(x => x.id === id);
+    const dt = new Date(`${document.getElementById('rbD').value}T${document.getElementById('rbT').value}:00`);
+    if (isNaN(dt)) { showToast('⚠ Tanggal tidak valid'); return; }
+    download(`followup-${(c.name||'klien').replace(/\W+/g,'-').toLowerCase()}.ics`,
+      [icsEvent({uid:'fu'+c.id+Date.now(), start:dt, mins:20, title:`🔔 Follow up ${c.name||''} — ${c.stage||''}`, desc:desc(c)})]);
+    closeSheet(); showToast('✓ File kalender terunduh — buka & simpan');
+  }
+  function icsBulk() {
+    const list = pending();
+    if (!list.length) { showToast('✓ Tidak ada yang perlu dijadwalkan'); return; }
+    const evs = list.map((c,i) => icsEvent({uid:'fu'+c.id+i, start:slot(i), mins:20,
+      title:`🔔 Follow up ${c.name||''} — ${c.stage||''}`, desc:desc(c)}));
+    download('rushtic-followup.ics', evs);
+    sheet(`<h3>${list.length} reminder siap</h3>
+      <p>Dijadwalkan ${PER_DAY} per hari mulai besok jam ${START_HOUR}.00, urut dari nilai deal terbesar. Tiap event sudah berisi link WA klien + script-nya.</p>
+      <div class="rb-note">Filenya sudah terunduh. Buka <b>rushtic-followup.ics</b> dari notifikasi unduhan → pilih Google Calendar → Import. Alarm akan bunyi 10 menit sebelum tiap jadwal, jadi kamu tidak perlu ingat membuka CRM.</div>
+      <button class="rb-btn primary" style="width:100%;justify-content:center;padding:13px;margin-top:14px" onclick="RB.closeSheet()">Oke</button>`);
+  }
+  function dailyAlarm() {
+    const d = new Date(); d.setDate(d.getDate()+1); d.setHours(START_HOUR,0,0,0);
+    download('rushtic-alarm-harian.ics', [icsEvent({uid:'daily'+Date.now(), start:d, mins:30, alarmMin:0,
+      rrule:'FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR,SA',
+      title:'🔔 Rushtic: 5 follow-up hari ini',
+      desc:['Buka CRM lalu tekan "Mulai follow-up hari ini".','','https://rushticwojogja.com/crm','','Lima lead teratas sudah diurutkan dan script-nya sudah jadi. Target: 15 menit, lalu tutup.'].join('\n')})]);
+    showToast('✓ Alarm harian terunduh — buka & simpan');
+  }
+  function waSelf() {
+    const list = pending().slice(0, PER_DAY);
+    if (!list.length) { showToast('✓ Tidak ada follow-up tertunggak'); return; }
+    const msg = ['🔔 *FOLLOW-UP HARI INI*','',
+      ...list.map((c,i)=>`${i+1}. *${c.name||'-'}* — ${c.stage} — ${c.value?rp(c.value):'-'}\n    ${Math.floor(H(c)/24)} hari didiamkan · ${waLink(c.wa)||'no WA -'}`),
+      '', 'Buka CRM: https://rushticwojogja.com/crm'].join('\n');
+    window.open(`https://wa.me/${MY_WA}?text=${encodeURIComponent(msg)}`, '_blank');
+  }
+
+  /* ── sheet ── */
+  function sheet(html){ document.getElementById('rbSheetIn').innerHTML = html; document.getElementById('rbSheet').classList.add('show'); }
+  function closeSheet(){ document.getElementById('rbSheet').classList.remove('show'); }
+
+  /* ── inject UI ── */
+  function mount() {
+    if (document.getElementById('rbBar')) return;
+    const bar = document.createElement('div');
+    bar.className = 'rb-bar'; bar.id = 'rbBar';
+    bar.innerHTML = `
+      <button class="rb-btn primary" onclick="RB.start()">▶ Mulai follow-up <span class="rb-count" id="rbN">0</span></button>
+      <button class="rb-btn" onclick="RB.icsBulk()">🗓 Jadwalkan semua</button>
+      <button class="rb-btn" onclick="RB.dailyAlarm()">⏰ Alarm harian</button>
+      <button class="rb-btn" onclick="RB.waSelf()">💬 Kirim daftar ke WA-ku</button>`;
+    const sb = document.getElementById('statsBar');
+    sb.parentNode.insertBefore(bar, sb.nextSibling);
+
+    // tombol 🔔 di tiap kartu
+    if (typeof window.cardHTML === 'function' && !window.__rbCard) {
+      const orig = window.cardHTML; window.__rbCard = true;
+      window.cardHTML = function(c) {
+        return orig(c).replace('<button class="btn-edit"',
+          `<button class="rb-bell" onclick="event.stopPropagation(); RB.remindOne('${c.id}')" title="Ingatkan lewat kalender">🔔</button><button class="btn-edit"`);
+      };
+      if (typeof renderAll === 'function') renderAll();
+    }
+    // jaga hitungan tetap update
+    if (typeof window.updateStats === 'function' && !window.__rbStats) {
+      const o = window.updateStats; window.__rbStats = true;
+      window.updateStats = function(){ o.apply(this, arguments); const n=document.getElementById('rbN'); if(n) n.textContent = pending().length; };
+    }
+    const n = document.getElementById('rbN'); if (n) n.textContent = pending().length;
+  }
+
+  window.addEventListener('load', () => setTimeout(mount, 300));
+  setTimeout(mount, 1200);
+
+  return { start, close, next, send, snooze, remindOne, saveOne, icsBulk, dailyAlarm, waSelf, closeSheet, build };
+})();
+</script>
+
 </body>
 </html>
