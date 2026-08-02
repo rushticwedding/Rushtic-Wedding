@@ -1799,7 +1799,29 @@ const RB = (() => {
   const firstName = (n='') => (n.split(/[&/,]/)[0] || n).trim().split(' ')[0] || 'Kak';
   const rp = (v) => 'Rp ' + (parseFloat(v)||0).toLocaleString('id-ID');
   const daysToEvent = (c) => c.date ? Math.ceil((new Date(c.date) - new Date()) / 864e5) : null;
-  const waLink = (wa) => { const n=(wa||'').replace(/\D/g,''); return n ? 'https://wa.me/' + (n.startsWith('0') ? '62'+n.slice(1) : n) : ''; };
+  const waNum = (wa) => { const n=(wa||'').replace(/\D/g,''); return n ? (n.startsWith('0') ? '62'+n.slice(1) : n) : ''; };
+  const waLink = (wa) => { const n = waNum(wa); return n ? 'https://wa.me/' + n : ''; };
+  const waApp = () => localStorage.getItem('rushtic_wa_app') || 'w4b';   // w4b = WhatsApp Business
+  const isAndroid = () => /Android/i.test(navigator.userAgent);
+  function openWA(wa, text) {
+    const n = waNum(wa); if (!n) return false;
+    const t = encodeURIComponent(text || '');
+    const app = waApp();
+    if (isAndroid() && app !== 'web') {
+      const pkg = app === 'w4b' ? 'com.whatsapp.w4b' : 'com.whatsapp';
+      window.location.href = `intent://send?phone=${n}&text=${t}#Intent;scheme=whatsapp;package=${pkg};end`;
+    } else {
+      window.open(`https://wa.me/${n}?text=${t}`, '_blank');
+    }
+    return true;
+  }
+  function toggleWaApp() {
+    const next = { w4b:'wa', wa:'web', web:'w4b' }[waApp()];
+    localStorage.setItem('rushtic_wa_app', next);
+    paintWaBtn(); showToast('\u2713 Kirim lewat: ' + waLabel());
+  }
+  const waLabel = () => ({ w4b:'WA Bisnis', wa:'WA Pribadi', web:'Pilih sendiri' })[waApp()];
+  function paintWaBtn() { const b = document.getElementById('rbWaApp'); if (b) b.innerHTML = '\uD83D\uDCF1 ' + waLabel(); }
   const esc = (s) => String(s||'').replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\r?\n/g,'\\n');
 
   /* ══ MESIN STRATEGI + SCRIPT (rule-based, jalan offline) ══ */
@@ -1878,10 +1900,15 @@ const RB = (() => {
     const g = build(c);
     navigator.clipboard?.writeText(g.pesan).catch(()=>{});
     touch(c, g.pesan);
-    const l = waLink(c.wa);
-    if (l) window.open(l + '?text=' + encodeURIComponent(g.pesan), '_blank');
-    else showToast('\u26a0 Nomor WA kosong \u2014 script sudah tersalin');
+    if (!openWA(c.wa, g.pesan)) showToast('\u26a0 Nomor WA kosong \u2014 script sudah tersalin');
     if (typeof renderAll === 'function') renderAll();
+  }
+  function archiveAsk(id) {
+    const c = clients.find(x => x.id === id); if (!c) return;
+    sheet(`<h3>Arsipkan ${c.name||'klien ini'}?</h3>
+      <p>Kartunya keluar dari pipeline, tapi nomor WA dan catatannya tetap tersimpan \u2014 masih bisa dipakai untuk promo atau referral nanti.</p>
+      <button class="rb-btn primary" style="width:100%;justify-content:center;padding:13px" onclick="RB.archive('${id}');RB.closeSheet()">Ya, arsipkan</button>
+      <button class="rb-btn" style="width:100%;justify-content:center;padding:13px;margin-top:8px" onclick="RB.closeSheet()">Batal</button>`);
   }
   function archive(id) {
     const i = clients.findIndex(x => x.id === id); if (i < 0) return;
@@ -1923,9 +1950,7 @@ const RB = (() => {
     const txt = document.getElementById('rbScript').textContent;
     navigator.clipboard?.writeText(txt).catch(()=>{});
     touch(c, txt);
-    const l = waLink(c.wa);
-    if (l) window.open(l + '?text=' + encodeURIComponent(txt), '_blank');
-    else showToast('⚠ Nomor WA kosong — script sudah tersalin');
+    if (!openWA(c.wa, txt)) showToast('\u26a0 Nomor WA kosong \u2014 script sudah tersalin');
     next();
   }
   function touch(c, txt) {
@@ -2019,7 +2044,7 @@ const RB = (() => {
     const msg = ['🔔 *FOLLOW-UP HARI INI*','',
       ...list.map((c,i)=>`${i+1}. *${c.name||'-'}* — ${c.stage} — ${c.value?rp(c.value):'-'}\n    ${Math.floor(H(c)/24)} hari didiamkan · ${waLink(c.wa)||'no WA -'}`),
       '', 'Buka CRM: https://rushticwojogja.com/crm'].join('\n');
-    window.open(`https://wa.me/${MY_WA}?text=${encodeURIComponent(msg)}`, '_blank');
+    openWA(MY_WA, msg);
   }
 
   /* ── sheet ── */
@@ -2035,7 +2060,9 @@ const RB = (() => {
       <button class="rb-btn primary" onclick="RB.start()">▶ Mulai follow-up <span class="rb-count" id="rbN">0</span></button>
       <button class="rb-btn" onclick="RB.icsBulk()">🗓 Jadwalkan semua</button>
       <button class="rb-btn" onclick="RB.dailyAlarm()">⏰ Alarm harian</button>
-      <button class="rb-btn" onclick="RB.waSelf()">💬 Kirim daftar ke WA-ku</button>`;
+      <button class="rb-btn" id="rbWaApp" onclick="RB.toggleWaApp()">📱 WA Bisnis</button>
+      <button class="rb-btn" onclick="RB.waSelf()">💬 Kirim daftar ke WA-ku</button>
+      <span style="flex:0 0 auto;align-self:center;font-size:10px;color:#666;padding:0 6px">v2.1</span>`;
     const sb = document.getElementById('statsBar');
     sb.parentNode.insertBefore(bar, sb.nextSibling);
 
@@ -2044,7 +2071,7 @@ const RB = (() => {
       const orig = window.cardHTML; window.__rbCard = true;
       window.cardHTML = function(c) {
         return orig(c).replace('<button class="btn-edit"',
-          `<button class="rb-bell" onclick="event.stopPropagation(); RB.remindOne('${c.id}')" title="Ingatkan lewat kalender">🔔</button><button class="btn-edit"`);
+          `<button class="rb-bell" onclick="event.stopPropagation(); RB.remindOne('${c.id}')" title="Ingatkan lewat kalender">🔔</button><button class="rb-bell" onclick="event.stopPropagation(); RB.archiveAsk('${c.id}')" title="Arsipkan">🗄</button><button class="btn-edit"`);
       };
       if (typeof renderAll === 'function') renderAll();
     }
@@ -2062,13 +2089,14 @@ const RB = (() => {
       const o = window.updateStats; window.__rbStats = true;
       window.updateStats = function(){ o.apply(this, arguments); const n=document.getElementById('rbN'); if(n) n.textContent = pending().length; };
     }
+    paintWaBtn();
     const n = document.getElementById('rbN'); if (n) n.textContent = pending().length;
   }
 
   window.addEventListener('load', () => setTimeout(mount, 300));
   setTimeout(mount, 1200);
 
-  return { start, close, next, send, snooze, remindOne, saveOne, icsBulk, dailyAlarm, waSelf, closeSheet, build, waCard, archive, archiveCur };
+  return { start, close, next, send, snooze, remindOne, saveOne, icsBulk, dailyAlarm, waSelf, closeSheet, build, waCard, archive, archiveAsk, archiveCur, toggleWaApp };
 })();
 </script>
 
