@@ -3,10 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e1317">
 <title>Pusat Kendali — Rushtic</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 :root{
   --bg:#0e1317; --panel:#161c22; --panel2:#1c242c; --line:#26313b;
@@ -17,57 +19,42 @@
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
-body{
-  background:var(--bg); color:var(--ink);
-  font-family:'Plus Jakarta Sans',system-ui,sans-serif;
-  font-size:15px; line-height:1.5;
-  padding-bottom:calc(76px + env(safe-area-inset-bottom));
-  -webkit-font-smoothing:antialiased;
-}
+body{background:var(--bg);color:var(--ink);font-family:'Plus Jakarta Sans',system-ui,sans-serif;
+  font-size:15px;line-height:1.5;padding-bottom:calc(76px + env(safe-area-inset-bottom));-webkit-font-smoothing:antialiased}
 button,input,select,textarea{font-family:inherit;font-size:inherit}
 a{color:var(--gold);text-decoration:none}
 
-/* ---------- header ---------- */
-header{
-  position:sticky;top:0;z-index:40;
-  background:rgba(14,19,23,.92);backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--line);
-  padding:calc(12px + env(safe-area-inset-top)) 16px 12px;
-  display:flex;align-items:center;gap:10px;
-}
+header{position:sticky;top:0;z-index:40;background:rgba(14,19,23,.92);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);padding:calc(12px + env(safe-area-inset-top)) 16px 12px;display:flex;align-items:center;gap:8px}
 .wordmark{font-family:'Fraunces',serif;font-size:19px;letter-spacing:.2px}
 .wordmark b{color:var(--gold);font-weight:600}
 .spacer{flex:1}
-.sync{
-  border:1px solid var(--line);background:var(--panel);color:var(--muted);
-  padding:7px 12px;border-radius:99px;font-size:12px;font-weight:600;
-  display:flex;align-items:center;gap:6px;cursor:pointer;
-}
+.sync{border:1px solid var(--line);background:var(--panel);color:var(--muted);padding:7px 12px;border-radius:99px;
+  font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;cursor:pointer}
 .sync.live{color:var(--ok);border-color:rgba(63,185,80,.3)}
 .sync.off{color:var(--bad);border-color:rgba(240,86,74,.3)}
 .dot{width:6px;height:6px;border-radius:99px;background:currentColor}
+.iconbtn{border:1px solid var(--line);background:var(--panel);color:var(--muted);width:34px;height:34px;
+  border-radius:99px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 34px}
+.iconbtn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 
 main{padding:16px 16px 24px;max-width:720px;margin:0 auto}
 .view{display:none}
 .view.on{display:block;animation:fade .25s ease}
 @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
-/* ---------- type ---------- */
-.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);font-weight:700;margin:22px 0 10px}
-.eyebrow:first-child{margin-top:4px}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);font-weight:700;margin:22px 0 10px;display:flex;align-items:center;gap:10px}
+.eyebrow span.n{color:var(--gold);font-family:'Fraunces',serif;letter-spacing:0;font-size:13px}
 h2{font-family:'Fraunces',serif;font-weight:600;font-size:24px;margin:0 0 4px}
 .sub{color:var(--muted);font-size:13px;margin:0 0 16px}
 
-/* ---------- cards ---------- */
 .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-bottom:10px}
 .card.tap{cursor:pointer;transition:border-color .15s,transform .1s}
 .card.tap:active{transform:scale(.99)}
 .card.tap:hover{border-color:var(--gold-dim)}
-
 .row{display:flex;align-items:center;gap:10px}
 .grow{flex:1;min-width:0}
 .truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-
 .name{font-weight:700;font-size:15px}
 .meta{color:var(--muted);font-size:12.5px;margin-top:2px}
 .money{font-variant-numeric:tabular-nums;font-weight:700}
@@ -79,42 +66,35 @@ h2{font-family:'Fraunces',serif;font-weight:600;font-size:24px;margin:0 0 4px}
 .p-dp{background:var(--gold-soft);color:var(--gold)}
 .p-lunas{background:rgba(63,185,80,.15);color:var(--ok)}
 .p-selesai{background:rgba(91,103,115,.18);color:var(--faint)}
+.p-batal{background:rgba(240,86,74,.14);color:var(--bad)}
 
-/* ---------- action strip (signature) ---------- */
-.today{
-  background:linear-gradient(160deg,#1d2530,#151b21);
-  border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:18px;
-  position:relative;overflow:hidden;
-}
-.today::after{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:linear-gradient(180deg,var(--gold),transparent)}
-.today .big{font-family:'Fraunces',serif;font-size:38px;line-height:1;color:var(--gold)}
-.today .lbl{font-size:12.5px;color:var(--muted);margin-top:6px}
+/* saldo + hari ini */
+.hero{background:linear-gradient(160deg,#1d2530,#151b21);border:1px solid var(--line);border-radius:18px;
+  padding:16px;margin-bottom:12px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:linear-gradient(180deg,var(--gold),transparent)}
+.hero .big{font-family:'Fraunces',serif;font-size:34px;line-height:1;color:var(--gold);font-variant-numeric:tabular-nums}
+.hero .lbl{font-size:12.5px;color:var(--muted);margin-top:6px}
+.hero .split{display:flex;gap:18px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.hero .split div{font-size:12px;color:var(--muted)}
+.hero .split b{display:block;font-size:14px;font-variant-numeric:tabular-nums;margin-top:2px}
 
 .task{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line)}
 .task:last-child{border-bottom:0;padding-bottom:0}
-.tick{
-  width:21px;height:21px;flex:0 0 21px;margin-top:1px;border-radius:6px;
-  border:1.5px solid var(--faint);background:transparent;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;color:transparent;font-size:12px;font-weight:800;
-}
+.tick{width:21px;height:21px;flex:0 0 21px;margin-top:1px;border-radius:6px;border:1.5px solid var(--faint);
+  background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:transparent;font-size:12px;font-weight:800}
 .tick:hover{border-color:var(--gold)}
 .tick.done{background:var(--gold);border-color:var(--gold);color:#0e1317}
 .task .t1{font-size:14px;font-weight:600}
 .task .t2{font-size:12px;color:var(--muted);margin-top:1px}
 .task.late .t2{color:var(--bad)}
 .task.soon .t2{color:var(--warn)}
-.task.done .t1{color:var(--faint);text-decoration:line-through}
 
-/* ---------- journey spine ---------- */
 .phase{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:800;margin:18px 0 8px;display:flex;align-items:center;gap:8px}
 .phase::after{content:"";flex:1;height:1px;background:var(--line)}
 .spine{position:relative;padding-left:26px}
 .spine::before{content:"";position:absolute;left:9px;top:6px;bottom:6px;width:1.5px;background:var(--line)}
 .step{position:relative;padding:9px 0}
-.step::before{
-  content:"";position:absolute;left:-22px;top:15px;width:11px;height:11px;border-radius:99px;
-  background:var(--bg);border:1.5px solid var(--faint);
-}
+.step::before{content:"";position:absolute;left:-22px;top:15px;width:11px;height:11px;border-radius:99px;background:var(--bg);border:1.5px solid var(--faint)}
 .step.done::before{background:var(--gold);border-color:var(--gold)}
 .step.late::before{border-color:var(--bad);background:var(--bad)}
 .step .sr{display:flex;align-items:center;gap:10px}
@@ -127,54 +107,36 @@ h2{font-family:'Fraunces',serif;font-weight:600;font-size:24px;margin:0 0 4px}
 .progress{height:5px;background:var(--panel2);border-radius:99px;overflow:hidden;margin-top:10px}
 .progress i{display:block;height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold));border-radius:99px;transition:width .4s}
 
-/* ---------- buttons ---------- */
-.btn{
-  border:0;border-radius:11px;padding:12px 16px;font-weight:700;font-size:14px;cursor:pointer;
-  background:var(--gold);color:#12181d;width:100%;
-}
+.btn{border:0;border-radius:11px;padding:12px 16px;font-weight:700;font-size:14px;cursor:pointer;background:var(--gold);color:#12181d;width:100%}
 .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
 .btn.wa{background:#1f8a4c;color:#fff}
+.btn.danger{background:transparent;border:1px solid rgba(240,86,74,.4);color:var(--bad)}
 .btn.sm{padding:9px 12px;font-size:13px;width:auto}
 .btns{display:flex;gap:8px;margin-top:12px}
 .btns .btn{width:auto;flex:1}
 
-/* ---------- forms ---------- */
 label{display:block;font-size:11.5px;font-weight:700;color:var(--muted);margin:12px 0 5px;letter-spacing:.03em}
-input,select,textarea{
-  width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--ink);
-  border-radius:10px;padding:11px 12px;outline:none;
-}
+input,select,textarea{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:11px 12px;outline:none}
 input:focus,select:focus,textarea:focus{border-color:var(--gold-dim)}
+textarea{resize:vertical}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 
-/* ---------- sheet ---------- */
 .scrim{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:60;display:none}
 .scrim.on{display:block}
-.sheet{
-  position:fixed;left:0;right:0;bottom:0;z-index:70;
-  background:var(--panel);border-radius:20px 20px 0 0;border-top:1px solid var(--line);
-  padding:18px 16px calc(20px + env(safe-area-inset-bottom));
-  max-height:88vh;overflow-y:auto;transform:translateY(102%);transition:transform .28s cubic-bezier(.2,.8,.2,1);
-  max-width:720px;margin:0 auto;
-}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:70;background:var(--panel);border-radius:20px 20px 0 0;
+  border-top:1px solid var(--line);padding:18px 16px calc(20px + env(safe-area-inset-bottom));max-height:88vh;overflow-y:auto;
+  transform:translateY(102%);transition:transform .28s cubic-bezier(.2,.8,.2,1);max-width:720px;margin:0 auto}
 .sheet.on{transform:none}
 .grab{width:38px;height:4px;background:var(--line);border-radius:99px;margin:0 auto 14px}
 .sheet h3{font-family:'Fraunces',serif;font-weight:600;font-size:20px;margin:0 0 2px}
 
-/* ---------- nav ---------- */
-nav{
-  position:fixed;left:0;right:0;bottom:0;z-index:50;
-  background:rgba(18,24,29,.96);backdrop-filter:blur(14px);border-top:1px solid var(--line);
-  display:flex;padding:8px 4px calc(8px + env(safe-area-inset-bottom));
-}
-nav button{
-  flex:1;background:none;border:0;color:var(--faint);cursor:pointer;
-  display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px;font-size:10.5px;font-weight:700;
-}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(18,24,29,.96);backdrop-filter:blur(14px);
+  border-top:1px solid var(--line);display:flex;padding:8px 4px calc(8px + env(safe-area-inset-bottom))}
+nav button{flex:1;background:none;border:0;color:var(--faint);cursor:pointer;display:flex;flex-direction:column;
+  align-items:center;gap:3px;padding:4px;font-size:10.5px;font-weight:700}
 nav button svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 nav button.on{color:var(--gold)}
 
-/* ---------- misc ---------- */
 .empty{text-align:center;padding:34px 18px;color:var(--muted)}
 .empty .em{font-family:'Fraunces',serif;font-size:17px;color:var(--ink);margin-bottom:6px}
 .stat{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
@@ -184,17 +146,22 @@ nav button.on{color:var(--gold)}
 .in{color:var(--ok)} .out{color:var(--bad)}
 .filters{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none}
 .filters::-webkit-scrollbar{display:none}
-.chip{border:1px solid var(--line);background:var(--panel);color:var(--muted);padding:7px 13px;border-radius:99px;font-size:12.5px;font-weight:600;white-space:nowrap;cursor:pointer}
+.chip{border:1px solid var(--line);background:var(--panel);color:var(--muted);padding:7px 13px;border-radius:99px;
+  font-size:12.5px;font-weight:600;white-space:nowrap;cursor:pointer}
 .chip.on{background:var(--gold-soft);border-color:var(--gold-dim);color:var(--gold)}
-.toast{
-  position:fixed;left:50%;bottom:92px;transform:translateX(-50%) translateY(20px);
-  background:var(--panel2);border:1px solid var(--gold-dim);color:var(--ink);
-  padding:11px 18px;border-radius:99px;font-size:13px;font-weight:600;z-index:90;
-  opacity:0;pointer-events:none;transition:.25s;white-space:nowrap;
-}
+.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%) translateY(20px);background:var(--panel2);
+  border:1px solid var(--gold-dim);color:var(--ink);padding:11px 18px;border-radius:99px;font-size:13px;font-weight:600;
+  z-index:90;opacity:0;pointer-events:none;transition:.25s;white-space:nowrap;max-width:88vw;overflow:hidden;text-overflow:ellipsis}
 .toast.on{opacity:1;transform:translateX(-50%)}
-.led{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}
+.led{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
 .led:last-child{border-bottom:0}
+.del{background:none;border:0;color:var(--faint);cursor:pointer;padding:4px 2px;font-size:15px}
+.sched{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.sched:last-child{border-bottom:0}
+.sched .dd{font-family:'Fraunces',serif;text-align:center;width:44px;flex:0 0 44px;line-height:1.1}
+.sched .dd b{display:block;font-size:19px;color:var(--gold)}
+.sched .dd i{font-style:normal;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.gcal{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin-top:8px}
 </style>
 </head>
 <body>
@@ -203,22 +170,33 @@ nav button.on{color:var(--gold)}
   <div class="wordmark">Pusat <b>Kendali</b></div>
   <div class="spacer"></div>
   <button class="sync" id="syncBtn" onclick="pull()"><span class="dot"></span><span id="syncTxt">Hubungkan</span></button>
+  <button class="iconbtn" onclick="openSettings()" aria-label="Pengaturan">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.6 1.6 0 00-1.8-.3 1.6 1.6 0 00-1 1.5V21a2 2 0 11-4 0v-.1A1.6 1.6 0 007 19.4a1.6 1.6 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.6 1.6 0 00.3-1.8 1.6 1.6 0 00-1.5-1H1a2 2 0 110-4h.1A1.6 1.6 0 002.6 9a1.6 1.6 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.6 1.6 0 001.8.3H7a1.6 1.6 0 001-1.5V3a2 2 0 114 0v.1a1.6 1.6 0 001 1.5 1.6 1.6 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.6 1.6 0 00-.3 1.8V9a1.6 1.6 0 001.5 1H21a2 2 0 110 4h-.1a1.6 1.6 0 00-1.5 1z"/></svg>
+  </button>
 </header>
 
 <main>
 
 <!-- ============ BERANDA ============ -->
 <section class="view on" id="v-beranda">
-  <div class="today">
-    <div class="big" id="dueCount">0</div>
-    <div class="lbl" id="dueLabel">langkah menunggu kamu hari ini</div>
+  <div class="hero">
+    <div class="big" id="saldoTotal">Rp 0</div>
+    <div class="lbl">Saldo total — semua pemasukan dikurangi pengeluaran</div>
+    <div class="split">
+      <div>Masuk bulan ini<b class="in" id="hIn">Rp 0</b></div>
+      <div>Keluar bulan ini<b class="out" id="hOut">Rp 0</b></div>
+      <div>Belum tertagih<b style="color:var(--warn)" id="hPiutang">Rp 0</b></div>
+    </div>
   </div>
 
-  <div class="eyebrow">Harus dikerjakan</div>
+  <div class="eyebrow">Harus dikerjakan <span class="n" id="dueCount"></span></div>
   <div id="taskList"></div>
 
-  <div class="eyebrow">Acara terdekat</div>
+  <div class="eyebrow">Tiga acara terdekat</div>
   <div id="upcoming"></div>
+
+  <div class="eyebrow">Semua jadwal mendatang <span class="n" id="schedCount"></span></div>
+  <div class="card" id="schedule"></div>
 </section>
 
 <!-- ============ KLIEN ============ -->
@@ -230,6 +208,13 @@ nav button.on{color:var(--gold)}
   <button class="btn" style="margin-top:14px" onclick="openNewLead()">+ Lead baru</button>
 </section>
 
+<!-- ============ EVENT ============ -->
+<section class="view" id="v-event">
+  <h2>Event</h2>
+  <p class="sub">Yang sudah deal — persiapan, anggaran, sampai LPJ.</p>
+  <div id="eventList"></div>
+</section>
+
 <!-- ============ UANG ============ -->
 <section class="view" id="v-uang">
   <h2>Uang</h2>
@@ -238,20 +223,11 @@ nav button.on{color:var(--gold)}
     <div class="card"><div class="v in" id="fIn">Rp 0</div><div class="k">Masuk bulan ini</div></div>
     <div class="card"><div class="v out" id="fOut">Rp 0</div><div class="k">Keluar bulan ini</div></div>
   </div>
-  <div class="card">
-    <div class="row"><div class="grow"><div class="meta">Sisa tagihan belum tertagih</div>
-    <div class="v money" style="font-size:20px" id="fPiutang">Rp 0</div></div></div>
-  </div>
+  <div class="card"><div class="meta">Sisa tagihan belum tertagih</div>
+    <div class="v money" style="font-size:20px;color:var(--warn)" id="fPiutang">Rp 0</div></div>
   <div class="eyebrow">Riwayat</div>
   <div class="card" id="ledgerList"></div>
   <button class="btn ghost" style="margin-top:12px" onclick="openEntry()">+ Catat manual</button>
-</section>
-
-<!-- ============ EVENT ============ -->
-<section class="view" id="v-event">
-  <h2>Event</h2>
-  <p class="sub">Yang sudah deal — dari persiapan sampai LPJ.</p>
-  <div id="eventList"></div>
 </section>
 
 </main>
@@ -273,408 +249,518 @@ nav button.on{color:var(--gold)}
 
 <script>
 /* =====================================================================
-   PUSAT KENDALI — RUSHTIC
-   Satu record klien, banyak tampilan. Data di Firebase RTDB rushtic-deco.
-     /crm/{id}            <- data klien (dipakai bareng CRM lama, TIDAK diubah strukturnya)
-     /kendali/journey/{id} <- centang langkah customer journey
-     /kendali/ledger/{id}  <- catatan uang
-     /kendali/evaluasi/{id}<- catatan LPJ & evaluasi
+   PUSAT KENDALI — RUSHTIC  (v2)
+     /crm/{id}              data klien (dipakai bareng CRM lama)
+     /kendali/journey/{id}  centang langkah
+     /kendali/ledger/{id}   catatan uang (punya clientId -> jadi anggaran per event)
+     /kendali/evaluasi/{id} LPJ
+     /kendali/config        client id google
    ===================================================================== */
-
 const DB = 'https://rushtic-deco-default-rtdb.firebaseio.com';
+const GCAL_KEYWORDS = /wedding|dekor|décor|engagement|lamaran|akad|resepsi|prewedding/i;
 
-let clients = {};      // id -> client
-let journey = {};      // clientId -> {stepId: {done, at}}
-let ledger  = {};      // id -> entry
-let evals   = {};      // clientId -> {catatan, nilai}
-let online  = false;
-let filterStage = 'aktif';
+let clients={}, journey={}, ledger={}, evals={}, config={};
+let online=false, filterStage='aktif', gToken=null, openClientId=null;
 
-/* ---------- helper ---------- */
-const $  = s => document.querySelector(s);
+const $  = s=>document.querySelector(s);
 const el = (t,c,h)=>{const n=document.createElement(t); if(c)n.className=c; if(h!=null)n.innerHTML=h; return n;};
-const rp = n => 'Rp ' + (Number(n)||0).toLocaleString('id-ID');
-const DAY = 86400000;
-const today = () => { const d=new Date(); d.setHours(0,0,0,0); return d; };
-const parseD = s => { if(!s) return null; const d=new Date(s); return isNaN(d)?null:(d.setHours(0,0,0,0),d); };
-const fmtD = d => d ? d.toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'2-digit'}) : '—';
-const daysTo = d => d ? Math.round((d - today())/DAY) : null;
-function rel(d){
-  const n = daysTo(d);
-  if(n===null) return 'tanpa tanggal';
-  if(n===0) return 'hari ini';
-  if(n===1) return 'besok';
-  if(n===-1) return 'kemarin';
-  return n<0 ? `telat ${-n} hari` : `${n} hari lagi`;
-}
-function toast(m){ const t=$('#toast'); t.textContent=m; t.classList.add('on'); setTimeout(()=>t.classList.remove('on'),2200); }
-function waLink(no,txt){
-  let n=(no||'').replace(/\D/g,'');
-  if(n.startsWith('0')) n='62'+n.slice(1);
-  if(!n.startsWith('62')) n='62'+n;
-  return `https://wa.me/${n}?text=${encodeURIComponent(txt||'')}`;
-}
+const rp = n=>'Rp '+(Number(n)||0).toLocaleString('id-ID');
+const esc= s=>String(s==null?'':s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const DAY=86400000;
+const today=()=>{const d=new Date();d.setHours(0,0,0,0);return d;};
+const parseD=s=>{if(!s)return null;const d=new Date(s);return isNaN(d)?null:(d.setHours(0,0,0,0),d);};
+const fmtD=d=>d?d.toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'2-digit'}):'—';
+const daysTo=d=>d?Math.round((d-today())/DAY):null;
+function rel(d){const n=daysTo(d);if(n===null)return 'tanpa tanggal';
+  if(n===0)return 'hari ini';if(n===1)return 'besok';if(n===-1)return 'kemarin';
+  return n<0?`telat ${-n} hari`:`${n} hari lagi`;}
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2400);}
+function waLink(no,txt){let n=(no||'').replace(/\D/g,'');
+  if(n.startsWith('0'))n='62'+n.slice(1); if(!n.startsWith('62'))n='62'+n;
+  return `https://wa.me/${n}?text=${encodeURIComponent(txt||'')}`;}
 
-/* =====================================================================
-   CUSTOMER JOURNEY — dibangun otomatis dari tanggal lead & tanggal acara
-   ===================================================================== */
-const TPL = [
-  // id,        label,                                  fase,          jangkar,  offset hari
-  ['balas',     'Balas lead (< 1 jam)',                 'Pra-deal',    'lead',    0],
-  ['fu1',       'Follow-up pertama',                    'Pra-deal',    'lead',    1],
-  ['survey',    'Survey / ketemu klien',                'Pra-deal',    'lead',    3],
-  ['penawaran', 'Kirim penawaran + moodboard',          'Pra-deal',    'lead',    5],
-  ['fu2',       'Follow-up penawaran',                  'Pra-deal',    'lead',    8],
-  ['closing',   'Closing & DP masuk',                   'Pra-deal',    'lead',   14, 'uang-dp'],
-
-  ['kontrak',   'Kontrak ditandatangani',               'Persiapan',   'acara', -90],
-  ['konsep',    'Konsep & moodboard disetujui',         'Persiapan',   'acara', -60],
-  ['vendor',    'Kunci vendor (dekor, katering, dok.)', 'Persiapan',   'acara', -45],
-  ['lunas',     'Pelunasan',                            'Persiapan',   'acara', -14, 'uang-lunas'],
-  ['tm',        'Technical meeting + rundown final',    'Persiapan',   'acara',  -7],
-  ['loading',   'Loading barang & setup',               'Persiapan',   'acara',  -1],
-
-  ['harih',     'Hari acara',                           'Hari-H',      'acara',   0],
-
-  ['dok',       'Serah terima dokumentasi',             'After event', 'acara',   7],
-  ['lpj',       'LPJ & evaluasi tim',                   'After event', 'acara',  10, 'evaluasi'],
-  ['testi',     'Minta testimoni / review',             'After event', 'acara',  14],
-
-  ['anniv',     'Ucapan + offer anniversary',           'Loyal',       'acara', 365, 'loyal'],
+/* ---------------- journey ---------------- */
+const TPL=[
+  ['balas','Balas lead (< 1 jam)','Pra-deal','lead',0],
+  ['fu1','Follow-up pertama','Pra-deal','lead',1],
+  ['survey','Survey / ketemu klien','Pra-deal','lead',3],
+  ['penawaran','Kirim penawaran + moodboard','Pra-deal','lead',5],
+  ['fu2','Follow-up penawaran','Pra-deal','lead',8],
+  ['closing','Closing & DP masuk','Pra-deal','lead',14,'uang-dp'],
+  ['kontrak','Kontrak ditandatangani','Persiapan','acara',-90],
+  ['konsep','Konsep & moodboard disetujui','Persiapan','acara',-60],
+  ['vendor','Kunci vendor (dekor, katering, dok.)','Persiapan','acara',-45],
+  ['lunas','Pelunasan','Persiapan','acara',-14,'uang-lunas'],
+  ['tm','Technical meeting + rundown final','Persiapan','acara',-7],
+  ['loading','Loading barang & setup','Persiapan','acara',-1],
+  ['harih','Hari acara','Hari-H','acara',0],
+  ['dok','Serah terima dokumentasi','After event','acara',7],
+  ['lpj','LPJ & evaluasi tim','After event','acara',10,'evaluasi'],
+  ['testi','Minta testimoni / review','After event','acara',14],
+  ['anniv','Ucapan + offer anniversary','Loyal','acara',365,'loyal'],
 ];
-
 function buildJourney(c){
-  const lead  = parseD(c.createdAt) || today();
-  const acara = parseD(c.date);
-  const state = journey[c.id] || {};
-  const stageIdx = ['Lead','Survey','Penawaran','DP','Lunas','Selesai'].indexOf(c.stage||'Lead');
-
+  const lead=parseD(c.createdAt)||today(), acara=parseD(c.date), state=journey[c.id]||{};
+  const si=['Lead','Survey','Penawaran','DP','Lunas','Selesai'].indexOf(c.stage||'Lead');
   return TPL.map(([id,label,fase,anchor,off,kind])=>{
-    const base = anchor==='lead' ? lead : acara;
-    const due  = base ? new Date(base.getTime() + off*DAY) : null;
-    // langkah pra-deal dianggap selesai kalau stage klien sudah melewatinya
-    let auto = false;
-    if(anchor==='lead' && stageIdx>=3) auto = true;                  // sudah DP -> pra-deal beres
-    if(id==='lunas' && stageIdx>=4) auto = true;
-    const done = state[id]?.done ?? auto;
-    return {id,label,fase,due,kind,done, at:state[id]?.at||null,
-            late: !done && due && daysTo(due)<0};
+    const base=anchor==='lead'?lead:acara;
+    const due=base?new Date(base.getTime()+off*DAY):null;
+    let auto=false;
+    if(anchor==='lead'&&si>=3)auto=true;
+    if(id==='lunas'&&si>=4)auto=true;
+    const done=state[id]?.done ?? auto;
+    return {id,label,fase,due,kind,done,late:!done&&due&&daysTo(due)<0};
   });
 }
-function activeSteps(c){
-  // langkah yang relevan: belum selesai, punya tanggal, dan jatuh tempo <= 3 hari lagi
-  return buildJourney(c).filter(s=>!s.done && s.due && daysTo(s.due)<=3);
+const isDead=c=>c.stage==='Batal';
+function activeSteps(c){ if(isDead(c))return [];
+  return buildJourney(c).filter(s=>!s.done&&s.due&&daysTo(s.due)<=3); }
+function progress(c){const j=buildJourney(c).filter(s=>s.id!=='anniv');
+  return Math.round(j.filter(s=>s.done).length/j.length*100);}
+
+/* ---------------- anggaran per event ---------------- */
+function budget(cid){
+  let masuk=0,keluar=0;
+  Object.values(ledger).forEach(e=>{ if(e.clientId!==cid)return;
+    e.type==='in'?masuk+=Number(e.amount)||0:keluar+=Number(e.amount)||0; });
+  return {masuk,keluar,laba:masuk-keluar};
 }
-function progress(c){
-  const j=buildJourney(c).filter(s=>s.id!=='anniv');
-  return Math.round(j.filter(s=>s.done).length / j.length * 100);
+function saldoTotal(){
+  let m=0,k=0;
+  Object.values(ledger).forEach(e=>{e.type==='in'?m+=Number(e.amount)||0:k+=Number(e.amount)||0;});
+  return m-k;
 }
 
-/* =====================================================================
-   SINKRONISASI
-   ===================================================================== */
+/* ---------------- sinkronisasi ---------------- */
 async function pull(){
   setSync('…','');
   try{
-    const [a,b,d,e] = await Promise.all([
+    const [a,b,d,e,f]=await Promise.all([
       fetch(`${DB}/crm.json`).then(r=>r.json()),
       fetch(`${DB}/kendali/journey.json`).then(r=>r.json()),
       fetch(`${DB}/kendali/ledger.json`).then(r=>r.json()),
       fetch(`${DB}/kendali/evaluasi.json`).then(r=>r.json()),
+      fetch(`${DB}/kendali/config.json`).then(r=>r.json()),
     ]);
-    clients = {}; 
-    Object.entries(a||{}).forEach(([id,v])=>{ if(v&&v.name) clients[id]={...v,id}; });
-    journey = b||{}; ledger = d||{}; evals = e||{};
-    online = true; setSync('Tersambung','live');
-    renderAll();
-  }catch(err){
-    online=false; setSync('Offline','off');
-    toast('Gagal ambil data — cek koneksi');
-    renderAll();
+    clients={}; Object.entries(a||{}).forEach(([id,v])=>{if(v&&v.name)clients[id]={...v,id};});
+    journey=b||{}; ledger=d||{}; evals=e||{}; config=f||{};
+    online=true; setSync('Tersambung','live'); renderAll();
+  }catch(err){ online=false; setSync('Offline','off'); toast('Gagal ambil data — cek koneksi'); renderAll(); }
+}
+async function push(path,data){
+  if(!online){toast('Offline — perubahan belum tersimpan');return;}
+  try{ await fetch(`${DB}/${path}.json`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}); }
+  catch(e){ toast('Gagal simpan'); }
+}
+async function remove(path){
+  if(!online){toast('Offline — belum terhapus');return;}
+  try{ await fetch(`${DB}/${path}.json`,{method:'DELETE'}); }catch(e){ toast('Gagal hapus'); }
+}
+function setSync(t,cls){$('#syncTxt').textContent=t;$('#syncBtn').className='sync '+cls;}
+
+/* =====================================================================
+   GOOGLE CALENDAR
+   ===================================================================== */
+function gcalReady(){ return !!(config.googleClientId && window.google?.accounts?.oauth2); }
+function gcalConnect(silent){
+  if(!config.googleClientId){ if(!silent) toast('Client ID Google belum diisi'); return; }
+  if(!window.google?.accounts?.oauth2){ if(!silent) toast('Skrip Google belum siap, tunggu sebentar'); return; }
+  const tc=google.accounts.oauth2.initTokenClient({
+    client_id:config.googleClientId,
+    scope:'https://www.googleapis.com/auth/calendar.readonly',
+    callback:(res)=>{ if(res.access_token){ gToken=res.access_token; gcalImport(); } }
+  });
+  tc.requestAccessToken({prompt:silent?'none':''});
+}
+async function gcalImport(){
+  if(!gToken) return;
+  toast('Membaca kalender…');
+  const timeMin=new Date(Date.now()-90*DAY).toISOString();
+  const url=`https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${encodeURIComponent(timeMin)}&singleEvents=true&orderBy=startTime&maxResults=250`;
+  let data;
+  try{ data=await fetch(url,{headers:{Authorization:'Bearer '+gToken}}).then(r=>r.json()); }
+  catch(e){ toast('Gagal baca kalender'); return; }
+  if(data.error){ toast('Google menolak: '+(data.error.message||'')); return; }
+
+  const known=new Set(Object.values(clients).map(c=>c.gcalId).filter(Boolean));
+  let added=0;
+  for(const ev of (data.items||[])){
+    const title=ev.summary||'';
+    if(!GCAL_KEYWORDS.test(title)) continue;
+    if(known.has(ev.id)) continue;
+    const start=ev.start?.date||ev.start?.dateTime; if(!start) continue;
+    const brand=/dekor|décor/i.test(title)?'Dekor':/engagement|lamaran/i.test(title)?'Engagement':'WO';
+    const id='g'+ev.id.replace(/[^a-zA-Z0-9]/g,'').slice(0,24)+Date.now().toString().slice(-4);
+    const c={name:title.trim(), wa:'', brand, date:String(start).slice(0,10),
+      value:0, venue:ev.location||'', stage:'Lead', dp:0, remaining:0,
+      notes:(ev.description||'').slice(0,600), gcalId:ev.id, source:'Google Calendar',
+      createdAt:ev.created||new Date().toISOString(), updatedAt:new Date().toISOString()};
+    clients[id]={...c,id}; await push('crm',{[id]:c}); added++;
   }
+  config.gcalLastSync=new Date().toISOString(); push('kendali/config',{gcalLastSync:config.gcalLastSync});
+  renderAll();
+  toast(added?`${added} acara ditarik dari kalender`:'Kalender sudah sinkron, tidak ada yang baru');
 }
-async function push(path, data){
-  if(!online){ toast('Offline — perubahan belum tersimpan'); return; }
-  try{
-    await fetch(`${DB}/${path}.json`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
-  }catch(e){ toast('Gagal simpan'); }
-}
-function setSync(t,cls){ $('#syncTxt').textContent=t; $('#syncBtn').className='sync '+cls; }
 
 /* =====================================================================
    AKSI
    ===================================================================== */
-async function toggleStep(cid, sid){
-  const c = clients[cid]; if(!c) return;
-  const st = buildJourney(c).find(s=>s.id===sid);
-  const now = !st.done;
-  journey[cid] = journey[cid]||{};
-  journey[cid][sid] = {done:now, at:new Date().toISOString()};
-  await push(`kendali/journey/${cid}`, {[sid]:journey[cid][sid]});
-
-  if(now && st.kind==='uang-dp')    return askMoney(c,'DP '+c.name, c.dp || Math.round((c.value||0)*.3));
-  if(now && st.kind==='uang-lunas') return askMoney(c,'Pelunasan '+c.name, c.remaining || 0);
-  if(now && st.kind==='evaluasi')   return openEval(c);
-  if(now && st.kind==='loyal')      return openAnniv(c);
-  renderAll();
+async function toggleStep(cid,sid){
+  const c=clients[cid]; if(!c)return;
+  const st=buildJourney(c).find(s=>s.id===sid);
+  const now=!st.done;
+  journey[cid]=journey[cid]||{};
+  journey[cid][sid]={done:now,at:new Date().toISOString()};
+  await push(`kendali/journey/${cid}`,{[sid]:journey[cid][sid]});
+  if(now&&st.kind==='uang-dp')    return askMoney(c,'DP '+c.name, c.dp||Math.round((c.value||0)*.3));
+  if(now&&st.kind==='uang-lunas') return askMoney(c,'Pelunasan '+c.name, c.remaining||0);
+  if(now&&st.kind==='evaluasi')   return openEval(c);
+  if(now&&st.kind==='loyal')      return openAnniv(c);
+  renderAll(); if(openClientId===cid&&isSheetOpen())openClient(cid,true);
 }
 
 function askMoney(c,label,amount){
-  openSheet(`
-    <h3>Catat pemasukan</h3>
-    <p class="sub">Nilai ini langsung masuk ke halaman Uang. Kamu tidak perlu input ulang di mana pun.</p>
-    <label>Keterangan</label><input id="mLabel" value="${label}">
+  openSheet(`<h3>Catat pemasukan</h3>
+    <p class="sub">Masuk ke halaman Uang dan ke anggaran ${esc(c.name)} sekaligus.</p>
+    <label>Keterangan</label><input id="mLabel" value="${esc(label)}">
     <label>Jumlah masuk</label><input id="mAmt" type="number" inputmode="numeric" value="${amount||0}">
-    <div class="btns">
-      <button class="btn ghost" onclick="closeSheet();renderAll()">Lewati</button>
-      <button class="btn" onclick="saveMoney('${c.id}')">Simpan</button>
-    </div>`);
+    <div class="btns"><button class="btn ghost" onclick="closeSheet();renderAll()">Lewati</button>
+    <button class="btn" onclick="saveMoney('${c.id}','in')">Simpan</button></div>`);
 }
-async function saveMoney(cid){
-  const id = 'e'+Date.now();
-  const entry = {clientId:cid, label:$('#mLabel').value, amount:Number($('#mAmt').value)||0,
-                 type:'in', date:new Date().toISOString()};
+async function saveMoney(cid,type){
+  const id='e'+Date.now();
+  const entry={clientId:cid||null,label:$('#mLabel').value||'Tanpa keterangan',
+    amount:Number($('#mAmt').value)||0,type:type||'in',date:new Date().toISOString()};
   ledger[id]=entry; await push('kendali/ledger',{[id]:entry});
-  closeSheet(); renderAll(); toast('Tercatat di Uang');
+  closeSheet(); renderAll(); if(cid&&openClientId===cid) setTimeout(()=>openClient(cid),320);
+  toast('Tercatat');
+}
+async function delEntry(id){
+  delete ledger[id]; await remove('kendali/ledger/'+id); renderAll(); toast('Catatan dihapus');
+}
+
+/* catat pemasukan / pengeluaran untuk satu event */
+function openEventMoney(cid,type){
+  const c=clients[cid];
+  openSheet(`<h3>${type==='in'?'Pemasukan':'Pengeluaran'} — ${esc(c.name)}</h3>
+    <p class="sub">Masuk ke anggaran acara ini dan ke ringkasan saldo.</p>
+    <label>Keterangan</label><input id="mLabel" placeholder="${type==='in'?'Termin 2':'Bayar vendor bunga'}">
+    <label>Jumlah</label><input id="mAmt" type="number" inputmode="numeric" placeholder="0">
+    <div class="btns"><button class="btn ghost" onclick="openClient('${cid}')">Batal</button>
+    <button class="btn" onclick="saveMoney('${cid}','${type}')">Simpan</button></div>`);
 }
 
 function openEntry(){
-  openSheet(`
-    <h3>Catat manual</h3>
+  openSheet(`<h3>Catat manual</h3>
     <label>Keterangan</label><input id="mLabel" placeholder="Sewa properti dekor">
-    <div class="two">
-      <div><label>Jumlah</label><input id="mAmt" type="number" inputmode="numeric" placeholder="0"></div>
-      <div><label>Arah</label><select id="mType"><option value="out">Keluar</option><option value="in">Masuk</option></select></div>
-    </div>
-    <div class="btns">
-      <button class="btn ghost" onclick="closeSheet()">Batal</button>
-      <button class="btn" onclick="saveEntry()">Simpan</button>
-    </div>`);
+    <div class="two"><div><label>Jumlah</label><input id="mAmt" type="number" inputmode="numeric" placeholder="0"></div>
+    <div><label>Arah</label><select id="mType"><option value="out">Keluar</option><option value="in">Masuk</option></select></div></div>
+    <label>Kaitkan ke event (opsional)</label>
+    <select id="mClient"><option value="">— tidak dikaitkan —</option>
+    ${Object.values(clients).filter(c=>!isDead(c)).map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')}</select>
+    <div class="btns"><button class="btn ghost" onclick="closeSheet()">Batal</button>
+    <button class="btn" onclick="saveEntry()">Simpan</button></div>`);
 }
 async function saveEntry(){
   const id='e'+Date.now();
-  const entry={clientId:null,label:$('#mLabel').value||'Tanpa keterangan',
-    amount:Number($('#mAmt').value)||0, type:$('#mType').value, date:new Date().toISOString()};
+  const entry={clientId:$('#mClient').value||null,label:$('#mLabel').value||'Tanpa keterangan',
+    amount:Number($('#mAmt').value)||0,type:$('#mType').value,date:new Date().toISOString()};
   ledger[id]=entry; await push('kendali/ledger',{[id]:entry});
   closeSheet(); renderAll(); toast('Tersimpan');
 }
 
+/* catatan permintaan klien */
+async function saveNotes(cid){
+  const v=$('#cNotes').value;
+  clients[cid].notes=v;
+  await push(`crm/${cid}`,{notes:v,updatedAt:new Date().toISOString()});
+  toast('Catatan tersimpan');
+}
+
 function openEval(c){
-  const cur = evals[c.id]||{};
-  openSheet(`
-    <h3>LPJ & evaluasi — ${c.name}</h3>
-    <p class="sub">Isi sekarang selagi ingat. Ini yang jadi bahan perbaikan paket berikutnya.</p>
-    <label>Yang berjalan baik</label><textarea id="eBaik" rows="2">${cur.baik||''}</textarea>
-    <label>Yang meleset</label><textarea id="eBuruk" rows="2">${cur.buruk||''}</textarea>
-    <div class="two">
-      <div><label>Biaya riil keluar</label><input id="eCost" type="number" inputmode="numeric" value="${cur.cost||''}"></div>
-      <div><label>Nilai kepuasan (1-5)</label><input id="eScore" type="number" min="1" max="5" value="${cur.score||''}"></div>
-    </div>
-    <div class="btns">
-      <button class="btn ghost" onclick="closeSheet();renderAll()">Nanti</button>
-      <button class="btn" onclick="saveEval('${c.id}')">Simpan</button>
-    </div>`);
+  const cur=evals[c.id]||{};
+  openSheet(`<h3>LPJ & evaluasi — ${esc(c.name)}</h3>
+    <p class="sub">Isi sekarang selagi ingat.</p>
+    <label>Yang berjalan baik</label><textarea id="eBaik" rows="2">${esc(cur.baik)}</textarea>
+    <label>Yang meleset</label><textarea id="eBuruk" rows="2">${esc(cur.buruk)}</textarea>
+    <div class="two"><div><label>Nilai kepuasan (1-5)</label><input id="eScore" type="number" min="1" max="5" value="${cur.score||''}"></div>
+    <div><label>Sisa biaya belum dicatat</label><input id="eCost" type="number" inputmode="numeric" value=""></div></div>
+    <div class="btns"><button class="btn ghost" onclick="closeSheet();renderAll()">Nanti</button>
+    <button class="btn" onclick="saveEval('${c.id}')">Simpan</button></div>`);
 }
 async function saveEval(cid){
-  const d={baik:$('#eBaik').value,buruk:$('#eBuruk').value,
-           cost:Number($('#eCost').value)||0,score:Number($('#eScore').value)||0,
-           at:new Date().toISOString()};
+  const cost=Number($('#eCost').value)||0;
+  const d={baik:$('#eBaik').value,buruk:$('#eBuruk').value,score:Number($('#eScore').value)||0,at:new Date().toISOString()};
   evals[cid]=d; await push('kendali/evaluasi',{[cid]:d});
-  if(d.cost>0){
-    const id='e'+Date.now();
-    const entry={clientId:cid,label:'Biaya event '+(clients[cid]?.name||''),amount:d.cost,type:'out',date:new Date().toISOString()};
-    ledger[id]=entry; await push('kendali/ledger',{[id]:entry});
-  }
+  if(cost>0){ const id='e'+Date.now();
+    const entry={clientId:cid,label:'Biaya event '+(clients[cid]?.name||''),amount:cost,type:'out',date:new Date().toISOString()};
+    ledger[id]=entry; await push('kendali/ledger',{[id]:entry}); }
   closeSheet(); renderAll(); toast('Evaluasi tersimpan');
 }
 
 function openAnniv(c){
-  const d=parseD(c.date);
-  const msg = `Halo ${c.name}! 🤍 Hari ini tepat satu tahun acara kalian bersama Rushtic. Semoga terus bahagia ya.\n\nKalau ada rencana acara keluarga berikutnya — syukuran, lamaran, atau ulang tahun — sebagai klien Rushtic kamu dapat harga khusus alumni. Kabari aja kapan pun. 🙏`;
-  openSheet(`
-    <h3>Anniversary ${c.name}</h3>
-    <p class="sub">${fmtD(d)} · satu tahun lalu</p>
-    <label>Pesan</label><textarea id="aMsg" rows="7">${msg}</textarea>
-    <div class="btns">
-      <button class="btn ghost" onclick="closeSheet();renderAll()">Tutup</button>
-      <button class="btn wa" onclick="sendWA('${c.id}')">Kirim WA</button>
-    </div>`);
+  const msg=`Halo ${c.name}! 🤍 Hari ini tepat satu tahun acara kalian bersama Rushtic. Semoga terus bahagia ya.\n\nKalau ada rencana acara keluarga berikutnya — syukuran, lamaran, atau ulang tahun — sebagai klien Rushtic kamu dapat harga khusus alumni. Kabari aja kapan pun. 🙏`;
+  openSheet(`<h3>Anniversary ${esc(c.name)}</h3><p class="sub">${fmtD(parseD(c.date))} · satu tahun lalu</p>
+    <label>Pesan</label><textarea id="aMsg" rows="7">${esc(msg)}</textarea>
+    <div class="btns"><button class="btn ghost" onclick="closeSheet();renderAll()">Tutup</button>
+    <button class="btn wa" onclick="sendWA('${c.id}')">Kirim WA</button></div>`);
 }
-function sendWA(cid){ window.open(waLink(clients[cid]?.wa,$('#aMsg').value),'_blank'); closeSheet(); renderAll(); }
+function sendWA(cid){window.open(waLink(clients[cid]?.wa,$('#aMsg').value),'_blank');closeSheet();renderAll();}
 
-/* ---------- lead baru ---------- */
+/* lead baru */
 function openNewLead(){
-  openSheet(`
-    <h3>Lead baru</h3>
-    <p class="sub">Begitu tersimpan, perjalanan kliennya langsung terbentuk sendiri.</p>
+  openSheet(`<h3>Lead baru</h3><p class="sub">Perjalanan kliennya langsung terbentuk sendiri.</p>
     <label>Nama</label><input id="nName" placeholder="Nama klien">
     <label>Nomor WhatsApp</label><input id="nWa" inputmode="tel" placeholder="08...">
-    <div class="two">
-      <div><label>Layanan</label><select id="nBrand"><option>WO</option><option>Dekor</option><option>Wisuda</option><option>MC</option><option>Paket</option></select></div>
-      <div><label>Tanggal acara</label><input id="nDate" type="date"></div>
-    </div>
-    <div class="two">
-      <div><label>Perkiraan nilai</label><input id="nValue" type="number" inputmode="numeric" placeholder="0"></div>
-      <div><label>Venue</label><input id="nVenue" placeholder="—"></div>
-    </div>
-    <div class="btns">
-      <button class="btn ghost" onclick="closeSheet()">Batal</button>
-      <button class="btn" onclick="saveLead()">Simpan lead</button>
-    </div>`);
+    <div class="two"><div><label>Layanan</label><select id="nBrand">
+      <option>WO</option><option>Dekor</option><option>Engagement</option><option>Wisuda</option><option>MC</option><option>Paket</option></select></div>
+    <div><label>Tanggal acara</label><input id="nDate" type="date"></div></div>
+    <div class="two"><div><label>Perkiraan nilai</label><input id="nValue" type="number" inputmode="numeric" placeholder="0"></div>
+    <div><label>Venue</label><input id="nVenue" placeholder="—"></div></div>
+    <label>Permintaan klien</label><textarea id="nNotes" rows="3" placeholder="Tema rustic, warna dusty pink, minta ada photobooth…"></textarea>
+    <div class="btns"><button class="btn ghost" onclick="closeSheet()">Batal</button>
+    <button class="btn" onclick="saveLead()">Simpan lead</button></div>`);
 }
 async function saveLead(){
   const name=$('#nName').value.trim();
-  if(!name){ toast('Nama masih kosong'); return; }
+  if(!name){toast('Nama masih kosong');return;}
   const id='c'+Date.now();
-  const c={name, wa:$('#nWa').value.trim(), brand:$('#nBrand').value, date:$('#nDate').value||'',
-    value:Number($('#nValue').value)||0, venue:$('#nVenue').value.trim(), stage:'Lead',
-    dp:0, remaining:Number($('#nValue').value)||0, notes:'',
-    createdAt:new Date().toISOString(), updatedAt:new Date().toISOString(), lastContact:''};
+  const val=Number($('#nValue').value)||0;
+  const c={name,wa:$('#nWa').value.trim(),brand:$('#nBrand').value,date:$('#nDate').value||'',
+    value:val,venue:$('#nVenue').value.trim(),stage:'Lead',dp:0,remaining:val,notes:$('#nNotes').value||'',
+    createdAt:new Date().toISOString(),updatedAt:new Date().toISOString(),lastContact:''};
   clients[id]={...c,id}; await push('crm',{[id]:c});
   closeSheet(); renderAll(); go('klien'); toast('Lead masuk — perjalanan dibuat');
   setTimeout(()=>openClient(id),350);
 }
 
-/* ---------- ubah stage ---------- */
 async function setStage(cid,stage){
   clients[cid].stage=stage;
-  await push(`crm/${cid}`,{stage, updatedAt:new Date().toISOString()});
-  renderAll(); openClient(cid);
+  await push(`crm/${cid}`,{stage,updatedAt:new Date().toISOString()});
+  renderAll(); openClient(cid,true);
+  if(stage==='Batal') toast('Ditandai batal — langkahnya berhenti mengingatkan');
+}
+
+/* hapus klien */
+function confirmDelete(cid){
+  const c=clients[cid];
+  openSheet(`<h3>Hapus ${esc(c.name)}?</h3>
+    <p class="sub">Data klien, seluruh centang langkah, dan catatan evaluasinya ikut hilang. Catatan uang yang sudah tercatat tetap ada di halaman Uang.</p>
+    <p class="sub" style="color:var(--warn)">Kalau ini cuma batal deal, jangan dihapus — ganti tahapnya ke <b>Batal</b> supaya riwayatnya tetap kebaca.</p>
+    <div class="btns"><button class="btn ghost" onclick="openClient('${cid}')">Kembali</button>
+    <button class="btn danger" onclick="doDelete('${cid}')">Hapus permanen</button></div>`);
+}
+async function doDelete(cid){
+  delete clients[cid]; delete journey[cid]; delete evals[cid];
+  await remove('crm/'+cid); await remove('kendali/journey/'+cid); await remove('kendali/evaluasi/'+cid);
+  closeSheet(); renderAll(); toast('Klien dihapus');
 }
 
 /* =====================================================================
    RENDER
    ===================================================================== */
-function renderAll(){ renderBeranda(); renderKlien(); renderEvent(); renderUang(); }
+function renderAll(){renderBeranda();renderKlien();renderEvent();renderUang();}
+const stagePill=s=>`<span class="pill p-${(s||'Lead').toLowerCase()}">${s||'Lead'}</span>`;
 
-function stagePill(s){
-  const k=(s||'Lead').toLowerCase();
-  return `<span class="pill p-${k}">${s||'Lead'}</span>`;
-}
-
-/* ---- beranda ---- */
 function renderBeranda(){
+  const s=saldoTotal();
+  $('#saldoTotal').textContent=rp(s);
+  $('#saldoTotal').style.color = s<0?'var(--bad)':'var(--gold)';
+
+  const now=new Date(),m=now.getMonth(),y=now.getFullYear();
+  let inn=0,out=0;
+  Object.values(ledger).forEach(e=>{const d=new Date(e.date);
+    if(d.getMonth()===m&&d.getFullYear()===y){e.type==='in'?inn+=Number(e.amount)||0:out+=Number(e.amount)||0;}});
+  const piutang=Object.values(clients).filter(c=>['DP','Lunas'].includes(c.stage))
+    .reduce((a,c)=>a+(Number(c.remaining)||0),0);
+  $('#hIn').textContent=rp(inn); $('#hOut').textContent=rp(out); $('#hPiutang').textContent=rp(piutang);
+
+  /* tugas */
   const list=$('#taskList'); list.innerHTML='';
   let items=[];
-  Object.values(clients).forEach(c=>{
-    if(c.stage==='Selesai' && !buildJourney(c).some(s=>s.kind==='loyal'&&!s.done&&s.due&&daysTo(s.due)<=3)) {}
-    activeSteps(c).forEach(s=>items.push({c,s}));
-  });
+  Object.values(clients).forEach(c=>activeSteps(c).forEach(st=>items.push({c,s:st})));
   items.sort((a,b)=>a.s.due-b.s.due);
-
-  $('#dueCount').textContent=items.length;
-  $('#dueLabel').textContent = items.length===0
-    ? 'semua langkah beres — nikmati harimu'
-    : 'langkah menunggu kamu';
-
+  $('#dueCount').textContent=items.length?items.length:'';
   if(!items.length){
-    list.appendChild(el('div','empty','<div class="em">Kosong.</div>Belum ada langkah yang jatuh tempo tiga hari ke depan.'));
-  } else {
+    list.appendChild(el('div','empty','<div class="em">Kosong.</div>Tidak ada langkah jatuh tempo tiga hari ke depan.'));
+  }else{
     const card=el('div','card');
     items.slice(0,12).forEach(({c,s})=>{
       const t=el('div','task '+(s.late?'late':daysTo(s.due)<=1?'soon':''));
       t.innerHTML=`<button class="tick" onclick="event.stopPropagation();toggleStep('${c.id}','${s.id}')">✓</button>
-        <div class="grow" onclick="openClient('${c.id}')">
-          <div class="t1">${s.label}</div>
-          <div class="t2">${c.name} · ${rel(s.due)}</div>
-        </div>`;
+        <div class="grow" onclick="openClient('${c.id}')"><div class="t1">${esc(s.label)}</div>
+        <div class="t2">${esc(c.name)} · ${rel(s.due)}</div></div>`;
       card.appendChild(t);
     });
     list.appendChild(card);
   }
 
-  const up=$('#upcoming'); up.innerHTML='';
-  const ev=Object.values(clients)
+  /* 3 acara terdekat */
+  const deal=Object.values(clients)
     .filter(c=>parseD(c.date)&&daysTo(parseD(c.date))>=0&&['DP','Lunas'].includes(c.stage))
-    .sort((a,b)=>parseD(a.date)-parseD(b.date)).slice(0,3);
-  if(!ev.length) up.appendChild(el('div','empty','Belum ada acara terjadwal.'));
-  ev.forEach(c=>{
-    const d=parseD(c.date);
-    const card=el('div','card tap');
-    card.onclick=()=>openClient(c.id);
-    card.innerHTML=`<div class="row"><div class="grow">
-        <div class="name">${c.name}</div>
-        <div class="meta">${fmtD(d)} · ${rel(d)} · ${c.venue||'venue belum fix'}</div>
+    .sort((a,b)=>parseD(a.date)-parseD(b.date));
+  const up=$('#upcoming'); up.innerHTML='';
+  if(!deal.length) up.appendChild(el('div','empty','Belum ada acara yang sudah deal.'));
+  deal.slice(0,3).forEach(c=>{
+    const b=budget(c.id);
+    const card=el('div','card tap'); card.onclick=()=>openClient(c.id);
+    card.innerHTML=`<div class="row"><div class="grow"><div class="name truncate">${esc(c.name)}</div>
+      <div class="meta truncate">${fmtD(parseD(c.date))} · ${rel(parseD(c.date))} · ${esc(c.venue)||'venue belum fix'}</div>
       </div>${stagePill(c.stage)}</div>
-      <div class="progress"><i style="width:${progress(c)}%"></i></div>`;
+      <div class="progress"><i style="width:${progress(c)}%"></i></div>
+      <div class="meta" style="margin-top:8px">Anggaran: masuk ${rp(b.masuk)} · keluar ${rp(b.keluar)} · sisa <b style="color:${b.laba<0?'var(--bad)':'var(--ok)'}">${rp(b.laba)}</b></div>`;
     up.appendChild(card);
+  });
+
+  /* semua jadwal mendatang */
+  const box=$('#schedule'); box.innerHTML='';
+  $('#schedCount').textContent=deal.length?deal.length:'';
+  if(!deal.length){ box.innerHTML='<div class="empty">Jadwal muncul di sini setelah klien masuk tahap DP.</div>'; return; }
+  deal.forEach(c=>{
+    const d=parseD(c.date);
+    const r=el('div','sched'); r.onclick=()=>openClient(c.id);
+    r.innerHTML=`<div class="dd"><b>${d.getDate()}</b><i>${d.toLocaleDateString('id-ID',{month:'short'})}</i></div>
+      <div class="grow"><div style="font-size:14px;font-weight:600" class="truncate">${esc(c.name)}</div>
+      <div class="meta truncate">${esc(c.brand)||'—'} · ${esc(c.venue)||'venue belum fix'} · ${rel(d)}</div></div>
+      ${stagePill(c.stage)}`;
+    box.appendChild(r);
   });
 }
 
-/* ---- klien ---- */
-const STAGES=['aktif','Lead','Survey','Penawaran','DP','Lunas','Selesai'];
+const STAGES=['aktif','Lead','Survey','Penawaran','DP','Lunas','Selesai','Batal'];
 function renderKlien(){
   const f=$('#stageFilters'); f.innerHTML='';
-  STAGES.forEach(s=>{
-    const b=el('button','chip'+(filterStage===s?' on':''), s==='aktif'?'Aktif':s);
-    b.onclick=()=>{filterStage=s;renderKlien();};
-    f.appendChild(b);
-  });
+  STAGES.forEach(s=>{const b=el('button','chip'+(filterStage===s?' on':''),s==='aktif'?'Aktif':s);
+    b.onclick=()=>{filterStage=s;renderKlien();}; f.appendChild(b);});
   const all=Object.values(clients);
-  const list=all.filter(c=> filterStage==='aktif' ? c.stage!=='Selesai' : c.stage===filterStage)
+  const list=all.filter(c=>filterStage==='aktif'?!['Selesai','Batal'].includes(c.stage):c.stage===filterStage)
     .sort((a,b)=>(parseD(a.date)||9e15)-(parseD(b.date)||9e15));
-
-  const pipeline=all.filter(c=>!['Selesai'].includes(c.stage)).reduce((s,c)=>s+(Number(c.value)||0),0);
+  const pipeline=all.filter(c=>!['Selesai','Batal'].includes(c.stage)).reduce((s,c)=>s+(Number(c.value)||0),0);
   $('#klienSub').textContent=`${all.length} klien · nilai pipeline ${rp(pipeline)}`;
 
   const box=$('#clientList'); box.innerHTML='';
-  if(!list.length){ box.appendChild(el('div','empty','<div class="em">Belum ada di tahap ini.</div>')); return; }
+  if(!list.length){box.appendChild(el('div','empty','<div class="em">Belum ada di tahap ini.</div>'));return;}
   list.forEach(c=>{
-    const next=activeSteps(c)[0] || buildJourney(c).find(s=>!s.done);
-    const card=el('div','card tap');
-    card.onclick=()=>openClient(c.id);
-    card.innerHTML=`<div class="row">
-        <div class="grow"><div class="name truncate">${c.name}</div>
-        <div class="meta truncate">${c.brand||'—'} · ${c.date?fmtD(parseD(c.date)):'tanggal belum fix'}</div></div>
-        ${stagePill(c.stage)}</div>
+    const next=activeSteps(c)[0]||buildJourney(c).find(s=>!s.done);
+    const card=el('div','card tap'); card.onclick=()=>openClient(c.id);
+    card.innerHTML=`<div class="row"><div class="grow"><div class="name truncate">${esc(c.name)}</div>
+      <div class="meta truncate">${esc(c.brand)||'—'} · ${c.date?fmtD(parseD(c.date)):'tanggal belum fix'}${c.source==='Google Calendar'?' · dari kalender':''}</div></div>
+      ${stagePill(c.stage)}</div>
       <div class="progress"><i style="width:${progress(c)}%"></i></div>
-      <div class="meta" style="margin-top:8px;color:${next&&next.late?'var(--bad)':'var(--muted)'}">
-        ${next?`Berikutnya: ${next.label} · ${rel(next.due)}`:'Semua langkah selesai'}</div>`;
+      <div class="meta" style="margin-top:8px;color:${isDead(c)?'var(--faint)':next&&next.late?'var(--bad)':'var(--muted)'}">
+      ${isDead(c)?'Dibatalkan':next?'Berikutnya: '+esc(next.label)+' · '+rel(next.due):'Semua langkah selesai'}</div>`;
     box.appendChild(card);
   });
 }
 
-/* ---- detail klien ---- */
-function openClient(id){
-  const c=clients[id]; if(!c) return;
-  const j=buildJourney(c);
-  let html=`<h3>${c.name}</h3>
-    <p class="sub">${c.brand||'—'} · ${c.venue||'venue belum fix'} · ${c.date?fmtD(parseD(c.date)):'tanggal belum fix'}</p>
+function renderEvent(){
+  const box=$('#eventList'); box.innerHTML='';
+  const list=Object.values(clients).filter(c=>['DP','Lunas','Selesai'].includes(c.stage))
+    .sort((a,b)=>(parseD(b.date)||0)-(parseD(a.date)||0));
+  if(!list.length){box.appendChild(el('div','empty','<div class="em">Belum ada event.</div>Klien yang sudah DP muncul di sini.'));return;}
+  list.forEach(c=>{
+    const sisa=buildJourney(c).filter(s=>!s.done&&s.fase!=='Loyal').length;
+    const b=budget(c.id);
+    const card=el('div','card tap'); card.onclick=()=>openClient(c.id);
+    card.innerHTML=`<div class="row"><div class="grow"><div class="name truncate">${esc(c.name)}</div>
+      <div class="meta">${fmtD(parseD(c.date))} · ${esc(c.venue)||'—'}</div></div>${stagePill(c.stage)}</div>
+      <div class="progress"><i style="width:${progress(c)}%"></i></div>
+      <div class="meta" style="margin-top:8px">${sisa?sisa+' langkah belum beres':'Tuntas'} · sisa anggaran <b style="color:${b.laba<0?'var(--bad)':'var(--ok)'}">${rp(b.laba)}</b>${evals[c.id]?' · LPJ ada':''}</div>`;
+    box.appendChild(card);
+  });
+}
+
+function renderUang(){
+  const now=new Date(),m=now.getMonth(),y=now.getFullYear();
+  let inn=0,out=0;
+  const ents=Object.entries(ledger).map(([id,e])=>({...e,id})).sort((a,b)=>new Date(b.date)-new Date(a.date));
+  ents.forEach(e=>{const d=new Date(e.date);
+    if(d.getMonth()===m&&d.getFullYear()===y){e.type==='in'?inn+=Number(e.amount)||0:out+=Number(e.amount)||0;}});
+  $('#fIn').textContent=rp(inn); $('#fOut').textContent=rp(out);
+  $('#fPiutang').textContent=rp(Object.values(clients).filter(c=>['DP','Lunas'].includes(c.stage))
+    .reduce((s,c)=>s+(Number(c.remaining)||0),0));
+  const box=$('#ledgerList'); box.innerHTML='';
+  if(!ents.length){box.innerHTML='<div class="empty">Belum ada catatan. Centang langkah pembayaran di klien — angkanya masuk sendiri ke sini.</div>';return;}
+  ents.slice(0,40).forEach(e=>{
+    const c=e.clientId?clients[e.clientId]:null;
+    const r=el('div','led');
+    r.innerHTML=`<div class="grow"><div style="font-size:14px;font-weight:600" class="truncate">${esc(e.label)}</div>
+      <div class="meta">${new Date(e.date).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}${c?' · '+esc(c.name):''}</div></div>
+      <div class="money ${e.type==='in'?'in':'out'}">${e.type==='in'?'+':'−'} ${rp(e.amount)}</div>
+      <button class="del" onclick="delEntry('${e.id}')" aria-label="Hapus">✕</button>`;
+    box.appendChild(r);
+  });
+}
+
+/* ---------------- detail klien ---------------- */
+function openClient(id,keepScroll){
+  const c=clients[id]; if(!c)return;
+  openClientId=id;
+  const j=buildJourney(c), b=budget(id);
+  const evOf=Object.entries(ledger).filter(([,e])=>e.clientId===id)
+    .sort((a,b2)=>new Date(b2[1].date)-new Date(a[1].date));
+
+  let html=`<h3>${esc(c.name)}</h3>
+    <p class="sub">${esc(c.brand)||'—'} · ${esc(c.venue)||'venue belum fix'} · ${c.date?fmtD(parseD(c.date)):'tanggal belum fix'}${c.source==='Google Calendar'?' · dari Google Calendar':''}</p>
     <div class="stat">
-      <div class="card"><div class="v money">${rp(c.value)}</div><div class="k">Nilai</div></div>
-      <div class="card"><div class="v money" style="color:var(--warn)">${rp(c.remaining)}</div><div class="k">Sisa</div></div>
+      <div class="card"><div class="v money">${rp(c.value)}</div><div class="k">Nilai kontrak</div></div>
+      <div class="card"><div class="v money" style="color:var(--warn)">${rp(c.remaining)}</div><div class="k">Sisa tagihan</div></div>
     </div>
     <label>Tahap</label>
     <select onchange="setStage('${id}',this.value)">
-      ${['Lead','Survey','Penawaran','DP','Lunas','Selesai'].map(s=>`<option ${c.stage===s?'selected':''}>${s}</option>`).join('')}
+      ${['Lead','Survey','Penawaran','DP','Lunas','Selesai','Batal'].map(s=>`<option ${c.stage===s?'selected':''}>${s}</option>`).join('')}
     </select>
     <div class="btns">
       <button class="btn wa" onclick="window.open('${waLink(c.wa,'Halo '+c.name+', ')}','_blank')">Chat WA</button>
-      <button class="btn ghost" onclick="downloadICS('${id}')">Ekspor ke kalender</button>
-    </div>`;
+      <button class="btn ghost" onclick="downloadICS('${id}')">Ekspor kalender</button>
+    </div>
 
-  let fase='';
-  html+='<div style="margin-top:6px">';
+    <div class="phase">Permintaan klien</div>
+    <textarea id="cNotes" rows="4" placeholder="Tema, warna, hal yang wajib ada, pantangan keluarga…">${esc(c.notes)}</textarea>
+    <button class="btn ghost sm" style="margin-top:8px;width:100%" onclick="saveNotes('${id}')">Simpan catatan</button>
+
+    <div class="phase">Anggaran acara</div>
+    <div class="stat">
+      <div class="card"><div class="v in" style="font-size:18px">${rp(b.masuk)}</div><div class="k">Masuk</div></div>
+      <div class="card"><div class="v out" style="font-size:18px">${rp(b.keluar)}</div><div class="k">Keluar</div></div>
+    </div>
+    <div class="card"><div class="row"><div class="grow"><div class="k" style="color:var(--muted);font-size:11px">Sisa di tangan</div>
+      <div class="v money" style="font-size:20px;color:${b.laba<0?'var(--bad)':'var(--ok)'}">${rp(b.laba)}</div></div></div></div>
+    <div class="btns">
+      <button class="btn ghost" onclick="openEventMoney('${id}','in')">+ Pemasukan</button>
+      <button class="btn ghost" onclick="openEventMoney('${id}','out')">+ Pengeluaran</button>
+    </div>`;
+  if(evOf.length){
+    html+='<div class="card" style="margin-top:10px">';
+    evOf.slice(0,10).forEach(([eid,e])=>{
+      html+=`<div class="led"><div class="grow"><div style="font-size:13.5px;font-weight:600" class="truncate">${esc(e.label)}</div>
+        <div class="meta">${new Date(e.date).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</div></div>
+        <div class="money ${e.type==='in'?'in':'out'}">${e.type==='in'?'+':'−'} ${rp(e.amount)}</div>
+        <button class="del" onclick="delEntry('${eid}');openClient('${id}')">✕</button></div>`;
+    });
+    html+='</div>';
+  }
+
+  let fase=''; html+='<div style="margin-top:6px">';
   j.forEach(s=>{
-    if(s.fase!==fase){ fase=s.fase; html+=`</div><div class="phase">${fase}</div><div class="spine">`; }
-    const cls=[s.done?'done':'', s.late?'late':'', daysTo(s.due)===0?'today-mark':''].join(' ');
+    if(s.fase!==fase){fase=s.fase;html+=`</div><div class="phase">${fase}</div><div class="spine">`;}
+    const cls=[s.done?'done':'',s.late&&!isDead(c)?'late':'',daysTo(s.due)===0?'today-mark':''].join(' ');
     html+=`<div class="step ${cls}"><div class="sr">
-        <button class="tick ${s.done?'done':''}" onclick="toggleStep('${id}','${s.id}');closeSheet()">✓</button>
-        <div class="st">${s.label}</div><div class="sd">${s.due?fmtD(s.due):'—'}</div>
-      </div></div>`;
+      <button class="tick ${s.done?'done':''}" onclick="toggleStep('${id}','${s.id}')">✓</button>
+      <div class="st">${esc(s.label)}</div><div class="sd">${s.due?fmtD(s.due):'—'}</div></div></div>`;
   });
   html+='</div>';
 
   const ev=evals[id];
-  if(ev) html+=`<div class="phase">Catatan evaluasi</div>
-    <div class="card"><div class="meta"><b style="color:var(--ok)">Baik:</b> ${ev.baik||'—'}</div>
-    <div class="meta" style="margin-top:6px"><b style="color:var(--bad)">Meleset:</b> ${ev.buruk||'—'}</div>
-    <div class="meta" style="margin-top:6px">Biaya riil ${rp(ev.cost)} · kepuasan ${ev.score||'—'}/5</div></div>`;
+  if(ev) html+=`<div class="phase">Catatan evaluasi</div><div class="card">
+    <div class="meta"><b style="color:var(--ok)">Baik:</b> ${esc(ev.baik)||'—'}</div>
+    <div class="meta" style="margin-top:6px"><b style="color:var(--bad)">Meleset:</b> ${esc(ev.buruk)||'—'}</div>
+    <div class="meta" style="margin-top:6px">Kepuasan ${ev.score||'—'}/5</div></div>`;
 
-  openSheet(html);
+  html+=`<button class="btn danger" style="margin-top:20px" onclick="confirmDelete('${id}')">Hapus klien ini</button>`;
+  openSheet(html,keepScroll);
 }
 
-/* ---- ics ---- */
 function downloadICS(id){
   const c=clients[id]; const j=buildJourney(c).filter(s=>!s.done&&s.due);
   let ics='BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Rushtic//Kendali//ID\n';
@@ -691,60 +777,67 @@ function downloadICS(id){
   toast('Buka file-nya untuk masuk kalender');
 }
 
-/* ---- event ---- */
-function renderEvent(){
-  const box=$('#eventList'); box.innerHTML='';
-  const list=Object.values(clients).filter(c=>['DP','Lunas','Selesai'].includes(c.stage))
-    .sort((a,b)=>(parseD(b.date)||0)-(parseD(a.date)||0));
-  if(!list.length){ box.appendChild(el('div','empty','<div class="em">Belum ada event.</div>Klien yang sudah DP muncul di sini.')); return; }
-  list.forEach(c=>{
-    const j=buildJourney(c);
-    const sisa=j.filter(s=>!s.done&&s.fase!=='Loyal').length;
-    const card=el('div','card tap'); card.onclick=()=>openClient(c.id);
-    card.innerHTML=`<div class="row"><div class="grow">
-        <div class="name truncate">${c.name}</div>
-        <div class="meta">${fmtD(parseD(c.date))} · ${c.venue||'—'}</div></div>${stagePill(c.stage)}</div>
-      <div class="progress"><i style="width:${progress(c)}%"></i></div>
-      <div class="meta" style="margin-top:8px">${sisa?sisa+' langkah belum beres':'Tuntas — tinggal anniversary'}${evals[c.id]?' · LPJ ada':''}</div>`;
-    box.appendChild(card);
-  });
+/* ---------------- pengaturan ---------------- */
+function openSettings(){
+  const last=config.gcalLastSync?new Date(config.gcalLastSync).toLocaleString('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'belum pernah';
+  openSheet(`<h3>Pengaturan</h3>
+    <p class="sub">Google Calendar dibaca setiap kali kamu buka halaman ini. Acara berjudul mengandung kata <b>wedding</b>, <b>dekor</b>, <b>engagement</b>, <b>lamaran</b>, <b>akad</b>, <b>resepsi</b>, atau <b>prewedding</b> otomatis jadi klien baru.</p>
+    <label>Google OAuth Client ID</label>
+    <input id="gcid" placeholder="xxxxx.apps.googleusercontent.com" value="${esc(config.googleClientId)}">
+    <div class="gcal">Sinkron terakhir: ${last}</div>
+    <div class="btns"><button class="btn ghost" onclick="closeSheet()">Tutup</button>
+    <button class="btn" onclick="saveConfig()">Simpan</button></div>
+    <button class="btn ghost" style="margin-top:8px" onclick="gcalConnect(false)">Sinkronkan kalender sekarang</button>`);
+}
+async function saveConfig(){
+  config.googleClientId=$('#gcid').value.trim();
+  await push('kendali/config',{googleClientId:config.googleClientId});
+  closeSheet(); toast('Tersimpan — coba sinkronkan kalender');
 }
 
-/* ---- uang ---- */
-function renderUang(){
-  const now=new Date(), m=now.getMonth(), y=now.getFullYear();
-  let inn=0,out=0;
-  const ents=Object.entries(ledger).map(([id,e])=>({...e,id}))
-    .sort((a,b)=>new Date(b.date)-new Date(a.date));
-  ents.forEach(e=>{ const d=new Date(e.date);
-    if(d.getMonth()===m&&d.getFullYear()===y){ e.type==='in'?inn+=e.amount:out+=e.amount; } });
-  $('#fIn').textContent=rp(inn); $('#fOut').textContent=rp(out);
-  const piutang=Object.values(clients).filter(c=>['DP','Lunas'].includes(c.stage))
-    .reduce((s,c)=>s+(Number(c.remaining)||0),0);
-  $('#fPiutang').textContent=rp(piutang);
+/* ---------------- navigasi + tombol back ---------------- */
+let curView='beranda', sheetOpen=false, exitArmed=false;
+const isSheetOpen=()=>sheetOpen;
 
-  const box=$('#ledgerList'); box.innerHTML='';
-  if(!ents.length){ box.innerHTML='<div class="empty">Belum ada catatan. Centang langkah pembayaran di klien — angkanya masuk sendiri ke sini.</div>'; return; }
-  ents.slice(0,25).forEach(e=>{
-    const r=el('div','led');
-    r.innerHTML=`<div class="grow"><div style="font-size:14px;font-weight:600">${e.label}</div>
-      <div class="meta">${new Date(e.date).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</div></div>
-      <div class="money ${e.type==='in'?'in':'out'}">${e.type==='in'?'+':'−'} ${rp(e.amount)}</div>`;
-    box.appendChild(r);
-  });
-}
-
-/* ---- nav & sheet ---- */
-function go(v){
+function go(v,fromBack){
+  curView=v;
   document.querySelectorAll('.view').forEach(s=>s.classList.remove('on'));
   $('#v-'+v).classList.add('on');
   document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
   window.scrollTo({top:0,behavior:'smooth'});
+  if(!fromBack&&v!=='beranda') history.pushState({k:'view',v},'');
 }
-function openSheet(h){ $('#sheetBody').innerHTML=h; $('#scrim').classList.add('on'); setTimeout(()=>$('#sheet').classList.add('on'),10); }
-function closeSheet(){ $('#sheet').classList.remove('on'); setTimeout(()=>$('#scrim').classList.remove('on'),260); }
+function openSheet(h,keepScroll){
+  const sc=keepScroll?$('#sheet').scrollTop:0;
+  $('#sheetBody').innerHTML=h;
+  $('#scrim').classList.add('on');
+  setTimeout(()=>{$('#sheet').classList.add('on');$('#sheet').scrollTop=sc;},10);
+  if(!sheetOpen){ sheetOpen=true; history.pushState({k:'sheet'},''); }
+}
+function closeSheet(fromBack){
+  if(!sheetOpen) return;
+  sheetOpen=false; openClientId=null;
+  $('#sheet').classList.remove('on');
+  setTimeout(()=>$('#scrim').classList.remove('on'),260);
+  if(!fromBack) history.back();
+}
+window.addEventListener('popstate',()=>{
+  if(sheetOpen){ closeSheet(true); return; }
+  if(curView!=='beranda'){ go('beranda',true); history.pushState({k:'root'},''); return; }
+  if(!exitArmed){
+    exitArmed=true; toast('Tekan back sekali lagi untuk keluar');
+    history.pushState({k:'root'},'');
+    setTimeout(()=>exitArmed=false,2200);
+  }
+});
+history.replaceState({k:'root'},'');
+history.pushState({k:'root'},'');
 
-pull();
+/* ---------------- start ---------------- */
+(async()=>{
+  await pull();
+  if(gcalReady()) setTimeout(()=>gcalConnect(true),800);
+})();
 </script>
 </body>
 </html>
